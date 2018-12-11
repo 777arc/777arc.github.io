@@ -4350,7 +4350,7 @@ var defaultOptions = {
     kind: OptionKind.VIEWER
   },
   defaultUrl: {
-    value: '../CV.pdf',
+    value: 'CV.pdf',
     kind: OptionKind.VIEWER
   },
   defaultZoomValue: {
