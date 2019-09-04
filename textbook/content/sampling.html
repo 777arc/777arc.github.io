@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Sampling with SDR &mdash; PySDR: Learn SDR and DSP with Python and GNU Radio 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> PySDR: Learn SDR and DSP with Python and GNU Radio
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">The Frequency Domain</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PySDR: Learn SDR and DSP with Python and GNU Radio</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sampling-with-sdr">
+<h1>Sampling with SDR<a class="headerlink" href="#sampling-with-sdr" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sampling-basics">
+<h2>Sampling Basics<a class="headerlink" href="#sampling-basics" title="Permalink to this headline">¶</a></h2>
+<p>Mention basics of sampling and discrete time here</p>
+</div>
+<div class="section" id="quadrature-sampling">
+<h2>Quadrature Sampling<a class="headerlink" href="#quadrature-sampling" title="Permalink to this headline">¶</a></h2>
+<p>Mention I and Q here</p>
+<p>Soon after you start playing around with SDRs, you will find that often, there will be a large spike in the center of the FFT.
+This is called a “DC offset” or “DC spike” or sometimes “LO leakage” because the center of the FFT represents zero Hz, which is a constant “DC type” signal with no sinusoidal variations.</p>
+<p>&lt;insert pic of DC offset using USRP&gt;</p>
+<p>Remember that because the SDR tunes to a center frequency, the 0 Hz portion of the FFT really corresponds to the center frequency.
+That being said, a DC spike doesn’t nessesarily mean there is energy at the center frequency.
+If there is only a DC spike, and the rest of the FFT looks like noise, there is most likely not actually a signal present where it is showing you one.</p>
+<p>&lt;insert same capture as above but with DC offset removed, to show “truth”&gt;</p>
+<p>A DC offset is a common artifact in direct conversion receivers, which is the architecture used for SDRs like most Ettus USRPs.
+In direct conversion receivers, there is an oscillator called the LO, which is used to down-convert the signal from its actual frequency to baseband.
+As a result, leakage from this LO will show up in the center of the observed bandwidth.
+Many RF integrated circuits (RFICs) have built-in automatic DC offset removal, but it typically requires a signal to be present to work.
+That is why the DC spike will be very apparent when no signals are present.</p>
+<p>A quick way around the DC offset issue is to oversample the signal and off-tune.
+As an example, lets say we want to view 5 MHz of spectrum at 100 MHz.
+Instead what we can do is sample at 20 MHz, at a center frequency of 95 MHz.</p>
+<a class="reference internal image-reference" href="../_images/offtuning.png"><img alt="../_images/offtuning.png" class="align-center" src="../_images/offtuning.png" style="width: 528.0px; height: 168.0px;" /></a>
+<p>Our LO will be set to 95 MHz because that is the frequency we ask the SDR to tune to, which is outside the observation window we are interested in.
+There is only one problem: if we want our signal to actually be centered at 100 MHz and only contain 5 MHz, we will have to perform a frequency shift, filter, and downsample ourself (something we will learn how to do later).
+Fortunately, this process of offtuning, a.k.a applying an LO offset, is often built into the SDRs, where they will automatically do the offtuning and then shift the frequency to your desired center frequency automatically.</p>
+</div>
+<div class="section" id="nyquist-sampling-rate">
+<h2>Nyquist Sampling Rate<a class="headerlink" href="#nyquist-sampling-rate" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="sampling-using-our-rtl-sdr">
+<h2>Sampling Using our RTL-SDR<a class="headerlink" href="#sampling-using-our-rtl-sdr" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="calculating-average-power">
+<h2>Calculating Average Power<a class="headerlink" href="#calculating-average-power" title="Permalink to this headline">¶</a></h2>
+<p>For a discrete complex signal, i.e. one we have sampled, we can find the average power by taking the magnitude of each sample, squaring it, then finding the mean:</p>
+<div class="math">
+<p><img src="../_images/math/b36d53d3e0d3a17139ffec99aad5be3dcb99af6b.svg" alt="P = \frac{1}{N} \sum_{n=1}^{N} |x[n]|^2"/></p>
+</div><p>Remember that the absolute value of a complex number is just the magnitude, i.e. <img class="math" src="../_images/math/7571535c090568d009f9b6dcd4be83925618c875.svg" alt="\sqrt{I^2+Q^2}"/></p>
+<p>In Python this would look like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">avg_pwr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that energy and power are not the same thing.  Typically in SDR we talk in terms of power, not energy.
+We will not go into it here, but in general, in signal processing you can calculate energy by dropping the square root that is always in power-related equations.
+See &lt;here&gt; for a nice guide about the difference between power and energy in the context of wireless comms and SDR.</p>
+<p>Here is a very useful trick for calculating the average power of a sampled signal.
+If your signal has (roughly) zero mean, which is usually the case in SDR (we will see why later), then the signal power can be found by simplying taking the variance of the samples, e.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">avg_pwr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># (signal should have roughly zero mean)</span>
+</pre></div>
+</div>
+<p>The reason why is quite simple; the equation for variance is <img class="math" src="../_images/math/81dd3cb7f6448e8a9c64cec293fa2543a4d12309.svg" alt="\frac{1}{N}\sum^N_{n=1} |x[n]-\mu|^2"/>
+where <img class="math" src="../_images/math/d79e8a2c7ce54906c2b25549da38bdbe02cf40d6.svg" alt="\mu"/> is the signal’s mean, so if <img class="math" src="../_images/math/d79e8a2c7ce54906c2b25549da38bdbe02cf40d6.svg" alt="\mu"/> is zero than it becomes equivalent to the equation for power.
+You can also just subtract out the mean from the samples in your window of observation, then take variance.</p>
+</div>
+<div class="section" id="calculating-power-spectral-density">
+<h2>Calculating Power Spectral Density<a class="headerlink" href="#calculating-power-spectral-density" title="Permalink to this headline">¶</a></h2>
+<p>Last chapter we learned that we can convert a signal to the frequency domain using an FFT, and the result is called the Power Spectral Density (PSD).
+All DSP engineers know this, but when it comes to actually finding the PSD of a batch of samples and plotting it, you need to do more than just take an FFT.
+We must do the following six operations:</p>
+<ol class="arabic simple">
+<li>Take the FFT of our samples.  The FFT size will be the length of x by default, so lets only use the first 1024 samples as an example.  I’ve seen anywhere from 2^6 to 2^20 (64 to one million).  Using a power of two is most efficient.</li>
+<li>Take the magnitude of our FFT results.</li>
+<li>Normalize; divide by our sample rate (<img class="math" src="../_images/math/00cc7b93584f504a49a9f4895973bc434576dcdd.svg" alt="F_s"/>)</li>
+<li>Square the resulting magnitude, to get power instead of energy.</li>
+<li>Convert to dB using <img class="math" src="../_images/math/a23d2079ff975b8b93ed118c3d67a9e92d855b77.svg" alt="10 \log_{10}()"/>, we always view PSDs in log scale.</li>
+<li>Perform an FFT shift; it turns out that mathematically the FFT operation does not result in “0 Hz” in the center.  This operation just rearranges the array to fix that.</li>
+</ol>
+<p>In Python this looks like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Fs</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># lets say we sampled at 1 MHz</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="s1">&#39;samples.iq&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span> <span class="c1"># replace with your method of getting samples</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">]</span> <span class="c1"># we will only take the FFT of the first 1024 samples, see text below</span>
+<span class="n">PSD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">Fs</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">PSD_log</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PSD</span><span class="p">)</span>
+<span class="n">PSD_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">PSD_log</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And optionally we can apply a window, like we learned about last chapter:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># add the following line after doing x = x[0:1024]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="c1"># apply a Hamming window</span>
+</pre></div>
+</div>
+<p>Now to plot this PSD we need to know the values of the x-axis.
+As we learned last chapter, when we sample a signal, we only “see” the spectrum between -fs/2 and fs/2 where fs is our sample rate.
+The resolution we achieve in the frequency domain depends on the size of our FFT, which by default is equal to the number of samples we perform the FFT operation on.
+In this case our x-axis is 1024 equally spaced points between -0.5 MHz and 0.5 MHz.
+If we had tuned our SDR to 2.4 GHz then that means our observation window would be between 2399500000 and 2400500000 Hz.
+In Python this looks like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">center_freq</span> <span class="o">=</span> <span class="mf">2.4e9</span> <span class="c1"># frequency we tuned our SDR to</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">center_freq</span> <span class="o">-</span> <span class="n">Fs</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">center_freq</span> <span class="o">+</span> <span class="n">Fs</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="c1"># lazy method</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">PSD_shifted</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And we should be left with a beautiful PSD.
+If you want to find the PSD of millions of samples, don’t just do a million-point FFT, because it will probably take forever, and it will give you an output of a million “frequency bins” which is too much to show in a plot.
+Instead I suggest doing multiple smaller PSDs and averaging them together, or displaying them using a Waterfall Plot.
+Alternatively, if you know your signal is not changing, it’s not a sin to only use a few thousand samples and just find the PSD of those, because within that time-frame of a few thousands samples you will likely capture enough of the signal to get a nice representation.</p>
+<p>Here is a full example which also includes generating a signal and noise.  Note that N, the number of samples to simulate, becomes the FFT length because we take the FFT of the entire simulated signal.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="n">Fs</span> <span class="o">=</span> <span class="mi">300</span> <span class="c1"># sample rate</span>
+<span class="n">Ts</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">Fs</span> <span class="c1"># sample period</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">5048</span> <span class="c1"># number of samples to simulate</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">Ts</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">50</span><span class="o">*</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># simulates sinusoid at 50 Hz</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># AWGN with unity power</span>
+<span class="n">noise_power</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">noise_power</span><span class="p">)</span>
+
+<span class="n">PSD</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">PSD_log</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PSD</span><span class="p">)</span>
+<span class="n">PSD_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">PSD_log</span><span class="p">)</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">Fs</span><span class="o">/-</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">Fs</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="c1"># lazy method</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">PSD_shifted</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<a class="reference internal image-reference" href="../_images/fft_example1.png"><img alt="../_images/fft_example1.png" class="align-center" src="../_images/fft_example1.png" style="width: 380.0px; height: 252.0px;" /></a>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Marc Lichtman
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

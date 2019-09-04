@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The Frequency Domain &mdash; PySDR: Learn SDR and DSP with Python and GNU Radio 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Intro" href="intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> PySDR: Learn SDR and DSP with Python and GNU Radio
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Intro</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The Frequency Domain</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fourier-series">Fourier Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#time-frequency-pairs">Time-Frequency Pairs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fourier-transform">Fourier Transform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#time-frequency-properties">Time-Frequency Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fft">FFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fft-in-python">FFT in Python</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PySDR: Learn SDR and DSP with Python and GNU Radio</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-frequency-domain">
+<h1>The Frequency Domain<a class="headerlink" href="#the-frequency-domain" title="Permalink to this headline">¶</a></h1>
+<p>One of the coolest side effects of learning about DSP and wireless communications is that you will also learn to think in the frequency domain.  Most people’s experience with <em>working</em> in the frequency domain is limited to adjusting the bass/mid/treble knobs on a car’s audio system.  Most people’s experience with <em>viewing</em> something in the frequency domain is limited to seeing an audio equalizer, such as this clip:</p>
+<a class="reference internal image-reference" href="../_images/audio_equalizer.webp"><img alt="../_images/audio_equalizer.webp" class="align-center" src="../_images/audio_equalizer.webp" /></a>
+<p>In this chapter we cover what the frequency domain means, how to convert between time and frequency (plus what happens when we do so), and some interesting principles we will use later on.  But by the end of this textbook you will be a master at working in the frequency domain, gauranteed!</p>
+<div class="section" id="fourier-series">
+<h2>Fourier Series<a class="headerlink" href="#fourier-series" title="Permalink to this headline">¶</a></h2>
+<p>The basics of the frequency domain starts with understanding that any signal can be represented by a bunch of sine waves summed together.  When we break a signal down into a bunch of sine waves, we call it a Fourier Series.  Here is an example of a signal that is made up of only two sine waves:</p>
+<a class="reference internal image-reference" href="../_images/summing_sinusoids.png"><img alt="../_images/summing_sinusoids.png" class="align-center" src="../_images/summing_sinusoids.png" style="width: 242.5px; height: 238.0px;" /></a>
+<p>Here is another example; the red curve below shows an approximation of a sawtooth wave using up to five sine waves added together.  We can see that it’s not a perfect reconstruction, it would take an infinite number of sine waves to reproduce this sawtooth wave due to the sharp transitions:</p>
+<a class="reference internal image-reference" href="../_images/fourier_series_triangle.gif"><img alt="../_images/fourier_series_triangle.gif" class="align-center" src="../_images/fourier_series_triangle.gif" style="width: 491.0px; height: 126.0px;" /></a>
+<p>Some signals require more sine waves than others, and some require an infinite amount of sine waves, although they can always be approximated with a limited number.  Here is another example of a signal being broken down into a series of sine waves:</p>
+<a class="reference internal image-reference" href="../_images/fourier_series_arbitrary_function.gif"><img alt="../_images/fourier_series_arbitrary_function.gif" class="align-center" src="../_images/fourier_series_arbitrary_function.gif" style="width: 543.0px; height: 156.0px;" /></a>
+<p>To understand how we can break down a signal into sine waves, we need to first review the three attributes of a sine wave, also known as sinusoid:</p>
+<ol class="arabic simple">
+<li>Amplitude</li>
+<li>Phase</li>
+<li>Frequency</li>
+</ol>
+<p>Amplitude indicates the “strength” of the wave, while phase is used to represent how the sine wave is shifted in time, anywhere from 0 to 360 degrees.  Frequency is the number of waves per second, and is the inverse of period.</p>
+<a class="reference internal image-reference" href="../_images/amplitude_and_phase.gif"><img alt="../_images/amplitude_and_phase.gif" class="align-center" src="../_images/amplitude_and_phase.gif" style="width: 453.0px; height: 209.0px;" /></a>
+<p>At this point you may have realized that a “signal” is essentially just a function, usually represented “over time”. This means the period of a sinusoid is the amount of time, in seconds, for the wave to finish one cycle.  Thus, the units of frequency, is 1/seconds, or Hz.</p>
+<p>When we decompose a signal into a summation of sine waves, each one will have a certain amplitude, phase, and frequency.  Each sine wave’s <strong>amplitude</strong> will tell us how strong that <strong>frequency</strong> existed in the original signal.  Don’t worry too much about <strong>phase</strong> for now, other than realizing that the only difference between sin() and cos() is a phase shift (time shift).</p>
+</div>
+<div class="section" id="time-frequency-pairs">
+<h2>Time-Frequency Pairs<a class="headerlink" href="#time-frequency-pairs" title="Permalink to this headline">¶</a></h2>
+<p>Knowing that a signal can be broken down into sine waves is one thing, but now let’s actually plot signals in the frequency domain.  In other words, instead of the x-axis being time, it will be frequency.  For a given signal we can plot it in both time <strong>and</strong> frequency.  Let’s look at some example signals, we will start with simple ones.</p>
+<p>Here is what a sine wave, at frequency f, looks like in the time and frequency domain:</p>
+<a class="reference internal image-reference" href="../_images/sine-wave.png"><img alt="../_images/sine-wave.png" class="align-center" src="../_images/sine-wave.png" style="width: 582.0px; height: 245.0px;" /></a>
+<p>The time domain should look very familiar, it’s simply an oscillating function, don’t worry about at what point in the cycle it starts, or how long it lasts.  The take-away is that it has only a <strong>single frequency</strong>, which is why we see a single spike/peak in the frequency domain.  Whatever frequency that sine wave is oscillating at will be where we see the spike in the frequency domain.  The mathematical name for a spike like this is called an “impulse”.</p>
+<p>Now what if we had an impulse in the time domain?  One example is a sound recording of someone clapping their hands, or hitting a nail with a hammer.  This time-frequency pair is a little less intuitive.</p>
+<a class="reference internal image-reference" href="../_images/impulse.png"><img alt="../_images/impulse.png" class="align-center" src="../_images/impulse.png" style="width: 585.0px; height: 230.0px;" /></a>
+<p>As we can see, a spike/impulse in the time domain is flat in the frequency domain, and theoretically contains every frequency, although there is no theoretically perfect impulse because it would have to be infinitely short in the time domain.  Similar to the sine wave, it doesn’t matter where in the time domain the impulse happens.  The important take-away here is that quick changes in time domain result in many frequencies occuring.</p>
+<p>Next lets look at the time and frequency domain plots of a square wave:</p>
+<a class="reference internal image-reference" href="../_images/square-wave.png"><img alt="../_images/square-wave.png" class="align-center" src="../_images/square-wave.png" style="width: 471.0px; height: 178.5px;" /></a>
+<p>This one is also less intuitive, but we can see that the frequency domain seems to keep going, and this is because of the quick change in time domain, just like in the previous example.  But it’s not flat in frequency, it has spikes at intervals, and the level seems to decay as the frequency gets higher.  It turns out that a square wave in time domain has a sin(x)/x pattern in the frequency domain, which is known as the sinc() function.</p>
+<p>Now what if we have a constant signal in the time domain?  A constant signal has no “frequency”.   Let’s see:</p>
+<a class="reference internal image-reference" href="../_images/dc-signal.png"><img alt="../_images/dc-signal.png" class="align-center" src="../_images/dc-signal.png" style="width: 633.0px; height: 217.0px;" /></a>
+<p>Because there is no frequency, in the frequency domain we have a spike at 0 Hz, which makes sense if you think about it.  The frequency domain is not going to be “empty”, because that only happens when there is no signal present (i.e. time domain of 0’s).  We call 0 Hz in the frequency domain “DC”, because a DC signal is a constant signal that doesn’t change.  Note that if we increase the amplitude of our DC signal in the time domain, the spike at 0 Hz in the frequency domain will also increase.</p>
+<p>Later on we will learn about what exactly the y-axis in the frequency domain plot means, but for now you can think of it as a sort of amplitude that tells you how much of that frequency was present in the time domain signal.</p>
+</div>
+<div class="section" id="fourier-transform">
+<h2>Fourier Transform<a class="headerlink" href="#fourier-transform" title="Permalink to this headline">¶</a></h2>
+<p>Mathematically, the “transform” we use to go from the time domain to the frequency domain and back is called the Fourier Transform.  It is defined as follows:</p>
+<div class="math">
+<p><img src="../_images/math/772fab0ae3b077f14ee975d88ccb5af37dc7bb2e.svg" alt="X(f) = \int x(t) e^{-j2\pi ft} dt"/></p>
+</div><p>So for a signal x(t) we can get the frequency domain version, X(f), using this formula.  We will represent the time domain version of a function with x(t) or y(t), and the corresponding frequency domain version with X(f) and Y(f).  Note the “t” for time, and “f” for frequency. The j is simply the imaginary number, you may have seen it as i in highschool math class.  We use j in engineering and computer science because i is often refering to current, and in programming it’s often used as an iterator.</p>
+<p>To go back to the time domain it’s almost exactly the same aside from a scaling factor and negative sign:</p>
+<div class="math">
+<p><img src="../_images/math/ee5ae93c8108d287c66261040337ca400e6296f6.svg" alt="x(t) = \frac{1}{2 \pi} \int X(f) e^{j2\pi ft} df"/></p>
+</div><p>Note that a lot of textbooks and other resources use <img class="math" src="../_images/math/ecd1ee2a1cd226b40c37e079aca62398d4b774f5.svg" alt="w"/> instead of <img class="math" src="../_images/math/875eb40014526135383caa89fd500ae40a835f56.svg" alt="f"/>.  <img class="math" src="../_images/math/ecd1ee2a1cd226b40c37e079aca62398d4b774f5.svg" alt="w"/> is angular frequency in radians, while <img class="math" src="../_images/math/875eb40014526135383caa89fd500ae40a835f56.svg" alt="f"/> is in Hz.  All you have to know that</p>
+<div class="math">
+<p><img src="../_images/math/23b2f859dee9a9da49b1c51bf3c1d132d2f4da3d.svg" alt="\omega = 2 \pi f"/></p>
+</div><p>Even though it adds a <img class="math" src="../_images/math/70b18b02102d304259bfe6eb9e38350b5993f6d0.svg" alt="2 \pi"/> term to many equations, I find it easier to just stick with frequency in Hz since that is what ends up being used when you actually implement DSP algorithms.</p>
+<p>The above equation for the Fourier Transform is the continuous form, which you will only see in math problems.  The discrete form is much closer to what is implemented in code:</p>
+<div class="math">
+<p><img src="../_images/math/8bd14ea4749c28498714dc8d5f10b28a758e92c3.svg" alt="X_k = \sum_{n=0}^{N-1} x_n e^{-\frac{j2\pi}{N}kn}"/></p>
+</div><p>Note that the main difference is we replaced the integral with a summation.</p>
+<p>remember that next chapter i go into the details of the fft/shift/window/abs/etc.  so this portion should be the very basics of FFT, like in my slides, including windowing</p>
+</div>
+<div class="section" id="time-frequency-properties">
+<h2>Time-Frequency Properties<a class="headerlink" href="#time-frequency-properties" title="Permalink to this headline">¶</a></h2>
+<p>Earlier we looked at a bunch of examples of signals in the time domain, and what they look like in the frequency domain.  Now, we will go over five important “Fourier properies”.  These are properties that tell us if we do ____ to our time domain signal, then ____ happens to our frequency domain signal.  This will give us a lot of important insight into the type of Digital Signal Processing (DSP) we will perform on time domain signals in practice.</p>
+<p>Linearity Property:</p>
+<div class="math">
+<p><img src="../_images/math/1d8d3d60020f7ba60d30ecf5eeec9bdb3d45a6ed.svg" alt="a x(t) + b y(t) \leftrightarrow a X(f) + b Y(f)"/></p>
+</div><p>This property is probably the easiest to understand.  If we add two signals in time, then the frequency domain version will also be the two frequency domain signals added together.  It also tells us that if we multiply either one by a scaling factor, the frequency domain will also scale by the same amount.  The utility of this property will become more apparent when we start looking at multiple signals being added together.</p>
+<p>Frequency Shift Property:</p>
+<div class="math">
+<p><img src="../_images/math/094b779328747f05d8d8584b150daeaef90c8de4.svg" alt="e^{jf_0t}x(t) \leftrightarrow X(f-f_0)"/></p>
+</div><p>The term to the left of x(t) is what we call a “complex sinusoid” or “complex exponential”, and for now all we need to know is that it’s essentially just a sine wave.  So what this property is telling us is that if we take a signal x(t) and multiply it by a sine wave, then in the frequency domain we get the same X(f) except shifted by a certain frequency.  Here is a visual showing what I mean by shifted in frequency:</p>
+<a class="reference internal image-reference" href="../_images/freq-shift.png"><img alt="../_images/freq-shift.png" class="align-center" src="../_images/freq-shift.png" style="width: 521.3000000000001px; height: 169.0px;" /></a>
+<p>This is a very important concept in DSP, because we will want to shift signals up and down in frequency for many reasons, and this property tells us how to do that (multiple by a sine wave).  Here’s another way to think about that:</p>
+<a class="reference internal image-reference" href="../_images/freq-shift-diagram.png"><img alt="../_images/freq-shift-diagram.png" class="align-center" src="../_images/freq-shift-diagram.png" style="width: 314.6px; height: 176.0px;" /></a>
+<p>Scaling in Time Property:</p>
+<div class="math">
+<p><img src="../_images/math/a2ae239d904b5338d2e11c58ce7ff91a2db1d86a.svg" alt="x(at) \leftrightarrow X\left(\frac{f}{a}\right)"/></p>
+</div><p>On the left hand side, we can see that we are scaling our signal x(t) in the time domain. Here is an example of a signal being scaled in time, and then what happens to the frequency domain versions of each one.</p>
+<a class="reference internal image-reference" href="../_images/time-scaling.png"><img alt="../_images/time-scaling.png" class="align-center" src="../_images/time-scaling.png" style="width: 486.0px; height: 97.8px;" /></a>
+<p>Scaling in time is essentially shrinking or expanding the signal in the x-axis.  What this property tells us is that when we do that, the frequency domain also scales, but inversely.  So, for example, when we transmit bits faster, we have to use more frequencies.  This is why higher data rate signals take up more bandwidth/spectrum.  If time-frequency scaling was proportional instead of inversely proportional then the celluler carriers would be able to transmit all the bits per second they wanted without paying billions for spectrum!  Unfortunately that’s not the case.</p>
+<p>Convolution Property:</p>
+<div class="math">
+<p><img src="../_images/math/6073f98ee902258963d948acb6eca3d41ae9e4e0.svg" alt="\int x(\tau) y(t-\tau) d\tau  \leftrightarrow X(f)Y(f)"/></p>
+</div><p>This one is called the convolution property because in the time domain we are convolving x(t) and y(t).  You may not know about the convolution operation yet, so for now just imagine it like a cross-correlation. When we convolve time domain signals, it’s equivalent to multiplying the frequency domain versions of those two signals.  This is very different from just adding together two signals.  When you add two signals, as we saw, nothing really happens, you just add together the frequency domain version.  But when you convolve two signals, it’s like creating a new third signal out of them.  Convolution is the single most important technique in DSP, but for a reason we won’t understand until we get into how filters work.</p>
+<p>But before we move on, to breifly explain why this property is so important, consider the situation in which you have one signal you want to receive, and there is an interfering signal next to it.</p>
+<a class="reference internal image-reference" href="../_images/two-signals.png"><img alt="../_images/two-signals.png" class="align-center" src="../_images/two-signals.png" style="width: 534.6px; height: 140.4px;" /></a>
+<p>The concept of masking is heavily used in programming, so let’s use it here.  What if we could create the mask below, and multiply it by the signal above in order to mask out the one we don’t want.</p>
+<a class="reference internal image-reference" href="../_images/masking.png"><img alt="../_images/masking.png" class="align-center" src="../_images/masking.png" style="width: 358.8px; height: 96.0px;" /></a>
+<p>We usually perform DSP operations in the time domain, so we can use the convolution property to see how we can do this masking in the time domain.  Let’s say that x(t) is our received signal.  We know that Y(f) is the mask we want to apply, in the ferquency domain.  Well that means y(t) is the time domain representation of our mask, and if we convolve it with x(t), we can “filter out” the signal we don’t want.</p>
+<a class="reference internal image-reference" href="../_images/masking-equation.png"><img alt="../_images/masking-equation.png" class="align-center" src="../_images/masking-equation.png" style="width: 327.0px; height: 134.0px;" /></a>
+<p>This will make a lot more sense once we get into filtering.</p>
+<p>Lastly, I want to point out that the convolution property works in reverse, although we won’t be using it as much as the time domain convolution:</p>
+<div class="math">
+<p><img src="../_images/math/be6697c779f4e7d711f9c296784a899747f7e96a.svg" alt="x(t)y(t)  \leftrightarrow  \int X(g) Y(f-g) dg"/></p>
+</div><p>There are other properties, but these are the most important ones to understand in my opinion.  Even though we didn’t bother going through the proof for each property, the point is we use the mathematical properties to gain insight into what happens to real signals when we do analysis and processing.  Don’t get caught up on the equations, just try to make sure you understand the description of each property.</p>
+</div>
+<div class="section" id="fft">
+<h2>FFT<a class="headerlink" href="#fft" title="Permalink to this headline">¶</a></h2>
+<p>Now back to the Fourier Transform- I showed you the equation for the discrete Fourier Transform, but what you will be using while coding 99.9% of the time will be the FFT function, fft().  The Fast Fourier Transform (FFT) is simply an algorithm to compute the discrete Fourier Transform.  It was developed decades ago, and even though there are variations on the implementation, it’s still the reigning leader for computing a DFT, which is lucky considering they used “Fast” in the name.</p>
+<p>The point is, the FFT is a function with one input and one output.  It converts a signal from time to frequency:</p>
+<a class="reference internal image-reference" href="../_images/fft-block-diagram.png"><img alt="../_images/fft-block-diagram.png" class="align-center" src="../_images/fft-block-diagram.png" style="width: 361.2px; height: 80.39999999999999px;" /></a>
+<p>We will only be dealing with 1 dimension FFTs in this textbook (2D is used for image processing and other applications).  So you can think of the FFT function as having one input- a vector of samples, and one output- the frequency domain version of that vector of samples.  The size of the output is always the same as the size of the input, so if I feed 1024 samples into the FFT, I will get 1024 on the output.  But the confusing part is that the output will always be in the frequency domain, and thus the “span” of the x-axis if we were to plot it doesn’t change based on the number of samples in the time domain input.</p>
+<a class="reference internal image-reference" href="../_images/fft-io.png"><img alt="../_images/fft-io.png" class="align-center" src="../_images/fft-io.png" style="width: 558.0px; height: 100.2px;" /></a>
+<p>Because the output is in the frequency domain, the span of the x-axis is based on the sample rate, which we will dive into next chapter.  What happens when we use more samples for the input vector is that we get a better resolution in the frequency domain (in addition to just processing more samples at once).  We don’t actually see more “frequencies”.</p>
+<p>So how do we actually plot this output?  As an example let’s say that our sample rate was 1 million samples per second (1 MHz).  As we will learn next chapter, that means we can only see signals up to 0.5 MHz, regardless of how many samples we feed into the FFT.  The way the output of the FFT gets plotted is as follows:</p>
+<a class="reference internal image-reference" href="../_images/negative-frequencies.png"><img alt="../_images/negative-frequencies.png" class="align-center" src="../_images/negative-frequencies.png" style="width: 381.59999999999997px; height: 106.8px;" /></a>
+<p>What in the world is a negative frequency?  Well for now, just know that they have to do with using complex numbers (imaginary numbers), and that there isn’t really such thing as a “negative frequency”, it’s just a representation we use.  Here’s an intuitive way to think about it.  Consider we tell our SDR to tune to 100 MHz (the FM radio band) and sample at a rate of 10 MHz.  In other words, we will view the spectrum from 95 MHz to 105 MHz:</p>
+<a class="reference internal image-reference" href="../_images/negative-frequencies2.png"><img alt="../_images/negative-frequencies2.png" class="align-center" src="../_images/negative-frequencies2.png" style="width: 436.2px; height: 128.4px;" /></a>
+<p>In this example there are three signals in that piece of spectrum.  Now, when the SDR gives us the samples, it will appear like this:</p>
+<a class="reference internal image-reference" href="../_images/negative-frequencies3.png"><img alt="../_images/negative-frequencies3.png" class="align-center" src="../_images/negative-frequencies3.png" style="width: 481.2px; height: 105.6px;" /></a>
+<p>We just have to remember that we tuned the SDR to 100 MHz.  So the signal that was at about 97.5 MHz shows up at -2.5 MHz, which is a negative frequency.  In reality it’s just a frequency lower than the center frequency.  This will make more sense as we dive into sampling and using our SDRs.</p>
+</div>
+<div class="section" id="fft-in-python">
+<h2>FFT in Python<a class="headerlink" href="#fft-in-python" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have learned about what an FFT is and how the output is represented, let’s actually look at some Python code and use Numpy’s FFT function, np.fft.fft().</p>
+<p>First, let us create a signal in the time domain.  Feel free to follow along with your own Python console. To keep things simple, we will make a simple sine wave at 0.15 Hz.  We will also use a sample rate of 1 Hz, meaning in time we sample at 0, 1, 2, 3 seconds, etc.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">0.15</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If we plot s it looks like:</p>
+<a class="reference internal image-reference" href="../_images/fft-python1.png"><img alt="../_images/fft-python1.png" class="align-center" src="../_images/fft-python1.png" style="width: 765.0px; height: 471.0px;" /></a>
+<p>Next let’s use Numpy’s FFT function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If we look at S we see it’s an array of complex numbers:</p>
+<p>S =  array([-0.01865008 +0.00000000e+00j, -0.01171553 -2.79073782e-01j,0.02526446 -8.82681208e-01j,  3.50536075 -4.71354150e+01j, -0.15045671 +1.31884375e+00j, -0.10769903 +7.10452463e-01j, -0.09435855 +5.01303240e-01j, -0.08808671 +3.92187956e-01j, -0.08454414 +3.23828386e-01j, -0.08231753 +2.76337148e-01j, -0.08081535 +2.41078885e-01j, -0.07974909 +2.13663710e-01j,…</p>
+<p>Hint: regardless of what you’re doing, if you ever run into complex numbers, try calculating the magnitude and the phase and see if they make more sense.  Let’s do exactly that, and plot the magnitude and phase:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">S_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+<span class="n">S_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">S_mag</span><span class="p">,</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">S_phase</span><span class="p">,</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/fft-python2.png"><img alt="../_images/fft-python2.png" class="align-center" src="../_images/fft-python2.png" style="width: 526.4px; height: 465.6px;" /></a>
+<p>Right now we aren’t providing any x-axis to the plots, it’s just the index of the array.  Due to mathematical reasons, the output of the FFT has the following format:</p>
+<a class="reference internal image-reference" href="../_images/fft-python3.png"><img alt="../_images/fft-python3.png" class="align-center" src="../_images/fft-python3.png" style="width: 328.0px; height: 146.0px;" /></a>
+<p>But we want 0 Hz (DC) in the center and negative freqs to the left (that’s just how we like to visualize things).  So any time we do an FFT we need to perform an “FFT shift”, which is just a simple array rearrangement operation, kind of like a circular shift but more of a “put this here and that there”.  This diagram fully defines what the FFT shift operation does:</p>
+<a class="reference internal image-reference" href="../_images/fft-python4.png"><img alt="../_images/fft-python4.png" class="align-center" src="../_images/fft-python4.png" style="width: 587.3px; height: 183.39999999999998px;" /></a>
+<p>For our convinience, Numpy has an FFT shift function.  Just replace the np.fft.fft() line with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We also need to figure out the x-axis values/label, before we were just using the index number.  Recall that we used a sample rate of 1 Hz to keep things simple.  That means the left edge of the frequency domain plot will be -0.5 Hz and the right edge will be 0.5 Hz.  If that doesn’t make sense, it will after you get through the chapter on sampling.</p>
+<p>Now we can plot the FFT output’s magnitude and phase with a proper x-axis label.  Here is the final version of this Python example, and the output:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">0.15</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+<span class="n">S_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+<span class="n">S_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="o">/</span><span class="mf">100.0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">S_mag</span><span class="p">,</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">S_phase</span><span class="p">,</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/fft-python5.png"><img alt="../_images/fft-python5.png" class="align-center" src="../_images/fft-python5.png" style="width: 518.4px; height: 442.40000000000003px;" /></a>
+<p>Note that we see our spike at 0.15 Hz, which is the frequency we used when creating the sine wave. So that means our FFT worked!  If we did not know the code used to generate that sine wave, but we were just given the list of samples, we could use the FFT to determine the frequency. The reason why we see a spike also at -0.15 Hz has to do with the fact it was a real signal, not complex, and we will get deeper into that later.</p>
+<p>The last thing to note is on FFT sizing.  The best FFT size is always an order of 2, and common sizes are between 128 and 4096, although you can certainly go larger.  In practice we may have to process signals that are millions or billions of samples long, so we need to break up the signal and do many FFTs.  That means we will get many outputs, so we can either average them up, or plot them over time (especially when our signal is changing over time).  You don’t have to put <strong>every</strong> sample of a signal through an FFT to get a good frequency domain representation of that signal, for example you could only FFT 1024 out of every 100k samples in the signal and it will still probably look fine, as long as the signal is always on.</p>
+<p>A waterfall plot, a.k.a. spectrogram, is the plot that shows frequency over time, often in realtime.  A spectrum analyzer is the piece of equipment that shows this waterfall/spectrogram.  Here is an example of a waterfall plot, with frequency on the horizontal/x-axis and time on the vertical/y-axis.  There seems to be a spike at DC, in the center.</p>
+<a class="reference internal image-reference" href="../_images/waterfall.png"><img alt="../_images/waterfall.png" class="align-center" src="../_images/waterfall.png" style="width: 463.2px; height: 297.59999999999997px;" /></a>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="intro.html" class="btn btn-neutral float-left" title="Intro" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Marc Lichtman
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
