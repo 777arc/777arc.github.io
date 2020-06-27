@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11. Multipath Fading &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="12. Pulse Shaping" href="pulse_shaping.html" />
+    <link rel="prev" title="10. IQ Files" href="iq_files.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="multipath-fading">
+<h1><span class="section-number">11. </span>Multipath Fading<a class="headerlink" href="#multipath-fading" title="Permalink to this headline">¶</a></h1>
+<p>So far we have only discussed the “AWGN Channel”, i.e. a model for a wireless channel where the signal is simply added to noise.  In this chapter we introduce multipath, which is a propagation phenomenon that results in signals reaching the receiver by two or more paths, and is what we experience in real-world wireless systems.</p>
+<div class="section" id="multipath">
+<h2>Multipath<a class="headerlink" href="#multipath" title="Permalink to this headline">¶</a></h2>
+<p>All realistic wireless channels include many “reflectors”, RF signals bounce after all.  Any object between or near the Tx or Rx can cause additional paths the signal travels along.  Each path experiences a different phase shift (delay) and attenuation (amplitude scaling).  At the receiver, all of the paths add up.  They can add up constructively, or destructively, or a mix of both.  We call this concept of multiple signal paths “multipath”.  There is the Line-of-Sight (LOS) path, and then all other paths.  In the example below, we show the LOS path and a single non-LOS path:</p>
+<a class="reference internal image-reference" href="../_images/multipath.PNG"><img alt="../_images/multipath.PNG" class="align-center" src="../_images/multipath.PNG" style="width: 385.6px; height: 134.4px;" /></a>
+<p>Destructive interference can happen if you get unlucky with how the paths sum together.  Consider the example above with just two paths.  Depending on the frequency and the exact distance of the paths, the two paths can be received 180 degrees out of phase, at roughly the same amplitude, causing them to null out each other (depicted below).  You may have learned about constructive and destructive interference in physics class.  In wireless, when the paths destructively combine, we call this being in a “deep fade”, because our signal briefly disappears.</p>
+<a class="reference internal image-reference" href="../_images/destructive_interference.PNG"><img alt="../_images/destructive_interference.PNG" class="align-center" src="../_images/destructive_interference.PNG" style="width: 251.99999999999997px; height: 184.79999999999998px;" /></a>
+<p>Paths can also add up constructively, causing a strong signal to be received.  Each path has a different phase shift and amplitude, which we can visualize on a plot in the time domain, called a “power delay profile”:</p>
+<a class="reference internal image-reference" href="../_images/multipath2.PNG"><img alt="../_images/multipath2.PNG" class="align-center" src="../_images/multipath2.PNG" style="width: 715.4px; height: 240.1px;" /></a>
+<p>The first path, i.e. the one closest to the y-axis, will always be the LOS path (assuming there is one), because there’s no way for any other path to reach the receiver faster than the LOS path.  Typically the magnitude will decrease as the delay increases, since a path that took longer to show up at the receiver will have traveled further.</p>
+</div>
+<div class="section" id="fading">
+<h2>Fading<a class="headerlink" href="#fading" title="Permalink to this headline">¶</a></h2>
+<p>What usually happens is we get a mix of constructive and destructive interference, and it changes over time as the Rx, Tx, or environment, is moving/changing.  We use the term “fading” when referring to the effects of a multipath channel <strong>changing</strong> over time.  So that’s why we often refer to it as “multipath fading”, it’s really the combination of constructive/destructive interference, and a changing environment. What we end up with is an SNR that varies over time; changes are usually on the order of milliseconds to microseconds, depending on how fast the Tx/Rx is moving:</p>
+<a class="reference internal image-reference" href="../_images/multipath_fading.PNG"><img alt="../_images/multipath_fading.PNG" class="align-center" src="../_images/multipath_fading.PNG" style="width: 617.0px; height: 272.0px;" /></a>
+<p>There are two types of fading from a <strong>time</strong> domain perspective:</p>
+<ul class="simple">
+<li><p><strong>Slow Fading:</strong> The channel doesn’t change within one packet’s worth of data.  I.e. a deep null during slow fading will wipe out the whole packet.</p></li>
+<li><p><strong>Fast Fading:</strong> The channel changes very quickly compared to the length of one packet.  Forward error correction, combined with interleaving, can combat fast fading.</p></li>
+</ul>
+<p>There are also two types of fading from a <strong>frequency</strong> domain perspective:</p>
+<p><strong>Frequency Selective Fading</strong>: The constructive/destructive interference changes within the frequency range of the signal.  When we have a wideband signal, we span a large range of frequencies.  Recall that wavelength determines whether it’s constructive or destructive.  Well if our signal spans a wide frequency range, it also spans a wide wavelength range (since wavelength is the inverse of frequency).  This means we can get different channel qualities in different portions of our signal (in the frequency domain).  Hence the name frequency selective fading.</p>
+<p><strong>Flat Fading</strong>: Occurs when the signal’s bandwidth is narrow enough that all frequencies experience roughly the same channel.  If there is a deep fade then the whole signal will disappear (for the duration of the deep fade).</p>
+<p>In the figure below, the <span class="red">red</span> shape shows our signal in the frequency domain, and the black curvy line shows the current channel condition over frequency.  Because the narrower signal is experiencing the same channel conditions throughout the whole signal, it’s experiencing flat fading.  The wider signal is very much experiencing frequency selective fading.</p>
+<a class="reference internal image-reference" href="../_images/flat_vs_freq_selective.PNG"><img alt="../_images/flat_vs_freq_selective.PNG" class="align-center" src="../_images/flat_vs_freq_selective.PNG" style="width: 709.0999999999999px; height: 172.2px;" /></a>
+<p>Here is an example of a 16 MHz wide signal that is continuously transmitting.  There are several moments in the middle where there’s a period of time where a piece of signal is missing.  This is an example of frequency selective fading, it causes holes in the signal that wipe out some frequencies but not others.</p>
+<a class="reference internal image-reference" href="../_images/fading_example.PNG"><img alt="../_images/fading_example.PNG" class="align-center" src="../_images/fading_example.PNG" style="width: 661.1999999999999px; height: 404.4px;" /></a>
+</div>
+<div class="section" id="mitigating-multipath-fading">
+<h2>Mitigating Multipath Fading<a class="headerlink" href="#mitigating-multipath-fading" title="Permalink to this headline">¶</a></h2>
+<p>In modern communications, we have developed ways to combat multipath fading.</p>
+<div class="section" id="cdma">
+<h3>CDMA<a class="headerlink" href="#cdma" title="Permalink to this headline">¶</a></h3>
+<p>3G cellular uses a technology called code division multiple access (CDMA).  With CDMA you take a narrowband signal and spread it over a wide bandwidth before transmitting it (using a spread spectrum technique called DSSS).  Under frequency selective fading, it’s unlikely that all frequencies will be in a deep null at the same time.  At the receiver, the spreading is reversed, and this de-spreading process greatly mitigates a deep null.</p>
+<a class="reference internal image-reference" href="../_images/cdma.PNG"><img alt="../_images/cdma.PNG" class="align-center" src="../_images/cdma.PNG" style="width: 529.0px; height: 242.0px;" /></a>
+</div>
+<div class="section" id="ofdm">
+<h3>OFDM<a class="headerlink" href="#ofdm" title="Permalink to this headline">¶</a></h3>
+<p>4G cellular, WiFi, and many other technologies use a scheme called orthogonal frequency-division multiplexing (OFDM).  OFDM uses something called subcarriers, where we split up the signal in the frequency domain into a bunch of narrow signals squashed together.  To combat multipath fading we can avoid assigning data to subcarriers that are in a deep fade, although this requires the receiving end to send channel information back to the transmitter quick enough.  We can also assign high order modulation schemes to subcarriers with great channel quality, to maximize our data rate.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">11. Multipath Fading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#multipath">Multipath</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fading">Fading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mitigating-multipath-fading">Mitigating Multipath Fading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="iq_files.html" title="previous chapter"><span class="section-number">10. </span>IQ Files</a></li>
+      <li>Next: <a href="pulse_shaping.html" title="next chapter"><span class="section-number">12. </span>Pulse Shaping</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

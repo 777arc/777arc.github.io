@@ -1,152 +1,290 @@
 
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Noise &mdash; PySDR: Learn SDR and DSP with Python and GNU Radio 0.1 documentation</title>
-  
 
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6. Noise and dB &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
-</head>
-
-<body class="wy-body-for-nav">
-
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7. Filters" href="filters.html" />
+    <link rel="prev" title="5. PlutoSDR Basics" href="pluto_intro.html" />
    
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
           
 
-          
-            <a href="../index.html" class="icon icon-home"> PySDR: Learn SDR and DSP with Python and GNU Radio
-          
+          <div class="body" role="main">
+            
+  <div class="section" id="noise-and-db">
+<h1><span class="section-number">6. </span>Noise and dB<a class="headerlink" href="#noise-and-db" title="Permalink to this headline">¶</a></h1>
+<p>In this chapter we will discuss noise, including how it is modeled, and dealt with in a comms system.  We will also introduce dB along the way.</p>
+<div class="section" id="gaussian-noise">
+<h2>Gaussian Noise<a class="headerlink" href="#gaussian-noise" title="Permalink to this headline">¶</a></h2>
+<p>Most people are aware of the concept of noise, and how it looks something like:</p>
+<a class="reference internal image-reference" href="../_images/noise.PNG"><img alt="../_images/noise.PNG" class="align-center" src="../_images/noise.PNG" style="width: 663.5999999999999px; height: 352.09999999999997px;" /></a>
+<p>Note how the average value is zero.  If the average value wasn’t zero then we could just subtract the average value, call it a bias, and we would be left with an average of zero.  Also note that the individual points are <em>not</em> “uniformly random”, i.e. larger values are rarer, most of the points are closer to zero.</p>
+<p>We call this type of noise “Gaussian noise”, and it’s a good model for the type of noise that comes from many natural sources, such as thermal vibrations of atoms in the silicon of our receiver’s RF components.  The central limit theorem tells us that the summation of many random processes will tend to have a Gaussian distribution, even if the individual processes have some other distribution.  I.e., when we have a lot of random things happen, and they accumulate, the result appears Gaussian, even if the individual things are not.</p>
+<img alt="../_images/central_limit_theorem.webp" class="align-center" src="../_images/central_limit_theorem.webp" />
+<p>The Gaussian distribution is also called the “Normal” distribution (recall bell curve).</p>
+<p>The Gaussian distribution has two parameters: mean and variance.  We already discussed how the mean can be considered zero, because you can always remove the mean if it’s not zero.  The variance changes how “strong” the noise is, a higher variance will result in larger numbers.  It is for this reason that variance defines the noise power.</p>
+<p>Note that variance equals standard deviation squared (<img class="math" src="../_images/math/6ba6a750dfd04fbdaf6ec0daeca3e068d61d54e1.svg" alt="\sigma^2"/>).</p>
+</div>
+<div class="section" id="decibels-db">
+<h2>Decibels (dB)<a class="headerlink" href="#decibels-db" title="Permalink to this headline">¶</a></h2>
+<p>We are going to take a quick tangent to formally introduce dB.  You have probably heard of dB, and if you are already familiar with it feel free to skip this section.</p>
+<p>Working in dB is extremely useful when we need to deal with small numbers and big numbers at the same time, or just a bunch of really big numbers.</p>
+<p>Example 1: Signal 1 is received at 2 watts and the noise floor is at 0.0000002 watts.</p>
+<p>Example 2: A garbage disposal is 100,000 times louder than a quiet rural area, and a chain saw is 10,000 times louder than a garbage disposal (in terms of power of sound waves).</p>
+<p>Without dB, i.e. working in normal “linear” terms, we need to use a lot of 0’s, and if we were to plot something like Signal 1 over time, we wouldn’t even see the noise floor, because the scale of the y-axis might go from 0 to 3 watts for example, causing the noise to be too small to show up in the plot.  By using dB we are essentially just working in a log-scale.  Below is an example waterfall showing three signals, the left-hand side is the original signal, and the right-hand side shows it converted to dB.  Both use the exact same colormap, where blue is lowest value and yellow is highest.  Note how you can barely see the signal on the left, in the linear scale.</p>
+<a class="reference internal image-reference" href="../_images/linear_vs_log.PNG"><img alt="../_images/linear_vs_log.PNG" class="align-center" src="../_images/linear_vs_log.PNG" style="width: 686.0px; height: 240.79999999999998px;" /></a>
+<p>For a given value x, we can represent x in dB using the following formula:</p>
+<div class="math">
+<p><img src="../_images/math/35f24a017cd3f62cdb401cd6ac8c54dd26c5b6f1.svg" alt="x_{dB} = 10 \log_{10} x"/></p>
+</div><p>In Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x_db</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You may have seen that <code class="code docutils literal notranslate"><span class="pre">10</span> <span class="pre">*</span></code> be a <code class="code docutils literal notranslate"><span class="pre">20</span> <span class="pre">*</span></code> in other domains.  Whenever you are dealing with a power of some sort, you use 10, and you use 20 if you are dealing with a voltage or current or some non-power value.  In DSP we are almost always dealing with a power, in fact there is not a single time in this whole textbook we need to use 20 instead of 10.</p>
+<p>We convert from dB back to linear (normal numbers) using:</p>
+<div class="math">
+<p><img src="../_images/math/20766f0f56596f4a74c03729f1bfb5c48d266aca.svg" alt="x = 10^{x_{dB}/10}"/></p>
+</div><p>In Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">(</span><span class="n">x_db</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>But don’t get caught up in the formula, there is a key concept to take away here.  In DSP we deal with really big numbers and really small numbers together (e.g. the strength of a signal compared to the strength of the noise), and dB lets us have more dynamic range when we express numbers or plot them.  It also provides some conveniences like being able to add when we would normally multiply (as we will see in the Link Budget chapter).</p>
+<p>Some common errors people will run into when new to dB are:</p>
+<ol class="arabic simple">
+<li><p>Using natural log instead of log base 10, because most programming language’s log() function is actually the natural log.</p></li>
+<li><p>Forgetting to include the dB when expressing a number or labeling an axis.  If we are in dB we need to identify it somewhere.</p></li>
+<li><p>When you’re in dB you add/subtract values instead of multiplying/dividing, e.g.:</p></li>
+</ol>
+<a class="reference internal image-reference" href="../_images/db.PNG"><img alt="../_images/db.PNG" class="align-center" src="../_images/db.PNG" style="width: 640.8px; height: 166.2px;" /></a>
+<p>It is also important to understand that dB is not technically a “unit”.  A value in dB alone is unit-less, like if something is 2x larger, there are no units until I tell you the units.  dB is a relative thing.  In audio when they say dB they really mean dBA which is units for sound level (the A is the units). In wireless we typically refer to watts, to refer to an actual power level, so you might see dBW which is relative to 1 W, or dBmW (often written dBm for short) which is relative to 1 mW.   For example, someone might say “our transmitter is set to 3 dBW” (so 5 watts).  Sometimes we just say dB, meaning it is relative, there are no units, e.g. “our signal was received 20 dB above the noise floor”.  A little tip: 0 dBm = -30 dBW.</p>
+<p>Lastly, here are some common conversions that I would recommend remembering:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Linear</p></th>
+<th class="head"><p>dB</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1x</p></td>
+<td><p>0 dB</p></td>
+</tr>
+<tr class="row-odd"><td><p>2x</p></td>
+<td><p>3 dB</p></td>
+</tr>
+<tr class="row-even"><td><p>10x</p></td>
+<td><p>10 dB</p></td>
+</tr>
+<tr class="row-odd"><td><p>0.5x</p></td>
+<td><p>-3 dB</p></td>
+</tr>
+<tr class="row-even"><td><p>0.1x</p></td>
+<td><p>-10 dB</p></td>
+</tr>
+<tr class="row-odd"><td><p>100x</p></td>
+<td><p>20 dB</p></td>
+</tr>
+<tr class="row-even"><td><p>1000x</p></td>
+<td><p>30 dB</p></td>
+</tr>
+<tr class="row-odd"><td><p>10000x</p></td>
+<td><p>40 dB</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="noise-in-frequency-domain">
+<h2>Noise in Frequency Domain<a class="headerlink" href="#noise-in-frequency-domain" title="Permalink to this headline">¶</a></h2>
+<p>In the Frequency Domain chapter we looked at “Fourier pairs”, i.e. what a certain time domain signal looks like in the frequency domain.  Well what does Gaussian noise look like in the frequency domain?  Below shows some simulated noise in the time domain, and then a plot of the FFT of that noise (many FFT’s were averaged together).</p>
+<a class="reference internal image-reference" href="../_images/noise_freq.PNG"><img alt="../_images/noise_freq.PNG" class="align-center" src="../_images/noise_freq.PNG" style="width: 599.5px; height: 506.00000000000006px;" /></a>
+<p>We can see that it looks roughly the same across all frequencies, and is fairly flat.   It turns out that Gaussian noise in the time domain is also Gaussian noise in the frequency domain.  So why don’t the two plots above look the same?  It’s because the frequency domain plot is showing the magnitude of the FFT, so there will only be positive numbers, and it’s using a log scale (it’s showing the magnitude in dB).  Otherwise they would look the same.  We can prove this to ourselves by generating some noise (in the time domain) in Python and then taking the FFT.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-          
-          </a>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">],</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="c1"># show first 512 points</span>
 
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">512</span><span class="p">:]</span> <span class="c1"># only look at real portion</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Note that the randn() function uses mean = 0 and variance = 1 by default.  Both of the plots will look something like this:</p>
+<a class="reference internal image-reference" href="../_images/noise_python.png"><img alt="../_images/noise_python.png" class="align-center" src="../_images/noise_python.png" style="width: 374.0px; height: 252.0px;" /></a>
+<p>The signal we generated and took the FFT of was a real signal (versus complex), and the FFT of any real signal will have matching negative and positive portions, so that’s why we only saved the positive portion of the FFT output (the 2nd half).  But why did we only generate “real” noise, and how do complex signals work into this?</p>
+</div>
+<div class="section" id="complex-noise">
+<h2>Complex Noise<a class="headerlink" href="#complex-noise" title="Permalink to this headline">¶</a></h2>
+<p>“Complex Gaussian” noise is what we will experience when we have a signal at baseband; the noise power is split between the real and imaginary portions equally.  And most importantly, the real and imag parts are independent of each other; knowing the values of one doesn’t give you the values of the other.</p>
+<p>We can generate complex Gaussian noise in Python using:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>But wait!  The equation above doesn’t generate the same “amount” of noise as <code class="code docutils literal notranslate"><span class="pre">np.random.randn()</span></code>, in terms of power (known as noise power).  We can find the average power of a zero-mean signal (or noise) using:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where np.var() is the function for variance.  It turns out that the power of our signal n is 2.  In order to generate complex noise with “unit power”, i.e. a power of 1 (which makes things convenient), we have to use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># AWGN with unity power</span>
+</pre></div>
+</div>
+<p>To plot complex noise in the time domain, like any complex signal we need two lines:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;real&#39;</span><span class="p">,</span><span class="s1">&#39;imag&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/noise3.PNG"><img alt="../_images/noise3.PNG" class="align-center" src="../_images/noise3.PNG" style="width: 798.4000000000001px; height: 296.8px;" /></a>
+<p>You can see that the real and imaginary portions are completely independent.</p>
+<p>What does complex Gaussian noise look like on an IQ plot?  Remember the IQ plot shows the real portion (horizontal axis) and the imaginary portion (vertical axis), both of which are independent random Gaussians.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/noise_iq.PNG"><img alt="../_images/noise_iq.PNG" class="align-center" src="../_images/noise_iq.PNG" style="width: 357.59999999999997px; height: 330.0px;" /></a>
+<p>It looks how we would expect; a random blob centered around 0 + 0j, i.e. the origin.  Just for fun, let’s try adding noise to a QPSK signal to see what the IQ plot looks like:</p>
+<a class="reference internal image-reference" href="../_images/noisey_qpsk.PNG"><img alt="../_images/noisey_qpsk.PNG" class="align-center" src="../_images/noisey_qpsk.PNG" style="width: 721.1999999999999px; height: 342.0px;" /></a>
+<p>Now what happens when the noise is stronger?</p>
+<a class="reference internal image-reference" href="../_images/noisey_qpsk2.PNG"><img alt="../_images/noisey_qpsk2.PNG" class="align-center" src="../_images/noisey_qpsk2.PNG" style="width: 643.5px; height: 229.0px;" /></a>
+<p>We are starting to get a feel why transmitting data wireless isn’t that simple, we want to send as many bits per symbol as we can, but if the noise is too high then we will get erroneous bits on the receiving end.</p>
+</div>
+<div class="section" id="awgn">
+<h2>AWGN<a class="headerlink" href="#awgn" title="Permalink to this headline">¶</a></h2>
+<p>In the DSP and SDR world you will hear the abbreviation “AWGN” a lot.  It stands for Additive White Gaussian Noise.  The GN, Gaussian Noise, we already discussed.  Additive just means the noise is being added to our received signal.  White means in the frequency domain, the spectrum is flat across our entire observation band.  It will almost always be white in practice, or approximately white.  In this textbook we will use AWGN as the only form of noise, when dealing with communications links and link budgets and such.  Non-AWGN noise tends to be a niche topic.</p>
+</div>
+<div class="section" id="snr">
+<h2>SNR<a class="headerlink" href="#snr" title="Permalink to this headline">¶</a></h2>
+<p>Signal-to-Noise Ratio (SNR) is how we will measure the differences in strength between the signal and noise, it’s a ratio (so it’s unit-less).  SNR is almost always in dB, in practice.  Often times in simulation we code in a way that our signals are unit power (power = 1).  That way, we can create an SNR of 10 dB by creating noise that is -10 dB in power, by adjusting the variance when we generate the noise.</p>
+<a class="reference internal image-reference" href="../_images/SNR.PNG"><img alt="../_images/SNR.PNG" class="align-center" src="../_images/SNR.PNG" style="width: 255.60000000000002px; height: 96.4px;" /></a>
+<p>If someone says “SNR = 0 dB” it means the signal and noise power are the same.  A positive SNR means our signal is higher power than the noise, while a negative SNR means the noise is higher power.  Detecting signals at negative SNR is usually pretty tough.</p>
+<p>Like we mentioned before, the power in a signal is equal to the variance of the signal.  So we can represent SNR as the ratio of the signal variance to noise variance:</p>
+<a class="reference internal image-reference" href="../_images/SNR2.PNG"><img alt="../_images/SNR2.PNG" class="align-center" src="../_images/SNR2.PNG" style="width: 193.20000000000002px; height: 59.2px;" /></a>
+</div>
+<div class="section" id="external-resources">
+<h2>External Resources<a class="headerlink" href="#external-resources" title="Permalink to this headline">¶</a></h2>
+<p>Further resources about AWGN, SNR, and variance:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Additive_white_Gaussian_noise">https://en.wikipedia.org/wiki/Additive_white_Gaussian_noise</a></p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Signal-to-noise_ratio">https://en.wikipedia.org/wiki/Signal-to-noise_ratio</a></p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Variance">https://en.wikipedia.org/wiki/Variance</a></p></li>
+</ol>
+</div>
 </div>
 
+
+          </div>
           
         </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
 
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">The Frequency Domain</a></li>
+
+
+<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Noise and dB</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gaussian-noise">Gaussian Noise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#decibels-db">Decibels (dB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#noise-in-frequency-domain">Noise in Frequency Domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#complex-noise">Complex Noise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#awgn">AWGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#snr">SNR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#external-resources">External Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
 </ul>
 
-            
-          
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">PySDR: Learn SDR and DSP with Python and GNU Radio</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
-  <div class="section" id="noise">
-<h1>Noise<a class="headerlink" href="#noise" title="Permalink to this headline">¶</a></h1>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="pluto_intro.html" title="previous chapter"><span class="section-number">5. </span>PlutoSDR Basics</a></li>
+      <li>Next: <a href="filters.html" title="next chapter"><span class="section-number">7. </span>Filters</a></li>
+  </ul></li>
+</ul>
 </div>
-
-
-           </div>
-           
-          </div>
-          <footer>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2019, Marc Lichtman
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Marc Lichtman.
+      
+    </div>
 
-    </section>
-
-  </div>
-  
-
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
     
-   
 
-</body>
+    
+  </body>
 </html>

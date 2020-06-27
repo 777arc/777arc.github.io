@@ -1,152 +1,339 @@
 
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Link Budgets &mdash; PySDR: Learn SDR and DSP with Python and GNU Radio 0.1 documentation</title>
-  
 
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8. Link Budgets &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
-</head>
-
-<body class="wy-body-for-nav">
-
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="9. Channel Coding" href="channel_coding.html" />
+    <link rel="prev" title="7. Filters" href="filters.html" />
    
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
           
 
-          
-            <a href="../index.html" class="icon icon-home"> PySDR: Learn SDR and DSP with Python and GNU Radio
-          
-
-          
-          </a>
-
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">The Frequency Domain</a></li>
-</ul>
-
-            
-          
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">PySDR: Learn SDR and DSP with Python and GNU Radio</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+          <div class="body" role="main">
             
   <div class="section" id="link-budgets">
-<h1>Link Budgets<a class="headerlink" href="#link-budgets" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">8. </span>Link Budgets<a class="headerlink" href="#link-budgets" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="intro">
+<h2>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h2>
+<p>A link budget is an accounting of all of the gains and losses from the transmitter to the receiver in a communication system.  Link budgets describe one direction of the wireless link.  Most communications systems are bidirectional, so there must be a separate uplink and downlink budget.  The “result” of the link budget will tell you roughly how much SNR you should expect to have at your receiver.  Further analysis would be needed to check if that SNR is high enough for your application.</p>
+<p>You study link budgets not for the purpose of being able to actually make a link budget for some situation, but to learn, and develop a system-layer point of view of wireless communications.</p>
+<p>We will first go over the received signal power budget, then the noise power budget, and then combine the two to find SNR (signal power divided by noise power).</p>
+</div>
+<div class="section" id="signal-power-budget">
+<h2>Signal Power Budget<a class="headerlink" href="#signal-power-budget" title="Permalink to this headline">¶</a></h2>
+<p>Below shows the most basic diagram of a generic wireless link.  In this chapter we will focus on one direction, i.e. from a transmitter (Tx) to receiver (Rx).  For a given system, we know the transmit power, it is usually a setting in the transmitter, so how do we figure out the received power at the receiver?</p>
+<a class="reference internal image-reference" href="../_images/tx_rx_system.PNG"><img alt="../_images/tx_rx_system.PNG" class="align-center" src="../_images/tx_rx_system.PNG" style="width: 369.5px; height: 130.5px;" /></a>
+<p>Let us define the following four system parameters:</p>
+<ul class="simple">
+<li><p><strong>Pt</strong> - Transmit power</p></li>
+<li><p><strong>Gt</strong> - Gain of transmit antenna</p></li>
+<li><p><strong>Gr</strong> - Gain of receive antenna</p></li>
+<li><p><strong>Lp</strong> - Distance between Tx and Rx (i.e. how much wireless path loss)</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/tx_rx_system_params.PNG"><img alt="../_images/tx_rx_system_params.PNG" class="align-center" src="../_images/tx_rx_system_params.PNG" style="width: 589.6px; height: 201.60000000000002px;" /></a>
+<div class="section" id="transmit-power">
+<h3>Transmit Power<a class="headerlink" href="#transmit-power" title="Permalink to this headline">¶</a></h3>
+<p>Transmit power is fairly straightforward, it will be a value in watts, dBW, or dBm (recall dBm is shorthand for dBmW).  Every transmitter has one or more amplifiers, and the transmit power is mostly a function of those amplifiers.  An analogy of transmit power would be the watts of a light bulb; more watts means more light transmitted by the bulb.  Examples of approximate transmit power for different technologies:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 17%" />
+<col style="width: 23%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p></p></td>
+<td colspan="2"><p>Power</p></td>
+</tr>
+<tr class="row-even"><td><p>Bluetooth</p></td>
+<td><p>10 mW</p></td>
+<td><p>-20 dBW</p></td>
+</tr>
+<tr class="row-odd"><td><p>WiFi</p></td>
+<td><p>100mW</p></td>
+<td><p>-10 dBW</p></td>
+</tr>
+<tr class="row-even"><td><p>LTE base-station</p></td>
+<td><p>1W</p></td>
+<td><p>0 dBW</p></td>
+</tr>
+<tr class="row-odd"><td><p>FM station</p></td>
+<td><p>10kW</p></td>
+<td><p>40 dBW</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="antenna-gains">
+<h3>Antenna Gains<a class="headerlink" href="#antenna-gains" title="Permalink to this headline">¶</a></h3>
+<p>Transmit and receive antenna gains are very important, the numbers will be in dB (unit-less).  Typically, antennas are either omnidirectional or directional.  If they are omnidirectional their gain will be 0 dB to 3 dB.  A directional antenna can have a gain anywhere up to 50 dB or so.</p>
+<a class="reference internal image-reference" href="../_images/antenna_gain_patterns.PNG"><img alt="../_images/antenna_gain_patterns.PNG" class="align-center" src="../_images/antenna_gain_patterns.PNG" style="width: 829.6px; height: 283.2px;" /></a>
+<p>When a directional antenna is used, it must be either:</p>
+<ul class="simple">
+<li><p>Installed facing the correct direction</p></li>
+<li><p>It could also be attached to a mechanical gimbal</p></li>
+<li><p>It could also be a phased array which can be electronically steered (i.e. in software)</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/antenna_steering.PNG"><img alt="../_images/antenna_steering.PNG" class="align-center" src="../_images/antenna_steering.PNG" style="width: 665.6px; height: 308.0px;" /></a>
+<p>Omnidirectional antennas are used when pointing in the right direction is not possible, like your cellphone and laptop.  In 5G, phones can operate in the higher frequency bands like 28 GHz (Verizon) and 39 GHz (AT&amp;T) using an array of antennas and electronic beam steering.</p>
+<p>In a link budget, we must assume that any directional antenna, whether transmit or receive, is pointed in the right direction.  If it’s not pointed correctly then our link budget won’t be accurate and there could be loss of comms (e.g. satellite dish on your roof gets hit by basketball and moves).  In general, our link budgets assume ideal circumstances, but then add a miscellaneous loss to account for real-world factors.</p>
+</div>
+<div class="section" id="path-loss">
+<h3>Path Loss<a class="headerlink" href="#path-loss" title="Permalink to this headline">¶</a></h3>
+<p>As a signal moves through the air (or vacuum), it will reduce in strength.  Imagine holding a small solar panel up in front of a light bulb.  The further away the solar panel is, the less energy it will absorb from the light bulb.  <strong>Flux</strong> is a term in physics and mathematics, defined as “how much stuff goes through your thing”.  For us, it’s the amount of electromagnetic field passing into our receive antenna.  We want to know how much power is lost, for a given distance.</p>
+<a class="reference internal image-reference" href="../_images/flux.PNG"><img alt="../_images/flux.PNG" class="align-center" src="../_images/flux.PNG" style="width: 864.0px; height: 227.20000000000002px;" /></a>
+<p>Free Space Path Loss (FSPL) tells us the path loss when there are no obstacles, for a given distance.  In its general form, <img class="math" src="../_images/math/bf814d621aebaba97eb1449877cb80f950ecc7e9.svg" alt="\mathrm{FSPL} = ( 4\pi d / \lambda )^2"/>. Google Friis transmission formula for more info.  For generating link budgets, we can use this same equation but converted to dB:</p>
+<div class="math">
+<p><img src="../_images/math/dbf8ea71b418c2782288cf66c820e6ba4de2be0d.svg" alt="\mathrm{FSPL}_{dB} = 20 \log_{10} d + 20 \log_{10} f - 147.55 \left[ dB \right]"/></p>
+</div><p><img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> is in meters and is the distance between the transmitter and receiver.</p>
+<p><img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is in Hz and is the carrier frequency.  In link budgets it will show up in dB, unit-less because it is a loss.</p>
+<p>There’s only one problem with this simple equation; we won’t always have free space between the transmitter and receiver.  E.g. indoors there is a lot of bouncing (most frequencies can go through walls, just not metal or thick masonry). For these situations there are various non-free-space models. A common one for cities and suburban areas (e.g. cellular) is the Okumura–Hata model:</p>
+<div class="math">
+<p><img src="../_images/math/14f2a692d9c7a9632a0334d816d150f76aae0695.svg" alt="L_{path} = 69.55 + 26.16 \log_{10} f - 13.82 \log_{10} h_B - C_H + \left[ 44.9 - 6.55 \log_{10} h_B \right] \log_{10} d"/></p>
+</div><p>where <img class="math" src="../_images/math/33400e0e3a8b767999d8b77eb40a0261e8fe9548.svg" alt="L_{path}"/> is the path loss in dB, <img class="math" src="../_images/math/df1bda24adad389d286c99c1a3f5a3aa122a91c8.svg" alt="h_B"/> is the height of the transmit antenna above ground level in meters, <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is the carrier frequency in MHz, <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> is the distance between Tx and Rx in km, and <img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> is called the “antenna high correction factor” and it’s defined based on the size of city and carrier frequency range:</p>
+<p><img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> for small/medium cities:</p>
+<div class="math">
+<p><img src="../_images/math/e6274194defe270556e489484bdc9a0a90018fef.svg" alt="C_H = 0.8 + (1.1 \log_{10} f - 0.7 ) h_M - 1.56 \log_{10} f"/></p>
+</div><p><img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> for large cities when <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is below 200 MHz:</p>
+<div class="math">
+<p><img src="../_images/math/e3b6c9a65db4b8d97ff431814e011c044f34249a.svg" alt="C_H = 8.29 ( log_{10}(1.54 h_M))^2 - 1.1"/></p>
+</div><p><img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> for large cities when <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is above 200 MHz but less than 1.5 GHz:</p>
+<div class="math">
+<p><img src="../_images/math/dfa9f50bca1150aa6cf8dbe66c437d3e1135453c.svg" alt="C_H = 3.2 ( log_{10}(11.75 h_M))^2 - 4.97"/></p>
+</div><p>where <img class="math" src="../_images/math/7e9505a347821cebd9135bdf0d277f0425ac20ed.svg" alt="h_M"/> is the height of the receiving antenna above ground level in meters.  Don’t worry if the above Okumura–Hata model seemed confusing, it is mainly shown here to demonstrate how non-free-space path loss models are much more complicated than our simple FSPL equation.  The final result of any of these models is a single number we can use for the path loss portion of our link budget.  We’ll stick to using FSPL for the rest of this chapter.</p>
+</div>
+<div class="section" id="miscellaneous-losses">
+<h3>Miscellaneous Losses<a class="headerlink" href="#miscellaneous-losses" title="Permalink to this headline">¶</a></h3>
+<p>In our link budget we also want to take into account miscellaneous losses.  We will just lump these together into one term, usually somewhere between 1 – 3 dB.  Examples of misc. losses:</p>
+<ul class="simple">
+<li><p>Cable loss</p></li>
+<li><p>Atmospheric Loss</p></li>
+<li><p>Antenna pointing imperfections</p></li>
+<li><p>Rain</p></li>
+</ul>
+<p>The plot below shows atmospheric loss in dB/km, over frequency (we will usually be &lt; 40 GHz).  If you take some time to understand the y-axis you’ll see that short range communications below 40 GHz, that are less than 1 km, have 1 dB or less of atmospheric loss, and thus we can usually ignore it.  When atmospheric loss really comes into play is with satellite communications, where the signal has to travel many km through the air.</p>
+<a class="reference internal image-reference" href="../_images/atmospheric_attenuation.PNG"><img alt="../_images/atmospheric_attenuation.PNG" class="align-center" src="../_images/atmospheric_attenuation.PNG" style="width: 576.8000000000001px; height: 397.6px;" /></a>
+</div>
+<div class="section" id="signal-power-equation">
+<h3>Signal Power Equation<a class="headerlink" href="#signal-power-equation" title="Permalink to this headline">¶</a></h3>
+<p>Now it’s time to put all of these gains and losses together, to calculate our signal power at the receiver, <img class="math" src="../_images/math/bc6ecef20020dde7203df6dc8f56c9e6326c2ed8.svg" alt="P_r"/>:</p>
+<div class="math">
+<p><img src="../_images/math/1d7facdb46a6709bc0a384b67e2da96929a5c7e8.svg" alt="P_r = P_t + G_t + G_r - L_p - L_{misc} \quad \mathrm{dBW}"/></p>
+</div><p>Overall it’s a pretty simple equation, we are just adding up gains/losses, some might not even consider it an equation at all.  We usually show it in a table, similar to accounting, like this:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Pt = 1.0 W</p></td>
+<td><p>0 dBW</p></td>
+</tr>
+<tr class="row-even"><td><p>Gt = 100</p></td>
+<td><p>20.0 dB</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gr = 1</p></td>
+<td><p>0 dB</p></td>
+</tr>
+<tr class="row-even"><td><p>Lp</p></td>
+<td><p>-162.0 dB</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lmisc</p></td>
+<td><p>-1.0 dB</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Pr</strong></p></td>
+<td><p><strong>-143.0 dBW</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="noise-power-budget">
+<h2>Noise Power Budget<a class="headerlink" href="#noise-power-budget" title="Permalink to this headline">¶</a></h2>
+<p>Now that we know the received signal power, let’s switch to looking at the received noise, since we need both to calculate SNR after all.  We can find received noise with a similar style power budget.</p>
+<p>Now is a good time to talk about where noise enters our comms link.  Answer: <strong>At the receiver!</strong>  The signal is not corrupted with noise until we go to receive it.  This is <em>extremely</em> important to understand, many students don’t quite internalize it, and end up making a foolish error as a result.  There is not noise floating around us in the air, the noise comes from the fact that our receiver has an amplifier and other electronics that are not perfect and not at 0 degrees kelvin.</p>
+<p>A popular and simple formulation for the noise budget uses the “kTB” approach:</p>
+<div class="math">
+<p><img src="../_images/math/2910804c9e37ce20bd06837b74c915adb9f7ed3a.svg" alt="P_{noise} = kTB"/></p>
+</div><ul class="simple">
+<li><p><img class="math" src="../_images/math/30d4f39194cc2ced00937a2642c0345222fed6cd.svg" alt="k"/> – Boltzmann’s constant = 1.38 x 10-23 J/K = <strong>-228.6 dBW/K/Hz</strong>.  For anyone curious, Boltzmann’s constant is a physical constant relating the average kinetic energy of particles in a gas with the temperature of the gas.</p></li>
+<li><p><img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/> – System noise temperature in K (cryocoolers anyone?), largely based on our amplifier.  This is the term that is most difficult to find, and is usually very approximate.  You might pay more for an amplifier with a lower noise temperature.</p></li>
+<li><p><img class="math" src="../_images/math/a04d3384fedfc300642f10c4207debb695a20fce.svg" alt="B"/> – Signal bandwidth in Hz, assuming you filter out the noise around your signal.  So an LTE downlink signal that is 10 MHz wide will have B set to 10 MHz, or 70 dBHz.</p></li>
+</ul>
+<p>Multiplying out (or adding in dB) kTB gives our noise power, i.e. the bottom term of SNR</p>
+</div>
+<div class="section" id="snr">
+<h2>SNR<a class="headerlink" href="#snr" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have both numbers, we can take the ratio to find SNR:</p>
+<a class="reference internal image-reference" href="../_images/SNR.PNG"><img alt="../_images/SNR.PNG" class="align-center" src="../_images/SNR.PNG" style="width: 319.5px; height: 120.5px;" /></a>
+<p>We typically shoot for an SNR &gt; 10 dB, although it really depends on the application.  In practice, SNR can be verified by looking at the FFT of the received signal, or just calculating the power with and without the signal present (recall variance = power).  The higher the SNR, the more bits per symbol you can manage without too many errors.</p>
+</div>
+<div class="section" id="example-link-budget-ads-b">
+<h2>Example Link Budget: ADS-B<a class="headerlink" href="#example-link-budget-ads-b" title="Permalink to this headline">¶</a></h2>
+<p>Automatic Dependent Surveillance-Broadcast (ADS-B) is a technology used by aircraft to broadcast signals that share their position and other status with air traffic control ground stations as well as other aircraft.  ADS–B is automatic in that it requires no pilot or external input; it depends on data from the aircraft’s navigation system and other computers.  The messages are not encrypted (yay!).  ADS–B equipment is currently mandatory in portions of Australian airspace, while the United States requires some aircraft to be equipped, depending on the size.</p>
+<a class="reference internal image-reference" href="../_images/adsb.jpg"><img alt="../_images/adsb.jpg" class="align-center" src="../_images/adsb.jpg" style="width: 230.39999999999998px; height: 306.0px;" /></a>
+<p>The Physical (PHY) Layer of ADS-B has the following characteristics:</p>
+<ul class="simple">
+<li><p>Transmitted on 1,090 MHz</p></li>
+<li><p>Signal has 50 kHz of bandwidth (which is very small)</p></li>
+<li><p>PPM modulation</p></li>
+<li><p>Messages carry 15 bytes of data each, so multiple messages are usually needed</p></li>
+<li><p>Multiple access is achieved by having messages broadcast with a period that ranges randomly between 0.4 and 0.6 seconds.  This randomization is designed to prevent aircraft from having all of their transmissions on top of each other (some may still collide but that’s fine)</p></li>
+<li><p>ADS-B antennas are vertically polarized</p></li>
+<li><p>Transmit power varies, but should be in the ballpark of 100 W (20 dBW)</p></li>
+<li><p>Transmit antenna gain is omnidirectional but only pointed downward, so let’s say 3 dB</p></li>
+<li><p>ADS-B receivers also have an omnidirectional antenna gain, so let’s say 0 dB</p></li>
+</ul>
+<p>The path loss depends on how far away the aircraft is from our receiver.  As an example, it’s about 30 km between University of Maryland (where the course that this textbook’s content originated from was taught) and BWI airport.  Let’s calculate FSPL for that distance and our frequency of 1,090 MHz:</p>
+<div class="math">
+<p><img src="../_images/math/87e4a970421b97c0beb6a25ce30e78b50c9f3b26.svg" alt="\mathrm{FSPL}_{dB} = 20 \log_{10} d + 20 \log_{10} f - 147.55  \left[ \mathrm{dB} \right]
+
+\mathrm{FSPL}_{dB} = 20 \log_{10} 30e3 + 20 \log_{10} 1090e6 - 147.55  \left[ \mathrm{dB} \right]
+
+\mathrm{FSPL}_{dB} = 122.7 \left[ \mathrm{dB} \right]"/></p>
+</div><p>Another option is to leave <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> as a variable in the link budget and figure out how far away we can hear signals based on a required SNR.</p>
+<p>Now because we definitely won’t have free space, let’s add another 3 dB of miscellaneous loss.  We will make the miscellaneous loss 6 dB total, to take into account our antenna not being well matched, and cable/connector losses.  Given all of this criteria, our signal link budget looks like:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 60%" />
+<col style="width: 40%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Pt</p></td>
+<td><p>20 dBW</p></td>
+</tr>
+<tr class="row-even"><td><p>Gt</p></td>
+<td><p>3 dB</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gr</p></td>
+<td><p>0 dB</p></td>
+</tr>
+<tr class="row-even"><td><p>Lp</p></td>
+<td><p>-122.7 dB</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lmisc</p></td>
+<td><p>-6 dB</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Pr</strong></p></td>
+<td><p><strong>-105.7 dBW</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>For our noise budget:</p>
+<ul class="simple">
+<li><p>B = 50 kHz = 50e3 = 47 dBHz</p></li>
+<li><p>T we have to approximate, lets say 300 K, which is 24.8 dBK.  It will vary based on quality of the receiver</p></li>
+<li><p>k is always -228.6 dBW/K/Hz</p></li>
+</ul>
+<div class="math">
+<p><img src="../_images/math/f7374fbb202051279103075b29e26a7798ec0c7f.svg" alt="P_{noise} = k + T + B = -156.8 \quad \mathrm{dBW}"/></p>
+</div><p>Therefore our SNR is -105.7 - (-156.8) = <strong>51.1 dB</strong>.  It’s not surprising this is a huge number, considering we are claiming to only be 30 km from the aircraft under free space.  If ADS-B signals couldn’t reach 30 km then ADS-B wouldn’t be a very effective system, no one would hear each other until they were very close.  Under this example we can easily decode the signals; PPM modulation is fairly robust and does not require that high an SNR.  What’s difficult is when you try to receive ADS-B while inside a classroom, with an antenna that is very poorly matched, and a strong FM radio station nearby causing interference.  Those factors could easily lead to 20-30 dB of losses.</p>
+<p>This example was really just a back-of-the-envelope calculation, but it demonstrated the basics of creating a link budget and understanding the important parameters of a comms link.</p>
+</div>
 </div>
 
 
-           </div>
-           
           </div>
-          <footer>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2019, Marc Lichtman
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
+          
         </div>
       </div>
-
-    </section>
-
-  </div>
-  
-
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
     
-   
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
 
-</body>
+
+
+<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">8. Link Budgets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#intro">Intro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#signal-power-budget">Signal Power Budget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#noise-power-budget">Noise Power Budget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#snr">SNR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-link-budget-ads-b">Example Link Budget: ADS-B</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="filters.html" title="previous chapter"><span class="section-number">7. </span>Filters</a></li>
+      <li>Next: <a href="channel_coding.html" title="next chapter"><span class="section-number">9. </span>Channel Coding</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
 </html>

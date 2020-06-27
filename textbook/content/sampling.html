@@ -1,127 +1,149 @@
 
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Sampling with SDR &mdash; PySDR: Learn SDR and DSP with Python and GNU Radio 0.1 documentation</title>
-  
 
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3. IQ Sampling &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
-</head>
-
-<body class="wy-body-for-nav">
-
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4. Digital Modulation" href="digital_modulation.html" />
+    <link rel="prev" title="2. The Frequency Domain" href="frequency_domain.html" />
    
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
           
 
-          
-            <a href="../index.html" class="icon icon-home"> PySDR: Learn SDR and DSP with Python and GNU Radio
-          
-
-          
-          </a>
-
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
+          <div class="body" role="main">
             
-            
-              
-            
-            
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">The Frequency Domain</a></li>
-</ul>
-
-            
-          
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">PySDR: Learn SDR and DSP with Python and GNU Radio</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
-  <div class="section" id="sampling-with-sdr">
-<h1>Sampling with SDR<a class="headerlink" href="#sampling-with-sdr" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="iq-sampling">
+<h1><span class="section-number">3. </span>IQ Sampling<a class="headerlink" href="#iq-sampling" title="Permalink to this headline">¶</a></h1>
+<p>In this chapter we introduce a concept called IQ Sampling, a.k.a. complex sampling or quadrature sampling.  This is the form of sampling that an SDR performs, as well as many digital receivers (and transmitters) in general.  It’s just a slightly more complex version of regular digital sampling (pun intended).</p>
 <div class="section" id="sampling-basics">
 <h2>Sampling Basics<a class="headerlink" href="#sampling-basics" title="Permalink to this headline">¶</a></h2>
-<p>Mention basics of sampling and discrete time here</p>
+<p>We will first talk about sampling in general, before jumping into IQ sampling.</p>
+<p>Whether we are dealing with audio or RF signals, we must sample if we want to capture and process or save a signal digitally.  Sampling might seem straightforward, but there is a lot to it.  Sampling a signal simply means grabbing values at moments in time, and saving them digitally. Let’s say we have some random function, <img class="math" src="../_images/math/097ad9d7221d263c5c30372cb84f502da58dc6ff.svg" alt="S(t)"/>, which could represent anything, and it’s a continuous function that we want to sample:</p>
+<a class="reference internal image-reference" href="../_images/sampling.png"><img alt="../_images/sampling.png" class="align-center" src="../_images/sampling.png" style="width: 402.0px; height: 263.5px;" /></a>
+<p>We record the value of <img class="math" src="../_images/math/097ad9d7221d263c5c30372cb84f502da58dc6ff.svg" alt="S(t)"/> at regular intervals of <img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/> seconds.  <img class="math" src="../_images/math/15edb6f2acafa5e06d8997e1682d87cc39351360.svg" alt="S_n"/> represents sample <img class="math" src="../_images/math/f7a9f3c7a45b9df2dac17c2a197dd82e66e4a44a.svg" alt="n"/>, usually an integer starting at 0. Using this convention, that means the sampling process can be represented mathametically as <img class="math" src="../_images/math/b5116a6f84baffdd75bcbf68ab2adfbaa31357bc.svg" alt="S_n = S(nT)"/> for integer values of <img class="math" src="../_images/math/f7a9f3c7a45b9df2dac17c2a197dd82e66e4a44a.svg" alt="n"/>.  Our sampling frequency is simply <img class="math" src="../_images/math/a32df15aba09f5932ad327e03821a26c43439f98.svg" alt="\frac{1}{T}"/>.</p>
+<p>An example of sampling is recording audio with a microphone.  The mic is a transducer that converts sound waves into an electric signal (a voltage level). Our SDRs are similar except instead of a mic, we have an antenna.  In both cases the voltage level is sampled with an analog-to-digital converter.  What comes out is just a bunch of numbers, either floats or ints.</p>
+</div>
+<div class="section" id="nyquist-sampling">
+<h2>Nyquist Sampling<a class="headerlink" href="#nyquist-sampling" title="Permalink to this headline">¶</a></h2>
+<p>When we sample something, we need to be mindful of the sample period, i.e. the time between samples are taken.  If you calculate the inverse of the sample period, you will get the sample rate, which is usually what we will use when talking about SDRs.</p>
+<p>For a given signal, the big question often is, how fast must we sample?  Let’s look at a signal that is just a sine wave, of frequency f.  Let’s say we sample at a rate Fs.  If we sample that signal at a rate equal to f (i.e., Fs = f), we will get something that looks like:</p>
+<a class="reference internal image-reference" href="../_images/sampling1.png"><img alt="../_images/sampling1.png" class="align-center" src="../_images/sampling1.png" style="width: 435.20000000000005px; height: 183.20000000000002px;" /></a>
+<p>In yellow is the original sine wave we are sampling, red shows the samples, and then in blue we show a different (incorrect) function that could have lead to the same samples being recorded.  This indicates that our sample rate was too low.  Let’s try sampling a little faster, at Fs = 1.2f:</p>
+<a class="reference internal image-reference" href="../_images/sampling2.png"><img alt="../_images/sampling2.png" class="align-center" src="../_images/sampling2.png" style="width: 464.8px; height: 190.8px;" /></a>
+<p>Once again, there is a different signal that could fit in these samples, and that ambiguity means that if someone gave us the list of samples, we wouldn’t know which signal was the original one.  How about sampling at Fs = 1.5f:</p>
+<a class="reference internal image-reference" href="../_images/sampling3.png"><img alt="../_images/sampling3.png" class="align-center" src="../_images/sampling3.png" style="width: 451.20000000000005px; height: 190.0px;" /></a>
+<p>Still not fast enough.  It turns out you have to sample at <strong>twice</strong> the frequency of the signal in order to remove the ambiguity we are experiencing.  Since most signals will have many frequency components to them, it’s really “twice the frequency of the maximum frequency component” in our signal.  Here’s a way to visualize that:</p>
+<a class="reference internal image-reference" href="../_images/max_freq.png"><img alt="../_images/max_freq.png" class="align-center" src="../_images/max_freq.png" style="width: 350.0px; height: 210.0px;" /></a>
+<p>So we must identify the highest one, then double it, and make sure we sample at that rate or faster. The minimum frequency is known as the Nyquist Rate, and it’s an extremely important piece of theory that shows up in more fields than just DSP and SDR.</p>
+<a class="reference internal image-reference" href="../_images/nyquist_rate.png"><img alt="../_images/nyquist_rate.png" class="align-center" src="../_images/nyquist_rate.png" style="width: 364.7px; height: 158.2px;" /></a>
+<p>If we don’t sample fast enough we get something called aliasing, which we will learn about later, but we try to avoid it at all costs.  In general, our SDRs will make sure that we are sampling fast enough to avoid aliasing, which means if we give our SDR a sample rate that’s too low, we will simply cut off the signal (in frequency), and not be able to see the whole thing.  Our SDRs go to great lengths to provide us with samples free of aliasing and other imperfections.</p>
 </div>
 <div class="section" id="quadrature-sampling">
 <h2>Quadrature Sampling<a class="headerlink" href="#quadrature-sampling" title="Permalink to this headline">¶</a></h2>
-<p>Mention I and Q here</p>
+<p>The term “quadrature” has many meanings, but in the context of DSP and SDR it refers to two waves that are 90 degrees out of phase.  Why 90 degrees out of phase?  Well we will see first hand, but first consider how two waves that are 180 degrees out of phase are essentially the same wave, with one multiplied by -1. By being 90 degrees out of phase they become orthogonal, and there’s a lot of cool stuff you can do with orthogonal functions.  For the sake of simplicity, we use sine and cosine as our two sine waves that are 90 degrees out of phase:</p>
+<a class="reference internal image-reference" href="../_images/quadrature.png"><img alt="../_images/quadrature.png" class="align-center" src="../_images/quadrature.png" style="width: 398.29999999999995px; height: 277.9px;" /></a>
+<p>Next let’s assign variables to represent the <strong>amplitude</strong> of the sine and cosine.  We will use <img class="math" src="../_images/math/39034215a6dc97c339d8d966435f213b2d5f1205.svg" alt="I"/> for the cos() and <img class="math" src="../_images/math/4aefab53c6f372bea2c7ebee8743862e44376226.svg" alt="Q"/> for the sin():</p>
+<div class="math">
+<p><img src="../_images/math/80a7eb6646b7124039443483ffd0ac0abc437075.svg" alt="I \cos(2\pi ft)
+
+Q \sin(2\pi ft)"/></p>
+</div><p>We can see this visually by plotting I and Q equal to 1:</p>
+<a class="reference internal image-reference" href="../_images/IQ_wave.png"><img alt="../_images/IQ_wave.png" class="align-center" src="../_images/IQ_wave.png" style="width: 481.59999999999997px; height: 242.2px;" /></a>
+<p>We call the cos() the “in phase” component, hence the name I, and the sin() is the 90 degrees out of phase or “quadrature” component, hence Q.  Although if you accidentally mix it up and assign Q to the cos() and I to the sin(), it won’t make a difference for most situations.</p>
+<p>IQ sampling is more easily understood by using the transmitter’s point of view, i.e. considering the task of transmitting an RF signal through the air.  What we do as the transmitter is add the sin() and cos().  Let’s say x(t) is our signal to transmit:</p>
+<div class="math">
+<p><img src="../_images/math/85952bb9ba66501bd120de475a08d40ff06ed52b.svg" alt="x(t) = I \cos(2\pi ft)  + Q \sin(2\pi ft)"/></p>
+</div><p>What happens when we add a sin and cosine?  Or rather, what happens when we add two sinusoids that are 90 degrees out of phase?  In the video below, there is a slider for adjusting I and another for adjusting Q.  What is plotted are the cos, sin, and then the sum of the two.</p>
+<a class="reference internal image-reference" href="../_images/IQ.gif"><img alt="../_images/IQ.gif" class="align-center" src="../_images/IQ.gif" style="width: 600.0px; height: 378.0px;" /></a>
+<p>The important take-aways are that when we add the cos() and sin(), we get another pure sine wave with a different phase and amplitude. Also, the phase shifts as we slowly remove or add one of the two parts.  The amplitude also changes.  The “utility” of this behavior is that we can control the phase and amplitude of a resulting sine wave by adjusting the amplitudes I and Q.  For example, we could adjust I and Q in a way that keeps the amplitude constant and makes the phase whatever we want.  As a transmitter this is extremely useful, because we know that we need to transmit a sinusoidal signal in order for it to fly through the air as an electromagnetic wave (because physics).  And it’s much easier to adjust two amplitudes and perform an addition compared to adjusting an amplitude and a phase.  The result is that our transmitter will look something like this:</p>
+<a class="reference internal image-reference" href="../_images/IQ_diagram.png"><img alt="../_images/IQ_diagram.png" class="align-center" src="../_images/IQ_diagram.png" style="width: 380.09999999999997px; height: 224.7px;" /></a>
+<p>We only need to generate one sine wave, and then just shift it by 90 degrees to get the Q portion.</p>
+</div>
+<div class="section" id="complex-numbers">
+<h2>Complex Numbers<a class="headerlink" href="#complex-numbers" title="Permalink to this headline">¶</a></h2>
+<p>Ultimately, the IQ convention is just an alternative way of representing magnitude and phase, which brings us to complex numbers and the complex plane.  You may have seen this before in other classes.  We can represent a single complex number of a complex plane.  Let’s take the complex number 0.7-0.4j as an example:</p>
+<a class="reference internal image-reference" href="../_images/complex_plane_1.png"><img alt="../_images/complex_plane_1.png" class="align-center" src="../_images/complex_plane_1.png" style="width: 258.3px; height: 251.99999999999997px;" /></a>
+<p>A complex number is really just two numbers together, a real and an imaginary portion.  But a complex number also has a magnitude and phase, which makes more sense if you think about it as a vector instead of a point. Magnitude is the length of the line between the origin and the point (i.e. length of the vector), while phase is the angle between the vector and 0 degrees, which we define as the positive real axis:</p>
+<a class="reference internal image-reference" href="../_images/complex_plane_2.png"><img alt="../_images/complex_plane_2.png" class="align-center" src="../_images/complex_plane_2.png" style="width: 246.39999999999998px; height: 240.79999999999998px;" /></a>
+<p>This is sometimes called a “phasor diagram” which sounds more complicated than it is.  It’s really just plotting complex numbers and treating them as vectors.  Now what is the magnitude and phase of our example complex number 0.7-0.4j?</p>
+<div class="math">
+<p><img src="../_images/math/b5a551214962cc324e2172e9b8f0227114232a90.svg" alt="\mathrm{magnitude} = \sqrt{a^2 + b^2} = 0.806
+
+\mathrm{phase} = \tan^{-1} \left( \frac{b}{a} \right) = -29.7^{\circ} = -0.519 \quad \mathrm{radians}"/></p>
+</div><p>In Python you can just use np.abs(x) and np.angle(x) for the magnitude and phase, the input can be a single complex number or an array of complex numbers, and the output will be a <strong>real</strong> number(s), i.e. floats.</p>
+<p>You may have figured out by now how this related back to IQ convention.  Well it’s simple; I is real and Q is imaginary.  From this point on, when we draw the complex plane, we will label it with I and Q instead of real and imaginary.  They are still complex numbers!</p>
+<a class="reference internal image-reference" href="../_images/complex_plane_3.png"><img alt="../_images/complex_plane_3.png" class="align-center" src="../_images/complex_plane_3.png" style="width: 221.89999999999998px; height: 230.99999999999997px;" /></a>
+<p>Now let’s say we want to transmit our example point 0.7-0.4j.  This means we will be transmitting:</p>
+<div class="math">
+<p><img src="../_images/math/d82c2758f35376381f24c6438a3692813143870f.svg" alt="x(t) = I \cos(2\pi ft)  + Q \sin(2\pi ft)
+
+\quad \quad \quad = 0.7 \cos(2\pi ft) - 0.4 \sin(2\pi ft)
+
+\quad = 0.806 \cos(2\pi ft - 0.519)"/></p>
+</div><p>So even though we started with a complex number, what we are actually transmitting is real, which is good because you can’t actually transmit something imaginary with electromagnetic waves.  We just use imaginary/complex numbers to represent <em>what</em> we are transmitting.  We will talk about the <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> shortly.</p>
+</div>
+<div class="section" id="receiver-side">
+<h2>Receiver Side<a class="headerlink" href="#receiver-side" title="Permalink to this headline">¶</a></h2>
+<p>Now let’s reverse everything and take the perspective of a radio receiver, that is trying to receive a signal (e.g. an FM radio signal).  Using IQ sampling, the diagram now looks like:</p>
+<a class="reference internal image-reference" href="../_images/IQ_diagram_rx.png"><img alt="../_images/IQ_diagram_rx.png" class="align-center" src="../_images/IQ_diagram_rx.png" style="width: 409.5px; height: 225.39999999999998px;" /></a>
+<p>What comes in is a real signal that was received by our antenna, and what comes out are IQ values.  What we do is sample the I and Q branch individually, using two analog to digital converters (ADCs), and then we combine the pairs and store them as complex numbers.  In other words, at each time step, you will sample one I value and one Q value, and combine them in the form <img class="math" src="../_images/math/d51b1ee62b9705749afbf567d0f9576f9e8588cf.svg" alt="I + jQ"/>, i.e. one complex number per IQ sample.  There will always be a “sample rate”, the rate sampling is performed.  For example, someone might say “I have an SDR running at 2 MHz sample rate” which just means it’s receiving two million IQ samples per second.  If someone gives you a bunch of IQ samples, it will look like a 1D array/vector of complex numbers.  This is pretty much what this entire chapter has been leading up to, and we finally made it.  Throughout this textbook you will become <strong>very</strong> familiar with how IQ samples work, how to receive and transmit them with an SDR, how to process them in Python, and how to save them to a file for later analysis.</p>
+<p>One last important note: the figure above shows what’s happening <strong>inside</strong> of the SDR, we don’t actually have to generate a sine wave, shift by 90, multiply or add, the SDR does that for us.  We tell the SDR what frequency we want to sample at, or what frequency we want to transmit our samples at.  On the receiver side, the SDR will provide us the IQ samples, and then for the transmitting side we have to provide the SDR the IQ samples.  In terms of data type, they will either be complex ints or floats.</p>
+</div>
+<div class="section" id="carrier-and-downconversion">
+<h2>Carrier and Downconversion<a class="headerlink" href="#carrier-and-downconversion" title="Permalink to this headline">¶</a></h2>
+<p>Up until this point we really didn’t talk about frequency, but we saw there was an <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> in the equations involving the cos() and sin().  This frequency is the frequency of the sine wave we actually send through the air, so the electromagnetic wave’s frequency.  We call this the “carrier”, because it carries our information (stored in I and Q) on a certain frequency.</p>
+<a class="reference internal image-reference" href="../_images/carrier.png"><img alt="../_images/carrier.png" class="align-center" src="../_images/carrier.png" style="width: 366.09999999999997px; height: 186.89999999999998px;" /></a>
+<p>Just for reference, radio signals such as FM radio, WiFi, Bluetooth, LTE, GPS, etc, usually use a frequency (i.e. a carrier) between 100 MHz and 6 GHz.  These frequencies travel really well through the air, but don’t require super long antennas or a ton of power to transmit on.  Your microwave cooks food with electromagnetic waves that are at 2.4 GHz, and if there is a leak in the door then your microwave will jam WiFi signals, and possibly also burn your skin.  Another form of electromagnetic waves is light, and visible light has a frequency of around 500 THz.  It’s so high that we don’t use traditional antennas to transmit light, we use other methods like LEDs that are semiconductor devices, that create light when electrons jump in between the atomic orbits of the semiconductor material.  But for frequencies below 100 GHz we tend to use normal antennas.</p>
+<p>When we change our IQ values really quickly and transmit our carrier, it’s called “modulating” the carrier (with data or whatever we want).  Because when we change I and Q, we are changing the phase and amplitude of the carrier.  A third option is to change the frequency of the carrier, i.e. shift it slightly up or down, which is what FM radio does.</p>
+<p>As a simple example, lets say we transmit the IQ sample 1+0j, and then we switch to transmitting 0+1j.  I.e. we go from sending <img class="math" src="../_images/math/500350f14f961e15e3aa1cc429df3236aba61acd.svg" alt="\cos(2\pi ft)"/> to <img class="math" src="../_images/math/9af12e10a6d9c096760b9646a4d41f6f9a0176f7.svg" alt="\sin(2\pi ft)"/>.  All that happens is our carrier shifts phase by 90 degrees when we switch from one sample to another.</p>
+<p>Now back to sampling for a second.   Instead of receiving samples by multiplying what comes off the antenna by a cos() and sin(), then recording I and Q, what if we just fed the signal from the antenna straight into a single analog to digital converter?  Well let’s say the carrier frequency is 2.4 GHz, like WiFi or Bluetooth.  That means we would have to sample at 4.8 GHz, as we learned.  Well that’s extremely fast, and an ADC that samples that fast costs thousands of dollars.  So what we do instead is “downconvert” the signal so that the signal we want to sample is centered around DC or 0 Hz, this happens before we do the sampling.  We go from</p>
+<div class="math">
+<p><img src="../_images/math/80a7eb6646b7124039443483ffd0ac0abc437075.svg" alt="I \cos(2\pi ft)
+
+Q \sin(2\pi ft)"/></p>
+</div><p>to just I and Q.  Let’s visualize this in the frequency domain:</p>
+<a class="reference internal image-reference" href="../_images/downconversion.png"><img alt="../_images/downconversion.png" class="align-center" src="../_images/downconversion.png" style="width: 703.1999999999999px; height: 116.39999999999999px;" /></a>
+<p>When we are centered around 0 Hz, the maximum frequency is no longer 2.4 GHz, but is simply based on the signal’s characteristics, because we have removed the carrier.  Most signals are around 100 kHz to 20 MHz wide in bandwidth, so we are talking about sampling at a much much lower rate.  The PlutoSDR contains an RF integrated circuit (RFIC) that can sample up to 56 MHz, which is high enough for most signals we will encounter.</p>
+<p>This downconverting process is</p>
+</div>
+<div class="section" id="baseband">
+<h2>Baseband<a class="headerlink" href="#baseband" title="Permalink to this headline">¶</a></h2>
+<p>When we discuss a signal centered around 0 Hz, we refer to this as “baseband”. The opposite of baseband is called “bandpass”, when a signal exists at some RF frequency, no where near 0 Hz.  A signal at baseband might be perfectly centered around 0 Hz like the right-hand portion of the figure above, or it might just be <em>near</em> 0 Hz, like the two signals shown below, which are still considered baseband.   Also shown is an example bandpass signal, centered at some very high frequency, denoted <img class="math" src="../_images/math/852c5d6001dcb2c5d6047cc1ee451735a4153eec.svg" alt="f_c"/>.</p>
+<a class="reference internal image-reference" href="../_images/baseband_bandpass.PNG"><img alt="../_images/baseband_bandpass.PNG" class="align-center" src="../_images/baseband_bandpass.PNG" style="width: 712.0px; height: 186.5px;" /></a>
+<p>You may also hear the term IF, which stands for intermediate frequency; for now think of this as some point in between baseband and bandpass/RF that the signal is converted to as an intermediate step inside a radio.</p>
+<p>When we create, record, or analyze signals, we usually do it at baseband, because we can work at a lower sample rate (for reasons discussed in the previous subsection).  It is also important to note that baseband signals are often complex signals, while signals at bandpass (e.g. signals we actually transmit over RF) are real.  This makes sense, because the signal fed through an antenna must be real, you cannot directly transmit a complex/imaginary signal.  You will know a signal is definitely a complex signal if the negative frequency and positive frequency portions of the signal are not exactly the same, complex numbers are how we represent negative frequencies after all.  In reality there is no negative frequencies, it’s just the portion of the signal that happened to be below the carrier frequency.</p>
+</div>
+<div class="section" id="dc-spike-and-offset-tuning">
+<h2>DC Spike and Offset Tuning<a class="headerlink" href="#dc-spike-and-offset-tuning" title="Permalink to this headline">¶</a></h2>
 <p>Soon after you start playing around with SDRs, you will find that often, there will be a large spike in the center of the FFT.
-This is called a “DC offset” or “DC spike” or sometimes “LO leakage” because the center of the FFT represents zero Hz, which is a constant “DC type” signal with no sinusoidal variations.</p>
-<p>&lt;insert pic of DC offset using USRP&gt;</p>
+This is called a “DC offset” or “DC spike” or sometimes “LO leakage”.  Here’s an example:</p>
+<a class="reference internal image-reference" href="../_images/dc_spike.png"><img alt="../_images/dc_spike.png" class="align-center" src="../_images/dc_spike.png" style="width: 257.5px; height: 244.0px;" /></a>
 <p>Remember that because the SDR tunes to a center frequency, the 0 Hz portion of the FFT really corresponds to the center frequency.
-That being said, a DC spike doesn’t nessesarily mean there is energy at the center frequency.
+That being said, a DC spike doesn’t necessarily mean there is energy at the center frequency.
 If there is only a DC spike, and the rest of the FFT looks like noise, there is most likely not actually a signal present where it is showing you one.</p>
-<p>&lt;insert same capture as above but with DC offset removed, to show “truth”&gt;</p>
-<p>A DC offset is a common artifact in direct conversion receivers, which is the architecture used for SDRs like most Ettus USRPs.
+<p>A DC offset is a common artifact in direct conversion receivers, which is the architecture used for SDRs like the PlutoSDR, RTL-SDR, LimeSDR, and many Ettus USRPs.
 In direct conversion receivers, there is an oscillator called the LO, which is used to down-convert the signal from its actual frequency to baseband.
 As a result, leakage from this LO will show up in the center of the observed bandwidth.
 Many RF integrated circuits (RFICs) have built-in automatic DC offset removal, but it typically requires a signal to be present to work.
@@ -129,38 +151,55 @@ That is why the DC spike will be very apparent when no signals are present.</p>
 <p>A quick way around the DC offset issue is to oversample the signal and off-tune.
 As an example, lets say we want to view 5 MHz of spectrum at 100 MHz.
 Instead what we can do is sample at 20 MHz, at a center frequency of 95 MHz.</p>
-<a class="reference internal image-reference" href="../_images/offtuning.png"><img alt="../_images/offtuning.png" class="align-center" src="../_images/offtuning.png" style="width: 528.0px; height: 168.0px;" /></a>
-<p>Our LO will be set to 95 MHz because that is the frequency we ask the SDR to tune to, which is outside the observation window we are interested in.
-There is only one problem: if we want our signal to actually be centered at 100 MHz and only contain 5 MHz, we will have to perform a frequency shift, filter, and downsample ourself (something we will learn how to do later).
-Fortunately, this process of offtuning, a.k.a applying an LO offset, is often built into the SDRs, where they will automatically do the offtuning and then shift the frequency to your desired center frequency automatically.</p>
+<a class="reference internal image-reference" href="../_images/offtuning.png"><img alt="../_images/offtuning.png" class="align-center" src="../_images/offtuning.png" style="width: 316.8px; height: 100.8px;" /></a>
+<p>The blue box above shows what is actually sampled by the SDR, and then the green box shows the piece of spectrum we want.  Our LO will be set to 95 MHz because that is the frequency we ask the SDR to tune to, which is outside of the green box, so we won’t get any DC spike inside our green box.</p>
+<p>There is only one problem: if we want our signal to actually be centered at 100 MHz and only contain 5 MHz, we will have to perform a frequency shift, filter, and downsample ourselves (something we will learn how to do later).
+Fortunately, this process of offtuning, a.k.a applying an LO offset, is often built into the SDRs, where they will automatically do the offtuning and then shift the frequency to your desired center frequency automatically.  It’s great when the SDR can do it internally because it means we don’t have to send a higher sample rate over our USB or ethernet connection, which is usually the bottleneck for how high a sample rate we can use.</p>
+<p>This subsection discussing DC offsets is a good example of where this textbook differs from others, your average DSP textbook will discuss sampling, but it would never include such a specific topic as DC offsets, despite how often it causes problems when using SDRs.</p>
 </div>
-<div class="section" id="nyquist-sampling-rate">
-<h2>Nyquist Sampling Rate<a class="headerlink" href="#nyquist-sampling-rate" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sampling-using-the-plutosdr">
+<h2>Sampling Using the PlutoSDR<a class="headerlink" href="#sampling-using-the-plutosdr" title="Permalink to this headline">¶</a></h2>
+<p>Sampling using the PlutoSDR’s Python API is pretty straightforward.  With any SDR app we know we must tell the SDR the center frequency, sample rate, and gain (or whether to use automatic gain control).  There might be other details, but those three are nessesary for the SDR to have enough information to do anything.  Some SDRs have a command to tell it to start sampling, while others like the Pluto will just start sampling as soon as you initialize it, and just drop the samples as the buffer fills up. All SDR APIs have some sort of “receive samples” function, for the pluto it’s rx(), and it returns a certain number of samples, defined by the buffer size that was set beforehand.</p>
+<p>Refer to the PlutoSDR Basics chapter for installing the software.  The code below assumes you have the Pluto’s Python API installed.  This code initializes the Pluto, sets the sample rate to 1 MHz, center frequency to 100 MHz, and gain to 50 dB, with automatic gain control turned off.  It usually doesn’t matter what order you set the center frequency, gain, and sample rate.  We tell the Pluto that we want it to give us 10,000 samples per call to rx().</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># Hz</span>
+<span class="n">center_freq</span> <span class="o">=</span> <span class="mf">100e6</span> <span class="c1"># Hz</span>
+<span class="n">num_samps</span> <span class="o">=</span> <span class="mi">10000</span> <span class="c1"># per call to rx()</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">()</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode</span> <span class="o">=</span> <span class="s1">&#39;manual&#39;</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain</span> <span class="o">=</span> <span class="mf">70.0</span> <span class="c1"># dB</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">center_freq</span><span class="p">)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_rf_bandwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span> <span class="c1"># filter width, just set it to the same as sample rate for now</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_buffer_size</span> <span class="o">=</span> <span class="n">num_samps</span>
+
+<span class="n">samples</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span> <span class="c1"># receive samples off Pluto</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="sampling-using-our-rtl-sdr">
-<h2>Sampling Using our RTL-SDR<a class="headerlink" href="#sampling-using-our-rtl-sdr" title="Permalink to this headline">¶</a></h2>
+<p>For now we aren’t going to do anything interesting with these samples.  Throughout this whole textbook we will swap between pure-Python examples, and Python examples that include PlutoSDR code.  The PlutoSDR examples are written such that it should be straightforward to substitute in a different SDR’s Python API.</p>
 </div>
 <div class="section" id="calculating-average-power">
 <h2>Calculating Average Power<a class="headerlink" href="#calculating-average-power" title="Permalink to this headline">¶</a></h2>
 <p>For a discrete complex signal, i.e. one we have sampled, we can find the average power by taking the magnitude of each sample, squaring it, then finding the mean:</p>
 <div class="math">
-<p><img src="../_images/math/b36d53d3e0d3a17139ffec99aad5be3dcb99af6b.svg" alt="P = \frac{1}{N} \sum_{n=1}^{N} |x[n]|^2"/></p>
-</div><p>Remember that the absolute value of a complex number is just the magnitude, i.e. <img class="math" src="../_images/math/7571535c090568d009f9b6dcd4be83925618c875.svg" alt="\sqrt{I^2+Q^2}"/></p>
+<p><img src="../_images/math/5ce37305be13d8e76bc41fea570f7b3041d860c2.svg" alt="P = \frac{1}{N} \sum_{n=1}^{N} |x[n]|^2"/></p>
+</div><p>Remember that the absolute value of a complex number is just the magnitude, i.e. <img class="math" src="../_images/math/a2cfebc8da1e2453e86d1fdf34c5af28729b7ea9.svg" alt="\sqrt{I^2+Q^2}"/></p>
 <p>In Python this would look like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">avg_pwr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Note that energy and power are not the same thing.  Typically in SDR we talk in terms of power, not energy.
-We will not go into it here, but in general, in signal processing you can calculate energy by dropping the square root that is always in power-related equations.
-See &lt;here&gt; for a nice guide about the difference between power and energy in the context of wireless comms and SDR.</p>
 <p>Here is a very useful trick for calculating the average power of a sampled signal.
-If your signal has (roughly) zero mean, which is usually the case in SDR (we will see why later), then the signal power can be found by simplying taking the variance of the samples, e.g.:</p>
+If your signal has (roughly) zero mean, which is usually the case in SDR (we will see why later), then the signal power can be found by simply taking the variance of the samples, e.g.:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">avg_pwr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># (signal should have roughly zero mean)</span>
 </pre></div>
 </div>
-<p>The reason why is quite simple; the equation for variance is <img class="math" src="../_images/math/81dd3cb7f6448e8a9c64cec293fa2543a4d12309.svg" alt="\frac{1}{N}\sum^N_{n=1} |x[n]-\mu|^2"/>
-where <img class="math" src="../_images/math/d79e8a2c7ce54906c2b25549da38bdbe02cf40d6.svg" alt="\mu"/> is the signal’s mean, so if <img class="math" src="../_images/math/d79e8a2c7ce54906c2b25549da38bdbe02cf40d6.svg" alt="\mu"/> is zero than it becomes equivalent to the equation for power.
-You can also just subtract out the mean from the samples in your window of observation, then take variance.</p>
+<p>The reason why is quite simple; the equation for variance is <img class="math" src="../_images/math/399bf68509fdd516e4e2437f32dba2c8c9635ff7.svg" alt="\frac{1}{N}\sum^N_{n=1} |x[n]-\mu|^2"/>
+where <img class="math" src="../_images/math/c859a8f80a5b73b97ecb9d3c15842e979a0f6fe2.svg" alt="\mu"/> is the signal’s mean, so if <img class="math" src="../_images/math/c859a8f80a5b73b97ecb9d3c15842e979a0f6fe2.svg" alt="\mu"/> is zero than it becomes equivalent to the equation for power.
+You can also just subtract out the mean from the samples in your window of observation, then take variance.  Just know that if the mean value is not zero, the variance and the power are not equal.</p>
 </div>
 <div class="section" id="calculating-power-spectral-density">
 <h2>Calculating Power Spectral Density<a class="headerlink" href="#calculating-power-spectral-density" title="Permalink to this headline">¶</a></h2>
@@ -168,29 +207,29 @@ You can also just subtract out the mean from the samples in your window of obser
 All DSP engineers know this, but when it comes to actually finding the PSD of a batch of samples and plotting it, you need to do more than just take an FFT.
 We must do the following six operations:</p>
 <ol class="arabic simple">
-<li>Take the FFT of our samples.  The FFT size will be the length of x by default, so lets only use the first 1024 samples as an example.  I’ve seen anywhere from 2^6 to 2^20 (64 to one million).  Using a power of two is most efficient.</li>
-<li>Take the magnitude of our FFT results.</li>
-<li>Normalize; divide by our sample rate (<img class="math" src="../_images/math/00cc7b93584f504a49a9f4895973bc434576dcdd.svg" alt="F_s"/>)</li>
-<li>Square the resulting magnitude, to get power instead of energy.</li>
-<li>Convert to dB using <img class="math" src="../_images/math/a23d2079ff975b8b93ed118c3d67a9e92d855b77.svg" alt="10 \log_{10}()"/>, we always view PSDs in log scale.</li>
-<li>Perform an FFT shift; it turns out that mathematically the FFT operation does not result in “0 Hz” in the center.  This operation just rearranges the array to fix that.</li>
+<li><p>Take the FFT of our samples.  If we have x samples, the FFT size will be the length of x by default, so let’s only use the first 1024 samples as an example, to create a 1024-size FFT.  The output will be 1024 complex float.</p></li>
+<li><p>Take the magnitude of the FFT output, which provides us 1024 real floats.</p></li>
+<li><p>Normalize: divide by our sample rate (<img class="math" src="../_images/math/b585a310928e16b1311b9409741740aa4dfc89b3.svg" alt="F_s"/>).</p></li>
+<li><p>Square the resulting magnitude, to get power.</p></li>
+<li><p>Convert to dB using <img class="math" src="../_images/math/f4455b0aaee830c84338328975fa7b9956463d04.svg" alt="10 \log_{10}()"/>, we always view PSDs in log scale.</p></li>
+<li><p>Perform an FFT shift, like we learned about last chapter, to move “0 Hz” in the center and negative frequencies to the left of center.</p></li>
 </ol>
 <p>In Python this looks like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Fs</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># lets say we sampled at 1 MHz</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="s1">&#39;samples.iq&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span> <span class="c1"># replace with your method of getting samples</span>
+<span class="c1"># assume x contains your array of IQ samples</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">]</span> <span class="c1"># we will only take the FFT of the first 1024 samples, see text below</span>
 <span class="n">PSD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">Fs</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
 <span class="n">PSD_log</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PSD</span><span class="p">)</span>
 <span class="n">PSD_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">PSD_log</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>And optionally we can apply a window, like we learned about last chapter:</p>
+<p>And optionally we can apply a window, which we will learn about later.  This gets added before the line with fft().</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># add the following line after doing x = x[0:1024]</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="c1"># apply a Hamming window</span>
 </pre></div>
 </div>
 <p>Now to plot this PSD we need to know the values of the x-axis.
-As we learned last chapter, when we sample a signal, we only “see” the spectrum between -fs/2 and fs/2 where fs is our sample rate.
+As we learned last chapter, when we sample a signal, we only “see” the spectrum between -Fs/2 and Fs/2 where Fs is our sample rate.
 The resolution we achieve in the frequency domain depends on the size of our FFT, which by default is equal to the number of samples we perform the FFT operation on.
 In this case our x-axis is 1024 equally spaced points between -0.5 MHz and 0.5 MHz.
 If we had tuned our SDR to 2.4 GHz then that means our observation window would be between 2399500000 and 2400500000 Hz.
@@ -203,11 +242,11 @@ In Python this looks like:</p>
 </div>
 <p>And we should be left with a beautiful PSD.
 If you want to find the PSD of millions of samples, don’t just do a million-point FFT, because it will probably take forever, and it will give you an output of a million “frequency bins” which is too much to show in a plot.
-Instead I suggest doing multiple smaller PSDs and averaging them together, or displaying them using a Waterfall Plot.
+Instead I suggest doing multiple smaller PSDs and averaging them together, or displaying them using a spectrogram plot.
 Alternatively, if you know your signal is not changing, it’s not a sin to only use a few thousand samples and just find the PSD of those, because within that time-frame of a few thousands samples you will likely capture enough of the signal to get a nice representation.</p>
 <p>Here is a full example which also includes generating a signal and noise.  Note that N, the number of samples to simulate, becomes the FFT length because we take the FFT of the entire simulated signal.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="n">Fs</span> <span class="o">=</span> <span class="mi">300</span> <span class="c1"># sample rate</span>
 <span class="n">Ts</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">Fs</span> <span class="c1"># sample period</span>
@@ -216,7 +255,7 @@ Alternatively, if you know your signal is not changing, it’s not a sin to only
 <span class="n">t</span> <span class="o">=</span> <span class="n">Ts</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">50</span><span class="o">*</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># simulates sinusoid at 50 Hz</span>
 
-<span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># AWGN with unity power</span>
+<span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># AWGN with unity power</span>
 <span class="n">noise_power</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">noise_power</span><span class="p">)</span>
 
@@ -227,7 +266,7 @@ Alternatively, if you know your signal is not changing, it’s not a sin to only
 <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">Fs</span><span class="o">/-</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">Fs</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="c1"># lazy method</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">PSD_shifted</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -237,43 +276,91 @@ Alternatively, if you know your signal is not changing, it’s not a sin to only
 </div>
 
 
-           </div>
-           
           </div>
-          <footer>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2019, Marc Lichtman
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
+          
         </div>
       </div>
-
-    </section>
-
-  </div>
-  
-
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
     
-   
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
 
-</body>
+
+
+<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. IQ Sampling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sampling-basics">Sampling Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nyquist-sampling">Nyquist Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quadrature-sampling">Quadrature Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#complex-numbers">Complex Numbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#receiver-side">Receiver Side</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#carrier-and-downconversion">Carrier and Downconversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#baseband">Baseband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dc-spike-and-offset-tuning">DC Spike and Offset Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sampling-using-the-plutosdr">Sampling Using the PlutoSDR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calculating-average-power">Calculating Average Power</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calculating-power-spectral-density">Calculating Power Spectral Density</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="frequency_domain.html" title="previous chapter"><span class="section-number">2. </span>The Frequency Domain</a></li>
+      <li>Next: <a href="digital_modulation.html" title="next chapter"><span class="section-number">4. </span>Digital Modulation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
 </html>

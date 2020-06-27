@@ -1,152 +1,422 @@
 
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Filters &mdash; PySDR: Learn SDR and DSP with Python and GNU Radio 0.1 documentation</title>
-  
 
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7. Filters &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
-</head>
-
-<body class="wy-body-for-nav">
-
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="8. Link Budgets" href="link_budgets.html" />
+    <link rel="prev" title="6. Noise and dB" href="noise.html" />
    
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
           
 
-          
-            <a href="../index.html" class="icon icon-home"> PySDR: Learn SDR and DSP with Python and GNU Radio
-          
-
-          
-          </a>
-
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">The Frequency Domain</a></li>
-</ul>
-
-            
-          
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">PySDR: Learn SDR and DSP with Python and GNU Radio</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+          <div class="body" role="main">
             
   <div class="section" id="filters">
-<h1>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">7. </span>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h1>
+<p>In this chapter we get introduced to filters.  We learn about the types of filters, how filters are represented digitally, and how they are designed.  We finish with an introduction to pulse shaping, a topic explored in depth in its own chapter.</p>
+<div class="section" id="filter-basics">
+<h2>Filter Basics<a class="headerlink" href="#filter-basics" title="Permalink to this headline">¶</a></h2>
+<p>Filters are used in many disciplines, for example image processing makes heavy use of 2D filters, where the input and output are images.  You might use a filter every morning to make your coffee, which filters out solids from liquid.  In DSP, filters are primarily used for:</p>
+<ol class="arabic simple">
+<li><p>Separation of signals that have been combined (e.g. pulling out the signal you want)</p></li>
+<li><p>Removing excess noise after receiving a signal</p></li>
+<li><p>Restoration of signals that have been distorted in some way (e.g. an audio equalizer is a filter)</p></li>
+</ol>
+<p>There are certainly other uses for filters.</p>
+<p>There are analog filters and digital filters.  You may think we only care about digital filters; this is a DSP based textbook after all, but it’s also important to know that a lot of filters will be analog, such as filters in our SDRs that come before the analog-to-digital converter (ADC) on the receive side.</p>
+<a class="reference internal image-reference" href="../_images/analog_digital_filter.PNG"><img alt="../_images/analog_digital_filter.PNG" class="align-center" src="../_images/analog_digital_filter.PNG" style="width: 793.0999999999999px; height: 223.29999999999998px;" /></a>
+<p>In DSP, where the input and output are signals, a filter has one input signal and one output signal:</p>
+<a class="reference internal image-reference" href="../_images/filter.PNG"><img alt="../_images/filter.PNG" class="align-center" src="../_images/filter.PNG" style="width: 527.8px; height: 86.1px;" /></a>
+<p>You cannot feed two different signals into a single filter, without adding them together first, or doing some other operation.  Likewise, the output will always be one signal, i.e. a 1D array of numbers.</p>
+<p>There are four basic types of filters:</p>
+<a class="reference internal image-reference" href="../_images/filter_types.PNG"><img alt="../_images/filter_types.PNG" class="align-center" src="../_images/filter_types.PNG" style="width: 703.5px; height: 145.6px;" /></a>
+<p>(ADD DIAGRAM SHOWING NEGATIVE FREQS TOO)</p>
+<p>Each filter lets certain frequencies through, and blocks other frequencies.  The range of frequencies it lets through is known as the “passband”, and the “stopband” is what gets blocked.  In the case of the low-pass filter, it passes low frequencies and stops high frequencies, so 0 Hz will always be in the passband.  For a high-pass and band-pass filter, 0 Hz will always be in the stopband.</p>
+<p>Do not get this confused with the different types of filter implementation (e.g. IIR vs FIR).  The most common type by far is the low-pass filter (LPF), because we often represent signals at baseband, so the LPF lets us filter out everything “around” our signal, to get rid of excess noise and other signals.</p>
+</div>
+<div class="section" id="filter-representation">
+<h2>Filter Representation<a class="headerlink" href="#filter-representation" title="Permalink to this headline">¶</a></h2>
+<p>For most filters we will see (known as FIR type filters), we can represent the filter itself with a single array of floats.  For symmetrical filters, these floats will be real (versus complex), and there will usually be an odd number of floats.  We call this array of floats the “filter taps”.  We often use <img class="math" src="../_images/math/2475529ef4582ec92a0ef0ee2a266a22d98ba80d.svg" alt="h"/> as the symbol for filter taps.  Here is an example of a set of filter taps, which define one filter:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">h</span> <span class="o">=</span>  <span class="p">[</span> <span class="mf">9.92977939e-04</span>  <span class="mf">1.08410297e-03</span>  <span class="mf">8.51595307e-04</span>  <span class="mf">1.64604862e-04</span>
+ <span class="o">-</span><span class="mf">1.01714338e-03</span> <span class="o">-</span><span class="mf">2.46268845e-03</span> <span class="o">-</span><span class="mf">3.58236429e-03</span> <span class="o">-</span><span class="mf">3.55412543e-03</span>
+ <span class="o">-</span><span class="mf">1.68583512e-03</span>  <span class="mf">2.10562324e-03</span>  <span class="mf">6.93100252e-03</span>  <span class="mf">1.09302641e-02</span>
+  <span class="mf">1.17766532e-02</span>  <span class="mf">7.60955496e-03</span> <span class="o">-</span><span class="mf">1.90555639e-03</span> <span class="o">-</span><span class="mf">1.48306750e-02</span>
+ <span class="o">-</span><span class="mf">2.69313236e-02</span> <span class="o">-</span><span class="mf">3.25659606e-02</span> <span class="o">-</span><span class="mf">2.63400086e-02</span> <span class="o">-</span><span class="mf">5.04184562e-03</span>
+  <span class="mf">3.08099470e-02</span>  <span class="mf">7.64264738e-02</span>  <span class="mf">1.23536693e-01</span>  <span class="mf">1.62377258e-01</span>
+  <span class="mf">1.84320776e-01</span>  <span class="mf">1.84320776e-01</span>  <span class="mf">1.62377258e-01</span>  <span class="mf">1.23536693e-01</span>
+  <span class="mf">7.64264738e-02</span>  <span class="mf">3.08099470e-02</span> <span class="o">-</span><span class="mf">5.04184562e-03</span> <span class="o">-</span><span class="mf">2.63400086e-02</span>
+ <span class="o">-</span><span class="mf">3.25659606e-02</span> <span class="o">-</span><span class="mf">2.69313236e-02</span> <span class="o">-</span><span class="mf">1.48306750e-02</span> <span class="o">-</span><span class="mf">1.90555639e-03</span>
+  <span class="mf">7.60955496e-03</span>  <span class="mf">1.17766532e-02</span>  <span class="mf">1.09302641e-02</span>  <span class="mf">6.93100252e-03</span>
+  <span class="mf">2.10562324e-03</span> <span class="o">-</span><span class="mf">1.68583512e-03</span> <span class="o">-</span><span class="mf">3.55412543e-03</span> <span class="o">-</span><span class="mf">3.58236429e-03</span>
+ <span class="o">-</span><span class="mf">2.46268845e-03</span> <span class="o">-</span><span class="mf">1.01714338e-03</span>  <span class="mf">1.64604862e-04</span>  <span class="mf">8.51595307e-04</span>
+  <span class="mf">1.08410297e-03</span>  <span class="mf">9.92977939e-04</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="example-use-case">
+<h3>Example Use-Case<a class="headerlink" href="#example-use-case" title="Permalink to this headline">¶</a></h3>
+<p>To learn how filters are actually used, let’s look an an example where we tune our SDR to a frequency we know a signal exists, and we want to isolate it from other signals.  Remember that we tell our SDR what frequency to tune to, but the samples it gives us are at baseband, so the signal will show up centered around 0 Hz, we just have to keep track of which frequency we told the SDR to tune to.  Here is what we might receive:</p>
+<a class="reference internal image-reference" href="../_images/filter_use_case.PNG"><img alt="../_images/filter_use_case.PNG" class="align-center" src="../_images/filter_use_case.PNG" style="width: 595.6999999999999px; height: 326.2px;" /></a>
+<p>Because our signal is already centered at DC (0 Hz), we know we want a low pass filter.  We must choose a “cutoff frequency” (a.k.a. corner frequency) which will determine when the passband transitions to stopband.  Cutoff frequency will always be in units of Hz.  In this example, 3 kHz seems like a good value:</p>
+<a class="reference internal image-reference" href="../_images/filter_use_case2.PNG"><img alt="../_images/filter_use_case2.PNG" class="align-center" src="../_images/filter_use_case2.PNG" style="width: 599.9px; height: 325.5px;" /></a>
+<p>However, the way most low pass filters work, the negative frequency boundary will be -3 kHz as well.  I.e., it’s symmetrical around DC (later on you will see why).  So our cutoff frequencies will look something like this (the passband is the area in between):</p>
+<a class="reference internal image-reference" href="../_images/filter_use_case3.PNG"><img alt="../_images/filter_use_case3.PNG" class="align-center" src="../_images/filter_use_case3.PNG" style="width: 420.0px; height: 323.4px;" /></a>
+<p>After creating and applying the filter with a cutoff freq of 3 kHz, this is what we get:</p>
+<a class="reference internal image-reference" href="../_images/filter_use_case4.PNG"><img alt="../_images/filter_use_case4.PNG" class="align-center" src="../_images/filter_use_case4.PNG" style="width: 451.49999999999994px; height: 330.4px;" /></a>
+<p>This filtered signal will look confusing until you recall that our noise floor <em>was</em> at the green line, around -65 dB.  So even though we can still see the signal centered at 10 kHz, we have <em>severely</em> decreased the power of that signal, to the point where it’s now below where the noise floor was.  We also removed most of the noise that existed in the stopband.</p>
+<p>In addition to cutoff frequency, the other main parameter of our low-pass filter is called the “transition width”.  Transition width is also in Hz, and it tells the filter how quickly it has to go between the passband and stopband, since an instant transition is impossible.  In the diagram below, <span class="green">green</span> is the ideal response, which essentially has a transition width of zero.  <span class="red">Red</span> is a realistic filter, which has some ripple and a certain transition width.</p>
+<a class="reference internal image-reference" href="../_images/realistic_filter.PNG"><img alt="../_images/realistic_filter.PNG" class="align-center" src="../_images/realistic_filter.PNG" style="width: 526.0px; height: 315.0px;" /></a>
+<p>You might be wondering why we wouldn’t just set the transition width as small as possible.  The reason is mainly that a smaller transition width results in more taps, and more taps means more computations, we will see why shortly.  A 50 tap filter can run all day long using 1% of the CPU on a Raspberry Pi.  Meanwhile, a 50,000 tap filter will cause your CPU to explode!
+Typically we use a filter designer tool, then see how many taps it outputs, and if it’s way too many (e.g. more than 100) we increase the transition width.  It all depends on the application and hardware running the filter, of course.</p>
+<p>In the filtering example above, we had used a cutoff of 3 kHz and a transition width of 1 kHz (it’s hard to actually see the transition width just looking at these screenshots).  The resulting filter had 77 taps.</p>
+<p>Back to filter representation.  Even though we might show the list of taps for a filter, we usually represent filters visually in the frequency domain.  We call this the “frequency response” of the filter, and it shows us the behavior of the filter in frequency..  E.g. this is the frequency response of the filter we were just using:</p>
+<a class="reference internal image-reference" href="../_images/filter_use_case5.PNG"><img alt="../_images/filter_use_case5.PNG" class="align-center" src="../_images/filter_use_case5.PNG" style="width: 575.0px; height: 275.0px;" /></a>
+<p>Note that what I’m showing here is <em>not</em> a signal, it’s just the frequency domain representation of the filter.  That can be a little hard to wrap your head around at first, but as we look at examples and code, it will click.</p>
+<p>A given filter also has a time domain representation; it’s called the “impulse response” of the filter, because it is what you see in the time domain if you take an impulse and put it through the filter (Google “Dirac delta function” for more info about what an impulse is). For an FIR type filter, the impulse response is simply the taps themselves.  For that 77 tap filter we used earlier, the taps are:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">h</span> <span class="o">=</span>  <span class="p">[</span><span class="o">-</span><span class="mf">0.00025604525581002235</span><span class="p">,</span> <span class="mf">0.00013669139298144728</span><span class="p">,</span> <span class="mf">0.0005385575350373983</span><span class="p">,</span>
+<span class="mf">0.0008378280326724052</span><span class="p">,</span> <span class="mf">0.000906112720258534</span><span class="p">,</span> <span class="mf">0.0006353431381285191</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">9.884083502996931e-19</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0008822851814329624</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0017323142383247614</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.0021665366366505623</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0018335371278226376</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0005912294145673513</span><span class="p">,</span>
+<span class="mf">0.001349081052467227</span><span class="p">,</span> <span class="mf">0.0033936649560928345</span><span class="p">,</span> <span class="mf">0.004703888203948736</span><span class="p">,</span>
+<span class="mf">0.004488115198910236</span><span class="p">,</span> <span class="mf">0.0023609865456819534</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0013707970501855016</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.00564080523326993</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.008859002031385899</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.009428252466022968</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.006394983734935522</span><span class="p">,</span> <span class="mf">4.76480351940553e-18</span><span class="p">,</span> <span class="mf">0.008114570751786232</span><span class="p">,</span>
+<span class="mf">0.015200719237327576</span><span class="p">,</span> <span class="mf">0.018197273835539818</span><span class="p">,</span> <span class="mf">0.01482443418353796</span><span class="p">,</span>
+<span class="mf">0.004636279307305813</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.010356673039495945</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.025791890919208527</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.03587324544787407</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.034922562539577484</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.019146423786878586</span><span class="p">,</span>
+<span class="mf">0.011919975280761719</span><span class="p">,</span> <span class="mf">0.05478153005242348</span><span class="p">,</span> <span class="mf">0.10243935883045197</span><span class="p">,</span>
+<span class="mf">0.1458890736103058</span><span class="p">,</span> <span class="mf">0.1762896478176117</span><span class="p">,</span> <span class="mf">0.18720689415931702</span><span class="p">,</span>
+<span class="mf">0.1762896478176117</span><span class="p">,</span> <span class="mf">0.1458890736103058</span><span class="p">,</span> <span class="mf">0.10243935883045197</span><span class="p">,</span>
+<span class="mf">0.05478153005242348</span><span class="p">,</span> <span class="mf">0.011919975280761719</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.019146423786878586</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.034922562539577484</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03587324544787407</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.025791890919208527</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.010356673039495945</span><span class="p">,</span> <span class="mf">0.004636279307305813</span><span class="p">,</span> <span class="mf">0.01482443418353796</span><span class="p">,</span>
+<span class="mf">0.018197273835539818</span><span class="p">,</span> <span class="mf">0.015200719237327576</span><span class="p">,</span> <span class="mf">0.008114570751786232</span><span class="p">,</span>
+<span class="mf">4.76480351940553e-18</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.006394983734935522</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.009428252466022968</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.008859002031385899</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.00564080523326993</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0013707970501855016</span><span class="p">,</span>
+<span class="mf">0.0023609865456819534</span><span class="p">,</span> <span class="mf">0.004488115198910236</span><span class="p">,</span> <span class="mf">0.004703888203948736</span><span class="p">,</span>
+<span class="mf">0.0033936649560928345</span><span class="p">,</span> <span class="mf">0.001349081052467227</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0005912294145673513</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.0018335371278226376</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0021665366366505623</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0017323142383247614</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.0008822851814329624</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.884083502996931e-19</span><span class="p">,</span> <span class="mf">0.0006353431381285191</span><span class="p">,</span>
+<span class="mf">0.000906112720258534</span><span class="p">,</span> <span class="mf">0.0008378280326724052</span><span class="p">,</span> <span class="mf">0.0005385575350373983</span><span class="p">,</span>
+<span class="mf">0.00013669139298144728</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.00025604525581002235</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>And even though we haven’t gotten into filter design yet, here is the Python code that generated that filter:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">num_taps</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">cut_off</span> <span class="o">=</span> <span class="mi">3000</span> <span class="c1"># Hz</span>
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="mi">32000</span> <span class="c1"># Hz</span>
+
+<span class="c1"># create our low pass filter</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">firwin</span><span class="p">(</span><span class="n">num_taps</span><span class="p">,</span> <span class="n">cut_off</span><span class="p">,</span> <span class="n">nyq</span><span class="o">=</span><span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># plot the impulse response</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Simply plotting this array of floats gives us the filter’s impulse response:</p>
+<a class="reference internal image-reference" href="../_images/impulse_response.PNG"><img alt="../_images/impulse_response.PNG" class="align-center" src="../_images/impulse_response.PNG" style="width: 562.0px; height: 283.0px;" /></a>
+<p>And here is the code that was used to produce the frequency response, shown earlier.  It’s a little more complicated because we have to create the x-axis array of frequencies.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot the frequency response</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">H</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">freqz</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">whole</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>  <span class="c1"># take magnitude</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>   <span class="c1"># make 0 in the center</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">))</span> <span class="c1"># x axis</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="s1">&#39;.-’)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="real-vs-complex-filters">
+<h3>Real vs. Complex Filters<a class="headerlink" href="#real-vs-complex-filters" title="Permalink to this headline">¶</a></h3>
+<p>The filter I showed you had real taps, but taps can also be complex.  Whether the taps are real or complex doesn’t have to match the signal you put through it, i.e. you can put a complex signal through a filter with real taps and vise versa.  When the taps are real, the filter’s frequency response will be symmetrical around DC (0 Hz).  So typically we use complex taps when we need asymmetry, which does not happen too often.</p>
+<a class="reference internal image-reference" href="../_images/complex_taps.PNG"><img alt="../_images/complex_taps.PNG" class="align-center" src="../_images/complex_taps.PNG" style="width: 787.2px; height: 193.60000000000002px;" /></a>
+<p>As an example of complex taps, let’s go back to the filtering use-case, except this time let’s say we want to receive the other signal (without having to re-tune the radio).  That means we want a band-pass filter, but not a symmetrical one, because we only want to keep (a.k.a “pass”) frequencies between around 7 kHz to 13 kHz (we don’t want to also pass -13 kHz to -7 kHz):</p>
+<a class="reference internal image-reference" href="../_images/filter_use_case6.PNG"><img alt="../_images/filter_use_case6.PNG" class="align-center" src="../_images/filter_use_case6.PNG" style="width: 418.59999999999997px; height: 310.09999999999997px;" /></a>
+<p>One way to design this kind of filter is to make a <strong>low</strong>-pass filter with a cutoff of 3 kHz and then frequency shift it.  Remember that we can frequency shift x(t) (time domain) by multiplying it by <img class="math" src="../_images/math/96dfb45b25ce9d4a2fd55cf9e8da4f3886436897.svg" alt="e^{j2\pi f_0t}"/>.  So in this case <img class="math" src="../_images/math/da647bd66569f61d6a3f16c3c2e09085c351a343.svg" alt="f_0"/> should be 10 kHz, that way it shifts our filter up by 10 kHz. Recall that in our Python code from above, h was the filter taps of the low-pass filter.  In order to create our band-pass filter we just have to multiply those taps by <img class="math" src="../_images/math/96dfb45b25ce9d4a2fd55cf9e8da4f3886436897.svg" alt="e^{j2\pi f_0t}"/>, although that involves creating a vector to represent time, based on our sample period (inverse of sample rate):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># (h was found using the previous code snippet)</span>
+
+<span class="c1"># Shift the filter in frequency by multiplying by exp(j*2*pi*f0*t)</span>
+<span class="n">f0</span> <span class="o">=</span> <span class="mf">10e3</span> <span class="c1"># amount we will shift</span>
+<span class="n">Ts</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">sample_rate</span> <span class="c1"># sample period</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">Ts</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">Ts</span><span class="p">)</span> <span class="c1"># time vector. args are (start, stop, step)</span>
+<span class="n">exponential</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">f0</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="c1"># this is essentially a complex sine wave</span>
+
+<span class="n">h_band_pass</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">exponential</span> <span class="c1"># do the shift</span>
+
+<span class="c1"># plot impulse response</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">h_band_pass</span><span class="p">),</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">h_band_pass</span><span class="p">),</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;real&#39;</span><span class="p">,</span> <span class="s1">&#39;imag&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># plot the frequency response</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">H</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">freqz</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">whole</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># shortcut for plotting frequency response</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>  <span class="c1"># take magnitude</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>   <span class="c1"># make 0 in the center</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">))</span> <span class="c1"># x axis</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency [kHz]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The plot of the impulse response should look like this:</p>
+<a class="reference internal image-reference" href="../_images/shifted_filter.PNG"><img alt="../_images/shifted_filter.PNG" class="align-center" src="../_images/shifted_filter.PNG" style="width: 637.1999999999999px; height: 312.59999999999997px;" /></a>
+<p>Because our filter is not symmetrical around 0 Hz, it has to use complex taps, which means we need two lines to plot those complex taps.  What we see in the left-hand plot is still the impulse response.  Our frequency response plot is what really validates that we created the kind of filter we were hoping for, where it will filter out everything except the signal centered around 0 Hz.  Once again, remember that the plot above is <em>not</em> an actual signal, it’s just a representation of the filter.  This can be very confusing, because when you apply the filter to the signal and plot the output, in the frequency domain, in many cases it will look roughly the same as the filter’s frequency response itself.</p>
+</div>
+</div>
+<div class="section" id="filter-implementation">
+<h2>Filter Implementation<a class="headerlink" href="#filter-implementation" title="Permalink to this headline">¶</a></h2>
+<p>We aren’t going to dive too deep into the implementation of filters, I rather focus on design of filters (you can find read-to-use implementations in any programming language anyway).  But for now, here is one take-away:  To filter a signal with an FIR filter, you simply convolve the impulse response (the array of taps) with the input signal.  So in the discrete world we use a discrete convolution (example below).  The b’s are the taps.  <img class="math" src="../_images/math/4ab963b7331cae46b916c29afa4dc9f2831023fa.svg" alt="z^{-1}"/> just means delay by one time step.</p>
+<a class="reference internal image-reference" href="../_images/discrete_convolution.PNG"><img alt="../_images/discrete_convolution.PNG" class="align-center" src="../_images/discrete_convolution.PNG" style="width: 385.6px; height: 152.8px;" /></a>
+<p>You might be able to see why we call them filter “taps” now, based on the way the filter itself is implemented.</p>
+<div class="section" id="fir-vs-iir">
+<h3>FIR vs. IIR<a class="headerlink" href="#fir-vs-iir" title="Permalink to this headline">¶</a></h3>
+<p>There are two main classes of digital filters: FIR and IIR</p>
+<ol class="arabic simple">
+<li><p>Finite impulse response (FIR)</p></li>
+<li><p>Infinite impulse response (IIR)</p></li>
+</ol>
+<p>We won’t get too deep into the theory, but for now just remember: FIR filters are easier to design, and can do anything you want if you use enough taps.  IIR filters are more complicated, have potential to be unstable, but are more efficient (use less CPU and memory for the given filter). If someone just gives you a list of taps, it’s assumed they are taps for an FIR filter.  If they start mentioning “poles”, they are talking about IIR filters.  We will stick with FIR filters in this textbook.</p>
+<p>Below is an example frequency response, showing the comparison of an FIR and IIR filter that do almost exactly the same filtering; they have a similar transition-width, which as we learned will determine how many taps are required.  The FIR filter has 50 taps and the IIR filter has 12 poles, which is like having 12 taps in terms of computations required.</p>
+<a class="reference internal image-reference" href="../_images/FIR_IIR.PNG"><img alt="../_images/FIR_IIR.PNG" class="align-center" src="../_images/FIR_IIR.PNG" style="width: 529.9px; height: 459.2px;" /></a>
+<p>The main take-away is that the FIR filter requires way more computational resources than the IIR, to perform roughly the same filtering operation.</p>
+<p>Here are some real-world examples of FIR and IIR filters that you may have used before.</p>
+<p>If you do a “moving average” across a list of numbers, that’s just an FIR filter with taps of 1’s:
+- h = [1 1 1 1 1 1 1 1 1 1] for a moving average filter with window size of 10.  It also happens to be a low pass type filter; why is that?  What’s the difference between using 1’s and using taps that decay to zero?</p>
+<details>
+<summary><a>Answers</a></summary><p>A moving average filter is a low pass filter because it smooths out “high frequency” changes, which is usually why people will use one.  The reason to use taps that decay to zero on both ends is to avoid a sudden change in the output, like if the signal being filtered was zero for a while and then suddenly jumped up.</p>
+</details><p>Now for an FIR example.  Have any of you ever done this:</p>
+<blockquote>
+<div><p>x = x*0.99 + new_value*0.01</p>
+</div></blockquote>
+<p>where the 0.99 and 0.01 represent the speed the value updates (or rate of decay, same thing).  It’s a convenient way to slowly update some variable without having to remember the last several values.  This is actually a form of low pass IIR Filter.  Hopefully you can see why IIR filters have less stability than FIR.  Values never fully go away!</p>
+</div>
+</div>
+<div class="section" id="filter-design-tools">
+<h2>Filter Design Tools<a class="headerlink" href="#filter-design-tools" title="Permalink to this headline">¶</a></h2>
+<p>In practice, most people will use a filter designer tool, or a function in code that designs the filter.  There are plenty of different tools, but for students I recommend this easy-to-use web app by Peter Isza that will show you impulse and frequency response: <a class="reference external" href="http://t-filter.engineerjs.com">http://t-filter.engineerjs.com</a>.  Using the default values, at the time of writing this at least, it’s set up to design a low-pass filter with a passband from 0 to 400 Hz and stopband from 500 Hz and up.  The sample rate is 2 kHz, so the max frequency we can “see” is 1 kHz.</p>
+<a class="reference internal image-reference" href="../_images/filter_designer1.PNG"><img alt="../_images/filter_designer1.PNG" class="align-center" src="../_images/filter_designer1.PNG" style="width: 659.4px; height: 156.79999999999998px;" /></a>
+<p>Click the “Design Filter” button to create the taps and plot the frequency response.</p>
+<a class="reference internal image-reference" href="../_images/filter_designer2.PNG"><img alt="../_images/filter_designer2.PNG" class="align-center" src="../_images/filter_designer2.PNG" style="width: 970.9px; height: 401.79999999999995px;" /></a>
+<p>Click “Impulse Response” at the top to see the impulse response, which is just a plot of the taps, since this is an FIR filter.</p>
+<a class="reference internal image-reference" href="../_images/filter_designer3.PNG"><img alt="../_images/filter_designer3.PNG" class="align-center" src="../_images/filter_designer3.PNG" style="width: 798.0px; height: 388.5px;" /></a>
+<p>This app even includes the C++ source code to implement and use this filter.  Note that it does not include any way to design IIR filters, which are in general much more difficult to design.</p>
+</div>
+<div class="section" id="convolution">
+<h2>Convolution<a class="headerlink" href="#convolution" title="Permalink to this headline">¶</a></h2>
+<p>We will take a brief detour to introduce the convolution operator, feel free to skip this section if you are already familiar with it.</p>
+<p>Adding two signals together is one way of combining two signals into one, in the Fourier chapter we talked about how the linearity property applies when adding two signals together.  Convolution is another way to combine two signals into one, but it is very different than simply adding them.  The convolution of two signals is like sliding one across the other and integrating.  It is <em>very</em> similar to a cross-correlation, if you are familiar with that operation, in fact it is equivalent to a cross-correlation in many cases.</p>
+<p>I believe the convolution operation is best learned through examples.  In this first example, we convolve two square pulses together:</p>
+<a class="reference internal image-reference" href="../_images/convolution_animation1.gif"><img alt="../_images/convolution_animation1.gif" class="align-center" src="../_images/convolution_animation1.gif" style="width: 480.0px; height: 360.0px;" /></a>
+<p>Because it’s just a sliding integreation, the result is a triangle, with a maximum at the point where both square pulses lined up perfectly.  Let’s look at what happens if we convolve a square pulse with a triangular pulse:</p>
+<a class="reference internal image-reference" href="../_images/convolution_animation2.gif"><img alt="../_images/convolution_animation2.gif" class="align-center" src="../_images/convolution_animation2.gif" style="width: 639.0px; height: 349.5px;" /></a>
+<p>In both examples, we have two input signals (one red, one blue), and then the output of the convolution is displayed.  You can see that the output is the integration of the two signals as one slides across the other.  Because of this “sliding” nature, the length of the output is actually longer than the input.  If one signal is <code class="code docutils literal notranslate"><span class="pre">M</span></code> samples and the other signal is <code class="code docutils literal notranslate"><span class="pre">N</span></code> samples, the convolution of the two can produce <code class="code docutils literal notranslate"><span class="pre">N+M-1</span></code> samples.  However, functions such as <code class="code docutils literal notranslate"><span class="pre">numpy.convolve()</span></code> have a way to specify whether you want the whole output, or just <code class="code docutils literal notranslate"><span class="pre">max(M,</span> <span class="pre">N)</span></code> samples, or just the samples where the signals overlapped completely, which is <code class="code docutils literal notranslate"><span class="pre">max(M,</span> <span class="pre">N)</span> <span class="pre">-</span> <span class="pre">min(M,</span> <span class="pre">N)</span> <span class="pre">+</span> <span class="pre">1</span></code> if you were curious.  No need to get caught up in this detail, just know that the length of the output of a convolution is not just the length of the inputs.</p>
+<p>So why does convolution matter in DSP?  Well for starters, to filter a signal, we can simply take the impulse response of that filter and convolve it with the signal.  It turns out FIR filtering is just a convolution operation.</p>
+<a class="reference internal image-reference" href="../_images/filter_convolve.PNG"><img alt="../_images/filter_convolve.PNG" class="align-center" src="../_images/filter_convolve.PNG" style="width: 502.59999999999997px; height: 275.79999999999995px;" /></a>
+<p>This might be confusing because earlier we mentioned that convolution takes in two <em>signals</em> and outputs one signal.  Well we can treat the impulse response like a signal, convolution is just a math operator after all, which operates on two 1D arrays.  If one of those 1D arrays is the filter’s impulse response, the other 1D array can be a piece of the input signal, and the output will be a filtered version of the input.  Let’s see another example to help this click.  In the example below, the triangle will represent our filter’s impulse response, and the <span class="green">green</span> signal is our signal being filtered.</p>
+<a class="reference internal image-reference" href="../_images/convolution.gif"><img alt="../_images/convolution.gif" class="align-center" src="../_images/convolution.gif" style="width: 358.4px; height: 358.4px;" /></a>
+<p>The <span class="red">red</span> output is the filtered signal.</p>
+<p>Question: What kind of filter was the triangle?  Well it smoothed out the high frequency components of the green signal (i.e. the sharp transitions of the square) so it’s acting as a low-pass filter.</p>
+</div>
+<div class="section" id="filter-design-in-python">
+<h2>Filter Design in Python<a class="headerlink" href="#filter-design-in-python" title="Permalink to this headline">¶</a></h2>
+<p>We will now talk about one way to design an FIR filter ourselves, in Python.  Note that there are many approaches to designing filters, in this example we will use the method of starting in the frequency domain and working backwards to find the impulse response, which is ultimately how our filter is represented (by its taps).</p>
+<p>You start by creating a vector of your desired frequency response.  As an example, let’s design an arbitrarily shaped low-pass filter shown below:</p>
+<a class="reference internal image-reference" href="../_images/filter_design1.PNG"><img alt="../_images/filter_design1.PNG" class="align-center" src="../_images/filter_design1.PNG" style="width: 525.6999999999999px; height: 213.5px;" /></a>
+<p>And the code used to create this is fairly simple:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">20</span><span class="p">)))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><code class="code docutils literal notranslate"><span class="pre">hstack()</span></code> is just one way to concatenate arrays in numpy.  We know this will lead to a filter with complex taps, why?</p>
+<details>
+<summary><a>Answer</a></summary><p>It’s not symmetrical around 0 Hz</p>
+</details><p>Our end goal is to find the taps of this filter so we can actually use it.  How do we get the taps, given the frequency response?  Well, how do we convert from the frequency domain back to the time domain?  Inverse FFT (IFFT)!  And recall that the IFFT function is almost exactly the same as the FFT function.  We also need to ifftshift our desired frequency response before the ifft, and then we need yet another iffshift after the ifft (no, they don’t cancel themselves out, you can try).  This might seem confusing, but just remember that you always should fftshift after an fft, and iffshift after an ifft.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">H</span><span class="p">)))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;real&#39;</span><span class="p">,</span><span class="s1">&#39;imag&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/filter_design2.PNG"><img alt="../_images/filter_design2.PNG" class="align-center" src="../_images/filter_design2.PNG" style="width: 503.1px; height: 306.90000000000003px;" /></a>
+<p>Now let’s say we use these taps shown above as our filter.  We know that the impulse response is just plotting the taps, so what we see above <em>is</em> our impulse response.  Lets take the FFT of our taps to see what the frequency domain actually looks like.  We will do a 1024 point FFT to get a high resolution:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">H_fft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">H_fft</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/filter_design3.PNG"><img alt="../_images/filter_design3.PNG" class="align-center" src="../_images/filter_design3.PNG" style="width: 806.4px; height: 240.79999999999998px;" /></a>
+<p>Note that it’s not very straight… It doesn’t match our original very well, recall the shape that we initially wanted to make a filter for.  A big reason is because our impulse response isn’t done decaying, i.e. the left and right sides don’t reach zero.  We have two options that will allow it to decay to zero:</p>
+<p><strong>Option 1:</strong> We “window” our current impulse response so that it decays to 0 on both sides.  This involves multiplying our impulse response with a “windowing function” that starts and ends at zero.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># After creating h using the previous code, create and apply the window</span>
+<span class="n">window</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">window</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/filter_design4.PNG"><img alt="../_images/filter_design4.PNG" class="align-center" src="../_images/filter_design4.PNG" style="width: 770.0px; height: 226.1px;" /></a>
+<p><strong>Option 2:</strong> We re-generate our impulse response using more points so that it has time to decay.  To do this we need to add resolution to the original frequency domain array we started with (called interpolating).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">200</span><span class="p">)))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># (the rest of the code is the same)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/filter_design5.PNG"><img alt="../_images/filter_design5.PNG" class="align-center" src="../_images/filter_design5.PNG" style="width: 465.59999999999997px; height: 296.4px;" /></a>
+<a class="reference internal image-reference" href="../_images/filter_design6.PNG"><img alt="../_images/filter_design6.PNG" class="align-center" src="../_images/filter_design6.PNG" style="width: 695.0999999999999px; height: 210.0px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<a class="reference internal image-reference" href="../_images/filter_design7.PNG"><img alt="../_images/filter_design7.PNG" class="align-center" src="../_images/filter_design7.PNG" style="width: 503.0px; height: 286.0px;" /></a>
+<p>Both options seemed to work.  Which one would you choose?  The second method resulted in more taps, but the first method resulting in a frequency response that wasn’t very sharp, and the falling edge wasn’t very steep.  There are many ways to design a filter, and many trade-offs along the way, many consider it an art.</p>
+</div>
+<div class="section" id="intro-to-pulse-shaping">
+<h2>Intro to Pulse Shaping<a class="headerlink" href="#intro-to-pulse-shaping" title="Permalink to this headline">¶</a></h2>
+<p>We will briefly introduce a very interesting topic within DSP, pulse shaping, a topic we explore in depth in its own chapter.</p>
+<p>As we learned, digital signals use symbols to represent one or more bits of information.  We use a digital modulation scheme like ASK, PSK, QAM, FSK, etc, to modulate a carrier so they can be sent wirelessly.  When we simulated QPSK in the Digital Modulation chapter, we only simulated one sample per symbol, i.e. each complex number we created was one of the points on the constellation, it was one symbol.  In practice we usually generate multiple samples per symbol, and the reason has to do with filtering.</p>
+<p>We use filters to craft the “shape” of our symbols, since the shape in the time domain will change the shape in the frequency domain.  The frequency domain is what tells us how much spectrum/bandwidth our signal is going to use, and we usually want to minimize it.  Now what’s important to understand is that the spectral characteristics (frequency domain) of the baseband symbols doesn’t change when we modulate a carrier, it just shifts it up in frequency, the shape stays the same, which means the amount of bandwidth it uses stays the same.  When we use 1 sample per symbol, it’s kind of like transmitting square pulses, in fact BPSK using 1 sample per symbol <em>is</em> just a square wave of random 1’s and -1’s:</p>
+<a class="reference internal image-reference" href="../_images/bpsk.PNG"><img alt="../_images/bpsk.PNG" class="align-center" src="../_images/bpsk.PNG" style="width: 468.90000000000003px; height: 287.1px;" /></a>
+<p>And as we have learned, square pulses are not the best, they use an excess amount of spectrum:</p>
+<a class="reference internal image-reference" href="../_images/square-wave.png"><img alt="../_images/square-wave.png" class="align-center" src="../_images/square-wave.png" style="width: 659.4px; height: 249.89999999999998px;" /></a>
+<p>So what we do is we “pulse shape” these blocky looking symbols so that they take up less bandwidth in the frequency domain.  We do this using a low-pass filter, because it will filter out the higher frequency components of our symbols.  Below shows an example of symbols in the time (top) and frequency (bottom) domain, before and after a pulse shaping filter has been applied:</p>
+<a class="reference internal image-reference" href="../_images/pulse_shaping.PNG"><img alt="../_images/pulse_shaping.PNG" class="align-center" src="../_images/pulse_shaping.PNG" style="width: 613.1999999999999px; height: 179.89999999999998px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<a class="reference internal image-reference" href="../_images/pulse_shaping_freq.png"><img alt="../_images/pulse_shaping_freq.png" class="align-center" src="../_images/pulse_shaping_freq.png" style="width: 628.2px; height: 315.0px;" /></a>
+<p>Note how much quicker the signal drops off in frequency; the sidelobes are around 30 dB lower after pulse shaping, that’s 1000x less!  And more importantly, the main lobe is more narrow, so less spectrum is used for the same amount of bits per second.</p>
+<p>For now, be aware that common pulse shaping filters include:</p>
+<ol class="arabic simple">
+<li><p>Raised-cosine filter</p></li>
+<li><p>Root raised-cosine filter</p></li>
+<li><p>Sinc filter</p></li>
+<li><p>Gaussian filter</p></li>
+</ol>
+<p>And these filters usually have some parameter you can adjust to tell it how tight you want the bandwidth.  For example, below shows the time and frequency domain of a raised-cosine filter with different values of <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/>, the parameter that defines how steep the roll-off is.</p>
+<a class="reference internal image-reference" href="../_images/pulse_shaping_rolloff.PNG"><img alt="../_images/pulse_shaping_rolloff.PNG" class="align-center" src="../_images/pulse_shaping_rolloff.PNG" style="width: 707.2px; height: 202.8px;" /></a>
+<p>You can see that a lower value of <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> leads to less spectrum being used (for the same amount of data), but if you go too low then the time domain symbols take longer to decay to zero, in fact when <img class="math" src="../_images/math/4f3447a0acb350996ffd4de1145f4b22132893f0.svg" alt="\beta=0"/> they never fully decay to zero which means we can’t actually transmit such symbols in practice.  A <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> around 0.35 is common.</p>
+<p>You will learn a lot more about pulse shaping, including some special properties that pulse shaping filters must satisfy, in the chapter dedicated to pulse shaping filters.</p>
+</div>
 </div>
 
 
-           </div>
-           
           </div>
-          <footer>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2019, Marc Lichtman
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
-
+          
         </div>
       </div>
-
-    </section>
-
-  </div>
-  
-
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
     
-   
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
 
-</body>
+
+
+<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Filters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#filter-basics">Filter Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filter-representation">Filter Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filter-implementation">Filter Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filter-design-tools">Filter Design Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convolution">Convolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filter-design-in-python">Filter Design in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#intro-to-pulse-shaping">Intro to Pulse Shaping</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="noise.html" title="previous chapter"><span class="section-number">6. </span>Noise and dB</a></li>
+      <li>Next: <a href="link_budgets.html" title="next chapter"><span class="section-number">8. </span>Link Budgets</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
 </html>
