@@ -25,17 +25,106 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
 
-    <div class="document">
+
+
+<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Noise and dB</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gaussian-noise">Gaussian Noise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#decibels-db">Decibels (dB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#noise-in-frequency-domain">Noise in Frequency Domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#complex-noise">Complex Noise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#awgn">AWGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#snr">SNR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#external-resources">External Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://repl.it/languages/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="pluto_intro.html" title="previous chapter"><span class="section-number">5. </span>PlutoSDR Basics</a></li>
+      <li>Next: <a href="filters.html" title="next chapter"><span class="section-number">7. </span>Filters</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="pluto_intro.html" title="Previous document"><span class="section-number">5. </span>PlutoSDR Basics</a>
+        </li>
+        <li>
+          <a href="filters.html" title="Next document"><span class="section-number">7. </span>Filters</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
 
           <div class="body" role="main">
             
   <div class="section" id="noise-and-db">
-<h1><span class="section-number">6. </span>Noise and dB<a class="headerlink" href="#noise-and-db" title="Permalink to this headline">¶</a></h1>
+<span id="noise-chapter"></span><h1><span class="section-number">6. </span>Noise and dB<a class="headerlink" href="#noise-and-db" title="Permalink to this headline">¶</a></h1>
 <p>In this chapter we will discuss noise, including how it is modeled, and dealt with in a comms system.  We will also introduce dB along the way.</p>
 <div class="section" id="gaussian-noise">
 <h2>Gaussian Noise<a class="headerlink" href="#gaussian-noise" title="Permalink to this headline">¶</a></h2>
@@ -71,57 +160,57 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">(</span><span class="n">x_db</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>But don’t get caught up in the formula, there is a key concept to take away here.  In DSP we deal with really big numbers and really small numbers together (e.g. the strength of a signal compared to the strength of the noise), and dB lets us have more dynamic range when we express numbers or plot them.  It also provides some conveniences like being able to add when we would normally multiply (as we will see in the Link Budget chapter).</p>
+<p>But don’t get caught up in the formula, there is a key concept to take away here.  In DSP we deal with really big numbers and really small numbers together (e.g. the strength of a signal compared to the strength of the noise), and dB lets us have more dynamic range when we express numbers or plot them.  It also provides some conveniences like being able to add when we would normally multiply (as we will see in the <a class="reference internal" href="link_budgets.html#link-budgets-chapter"><span class="std std-ref">Link Budgets</span></a> chapter).</p>
 <p>Some common errors people will run into when new to dB are:</p>
 <ol class="arabic simple">
-<li><p>Using natural log instead of log base 10, because most programming language’s log() function is actually the natural log.</p></li>
-<li><p>Forgetting to include the dB when expressing a number or labeling an axis.  If we are in dB we need to identify it somewhere.</p></li>
-<li><p>When you’re in dB you add/subtract values instead of multiplying/dividing, e.g.:</p></li>
+<li>Using natural log instead of log base 10, because most programming language’s log() function is actually the natural log.</li>
+<li>Forgetting to include the dB when expressing a number or labeling an axis.  If we are in dB we need to identify it somewhere.</li>
+<li>When you’re in dB you add/subtract values instead of multiplying/dividing, e.g.:</li>
 </ol>
 <a class="reference internal image-reference" href="../_images/db.PNG"><img alt="../_images/db.PNG" class="align-center" src="../_images/db.PNG" style="width: 640.8px; height: 166.2px;" /></a>
 <p>It is also important to understand that dB is not technically a “unit”.  A value in dB alone is unit-less, like if something is 2x larger, there are no units until I tell you the units.  dB is a relative thing.  In audio when they say dB they really mean dBA which is units for sound level (the A is the units). In wireless we typically refer to watts, to refer to an actual power level, so you might see dBW which is relative to 1 W, or dBmW (often written dBm for short) which is relative to 1 mW.   For example, someone might say “our transmitter is set to 3 dBW” (so 5 watts).  Sometimes we just say dB, meaning it is relative, there are no units, e.g. “our signal was received 20 dB above the noise floor”.  A little tip: 0 dBm = -30 dBW.</p>
 <p>Lastly, here are some common conversions that I would recommend remembering:</p>
-<table class="docutils align-default">
+<table border="1" class="docutils align-default">
 <colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
+<col width="50%" />
+<col width="50%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Linear</p></th>
-<th class="head"><p>dB</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Linear</th>
+<th class="head">dB</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>1x</p></td>
-<td><p>0 dB</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>1x</td>
+<td>0 dB</td>
 </tr>
-<tr class="row-odd"><td><p>2x</p></td>
-<td><p>3 dB</p></td>
+<tr class="row-odd"><td>2x</td>
+<td>3 dB</td>
 </tr>
-<tr class="row-even"><td><p>10x</p></td>
-<td><p>10 dB</p></td>
+<tr class="row-even"><td>10x</td>
+<td>10 dB</td>
 </tr>
-<tr class="row-odd"><td><p>0.5x</p></td>
-<td><p>-3 dB</p></td>
+<tr class="row-odd"><td>0.5x</td>
+<td>-3 dB</td>
 </tr>
-<tr class="row-even"><td><p>0.1x</p></td>
-<td><p>-10 dB</p></td>
+<tr class="row-even"><td>0.1x</td>
+<td>-10 dB</td>
 </tr>
-<tr class="row-odd"><td><p>100x</p></td>
-<td><p>20 dB</p></td>
+<tr class="row-odd"><td>100x</td>
+<td>20 dB</td>
 </tr>
-<tr class="row-even"><td><p>1000x</p></td>
-<td><p>30 dB</p></td>
+<tr class="row-even"><td>1000x</td>
+<td>30 dB</td>
 </tr>
-<tr class="row-odd"><td><p>10000x</p></td>
-<td><p>40 dB</p></td>
+<tr class="row-odd"><td>10000x</td>
+<td>40 dB</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="noise-in-frequency-domain">
 <h2>Noise in Frequency Domain<a class="headerlink" href="#noise-in-frequency-domain" title="Permalink to this headline">¶</a></h2>
-<p>In the Frequency Domain chapter we looked at “Fourier pairs”, i.e. what a certain time domain signal looks like in the frequency domain.  Well what does Gaussian noise look like in the frequency domain?  Below shows some simulated noise in the time domain, and then a plot of the FFT of that noise (many FFT’s were averaged together).</p>
+<p>In the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> chapter we looked at “Fourier pairs”, i.e. what a certain time domain signal looks like in the frequency domain.  Well what does Gaussian noise look like in the frequency domain?  Below shows some simulated noise in the time domain, and then a plot of the FFT of that noise (many FFT’s were averaged together).</p>
 <a class="reference internal image-reference" href="../_images/noise_freq.PNG"><img alt="../_images/noise_freq.PNG" class="align-center" src="../_images/noise_freq.PNG" style="width: 599.5px; height: 506.00000000000006px;" /></a>
 <p>We can see that it looks roughly the same across all frequencies, and is fairly flat.   It turns out that Gaussian noise in the time domain is also Gaussian noise in the frequency domain.  So why don’t the two plots above look the same?  It’s because the frequency domain plot is showing the magnitude of the FFT, so there will only be positive numbers, and it’s using a log scale (it’s showing the magnitude in dB).  Otherwise they would look the same.  We can prove this to ourselves by generating some noise (in the time domain) in Python and then taking the FFT.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -182,7 +271,7 @@
 </div>
 <div class="section" id="awgn">
 <h2>AWGN<a class="headerlink" href="#awgn" title="Permalink to this headline">¶</a></h2>
-<p>In the DSP and SDR world you will hear the abbreviation “AWGN” a lot.  It stands for Additive White Gaussian Noise.  The GN, Gaussian Noise, we already discussed.  Additive just means the noise is being added to our received signal.  White means in the frequency domain, the spectrum is flat across our entire observation band.  It will almost always be white in practice, or approximately white.  In this textbook we will use AWGN as the only form of noise, when dealing with communications links and link budgets and such.  Non-AWGN noise tends to be a niche topic.</p>
+<p>Additive White Gaussian Noise (AWGN) is an abbreviation you will hear a lot in the DSP and SDR world.  The GN, Gaussian Noise, we already discussed.  Additive just means the noise is being added to our received signal.  White means in the frequency domain, the spectrum is flat across our entire observation band.  It will almost always be white in practice, or approximately white.  In this textbook we will use AWGN as the only form of noise, when dealing with communications links and link budgets and such.  Non-AWGN noise tends to be a niche topic.</p>
 </div>
 <div class="section" id="snr">
 <h2>SNR<a class="headerlink" href="#snr" title="Permalink to this headline">¶</a></h2>
@@ -196,88 +285,35 @@
 <h2>External Resources<a class="headerlink" href="#external-resources" title="Permalink to this headline">¶</a></h2>
 <p>Further resources about AWGN, SNR, and variance:</p>
 <ol class="arabic simple">
-<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Additive_white_Gaussian_noise">https://en.wikipedia.org/wiki/Additive_white_Gaussian_noise</a></p></li>
-<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Signal-to-noise_ratio">https://en.wikipedia.org/wiki/Signal-to-noise_ratio</a></p></li>
-<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Variance">https://en.wikipedia.org/wiki/Variance</a></p></li>
+<li><a class="reference external" href="https://en.wikipedia.org/wiki/Additive_white_Gaussian_noise" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Additive_white_Gaussian_noise</a></li>
+<li><a class="reference external" href="https://en.wikipedia.org/wiki/Signal-to-noise_ratio" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Signal-to-noise_ratio</a></li>
+<li><a class="reference external" href="https://en.wikipedia.org/wiki/Variance" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Variance</a></li>
 </ol>
 </div>
 </div>
 
 
           </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="pluto_intro.html" title="Previous document"><span class="section-number">5. </span>PlutoSDR Basics</a>
+        </li>
+        <li>
+          <a href="filters.html" title="Next document"><span class="section-number">7. </span>Filters</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<p class="logo">
-  <a href="../index.html">
-    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
-    
-    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
-    
-  </a>
-</p>
-
-
-
-<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Noise and dB</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#gaussian-noise">Gaussian Noise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#decibels-db">Decibels (dB)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#noise-in-frequency-domain">Noise in Frequency Domain</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#complex-noise">Complex Noise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#awgn">AWGN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#snr">SNR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#external-resources">External Resources</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="pluto_intro.html" title="previous chapter"><span class="section-number">5. </span>PlutoSDR Basics</a></li>
-      <li>Next: <a href="filters.html" title="next chapter"><span class="section-number">7. </span>Filters</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2020, Marc Lichtman.
       

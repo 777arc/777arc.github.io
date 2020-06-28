@@ -25,21 +25,109 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
 
-    <div class="document">
+
+
+<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">12. Pulse Shaping</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#inter-symbol-interference-isi">Inter-Symbol-Interference (ISI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matched-filter">Matched Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#splitting-a-filter-in-half">Splitting a Filter in Half</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#specific-pulse-shaping-filters">Specific Pulse Shaping Filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#roll-off-factor">Roll-off Factor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-exercise">Python Exercise</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://repl.it/languages/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="multipath_fading.html" title="previous chapter"><span class="section-number">11. </span>Multipath Fading</a></li>
+      <li>Next: <a href="appendix_text_comparison.html" title="next chapter"><span class="section-number">13. </span>Textbook Comparison</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="multipath_fading.html" title="Previous document"><span class="section-number">11. </span>Multipath Fading</a>
+        </li>
+        <li>
+          <a href="appendix_text_comparison.html" title="Next document"><span class="section-number">13. </span>Textbook Comparison</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
 
           <div class="body" role="main">
             
   <div class="section" id="pulse-shaping">
-<h1><span class="section-number">12. </span>Pulse Shaping<a class="headerlink" href="#pulse-shaping" title="Permalink to this headline">¶</a></h1>
+<span id="pulse-shaping-chapter"></span><h1><span class="section-number">12. </span>Pulse Shaping<a class="headerlink" href="#pulse-shaping" title="Permalink to this headline">¶</a></h1>
 <p>You can consider this Part II of the Filters chapter, where we take a deeper dive into pulse shaping.</p>
 <div class="section" id="inter-symbol-interference-isi">
 <h2>Inter-Symbol-Interference (ISI)<a class="headerlink" href="#inter-symbol-interference-isi" title="Permalink to this headline">¶</a></h2>
-<p>In the Filters chapter we learned that blocky shaped symbols/pulses use an excess amount of spectrum, and we can greatly reduce the amount of spectrum used by “shaping” our pulses.  But you can’t just use any low-pass filter, or you might get inter-symbol-interference (ISI), which is when symbols bleed into each other and interfere with each other.</p>
+<p>In the <a class="reference internal" href="filters.html#filters-chapter"><span class="std std-ref">Filters</span></a> chapter we learned that blocky shaped symbols/pulses use an excess amount of spectrum, and we can greatly reduce the amount of spectrum used by “shaping” our pulses.  But you can’t just use any low-pass filter, or you might get inter-symbol-interference (ISI), which is when symbols bleed into each other and interfere with each other.</p>
 <p>When we transmit digital symbols, we transmit them back-to-back (as opposed to waiting some time between symbols).  But when you apply a pulse-shaping filter, it elongates the pulse in the time domain (in order to condense it in frequency), which causes adjacent symbols to overlap with each other.  And this is fine, as long as your pulse shaping filter meets this one criterion: all of the pulses must add up to zero at every multiple of our symbol period T, except for one of the pulses.  This is best understood through the following visualization:</p>
 <a class="reference internal image-reference" href="../_images/pulse_train.PNG"><img alt="../_images/pulse_train.PNG" class="align-center" src="../_images/pulse_train.PNG" style="width: 406.0px; height: 222.4px;" /></a>
 <p>As you can see, at every interval of T, there is one peak of a pulse, and the rest of the pulses are at 0 (they cross the x-axis).  When the receiver goes to sample the signal, it does so at the perfect time (at the peak of the pulses), meaning that is the only point in time which matters.  Usually there is a symbol synchronization block at the receiver that makes sure the symbols are sampled at the peaks.</p>
@@ -48,8 +136,8 @@
 <h2>Matched Filter<a class="headerlink" href="#matched-filter" title="Permalink to this headline">¶</a></h2>
 <p>One trick we use in wireless communications is called matched filtering.  To understand matched filtering you must first understand these two points:</p>
 <ol class="arabic simple">
-<li><p>The pulses we discussed above only have to be aligned perfectly <em>at the receiver</em>, right before the sampling occurs.  Until that point it doesn’t really matter if there is ISI, i.e. the signals can fly through the air with ISI and it’s OK.</p></li>
-<li><p>We want a low-pass filter in our transmitter to reduce the amount of spectrum our signal uses.  But the receiver also needs a low-pass filter, to get rid of as much noise/interference next to the signal as possible.  So we have a low-pass filter at the Tx, another at the Rx, and sampling occurs after both filters (and the wireless channel’s effects).</p></li>
+<li>The pulses we discussed above only have to be aligned perfectly <em>at the receiver</em>, right before the sampling occurs.  Until that point it doesn’t really matter if there is ISI, i.e. the signals can fly through the air with ISI and it’s OK.</li>
+<li>We want a low-pass filter in our transmitter to reduce the amount of spectrum our signal uses.  But the receiver also needs a low-pass filter, to get rid of as much noise/interference next to the signal as possible.  So we have a low-pass filter at the Tx, another at the Rx, and sampling occurs after both filters (and the wireless channel’s effects).</li>
 </ol>
 <p>What we do in modern comms is split the pulse shaping filter equally between the Tx and Rx.  They don’t <em>have</em> to be identical filters, but theoretically, the optimal linear filter for maximizing the SNR in the presence of AWGN is to use the same filter at both the Tx and Rx.  This is called the “matched filter” concept.</p>
 <p>Another way of thinking about matched filters is that the receiver correlates the received signal with the known template signal.  The template signal is essentially the pulses the transmitter sends, irrespective of the phase/amplitude shifts applied to them.  Recall that filtering is done by convolution, which is essentially correlation (in fact they are mathematically the same when the template is symmetrical).  This process of correlating the received signal with the template gives us our best chance at recovering what was sent, and is why it’s theoretically optimal.  As an analogy, think of an image recognition system that looks for faces using a template of a face, and a 2d correlation:</p>
@@ -135,7 +223,7 @@
 <span class="n">Applying</span> <span class="mi">8</span> <span class="n">samples</span> <span class="n">per</span> <span class="n">symbol</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>We will create a raised-cosine filter, using a beta of 0.35, and make it 101 taps which will give it enough time to decay to zero.   While the raised cosine equation asks for our symbol period, and a time vector (t), we can just assume a <strong>sample</strong> period of 1 second, to sort of “normalize” our simulation.  This means our symbol period (Ts) is 8, because we have 8 samples per symbol.  So our time vector will just be a list of integers.  With the way the raised-cosine equation works, we want t=0 to be in the center, so we will generate the 101-length time vector starting at -51 and ending on -51:</p>
+<p>We will create a raised-cosine filter, using a beta of 0.35, and make it 101 taps which will give it enough time to decay to zero.   While the raised cosine equation asks for our symbol period, and a time vector (t), we can just assume a <strong>sample</strong> period of 1 second, to sort of “normalize” our simulation.  This means our symbol period (Ts) is 8, because we have 8 samples per symbol.  So our time vector will just be a list of integers.  With the way the raised-cosine equation works, we want t=0 to be in the center, so we will generate the 101-length time vector starting at -51 and ending on +51:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create our raised-cosine filter</span>
 <span class="n">num_taps</span> <span class="o">=</span> <span class="mi">101</span>
 <span class="n">beta</span> <span class="o">=</span> <span class="mf">0.35</span>
@@ -179,78 +267,26 @@
 
 
           </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="multipath_fading.html" title="Previous document"><span class="section-number">11. </span>Multipath Fading</a>
+        </li>
+        <li>
+          <a href="appendix_text_comparison.html" title="Next document"><span class="section-number">13. </span>Textbook Comparison</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<p class="logo">
-  <a href="../index.html">
-    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
-    
-    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
-    
-  </a>
-</p>
-
-
-
-<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">12. Pulse Shaping</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#inter-symbol-interference-isi">Inter-Symbol-Interference (ISI)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#matched-filter">Matched Filter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#splitting-a-filter-in-half">Splitting a Filter in Half</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#specific-pulse-shaping-filters">Specific Pulse Shaping Filters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#roll-off-factor">Roll-off Factor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#python-exercise">Python Exercise</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="multipath_fading.html" title="previous chapter"><span class="section-number">11. </span>Multipath Fading</a></li>
-      <li>Next: <a href="appendix_text_comparison.html" title="next chapter"><span class="section-number">13. </span>Textbook Comparison</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2020, Marc Lichtman.
       

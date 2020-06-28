@@ -25,17 +25,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
 
-    <div class="document">
+
+
+<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. PlutoSDR Basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#software-drivers-install">Software/Drivers Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-exercises">Python Exercises</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://repl.it/languages/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="digital_modulation.html" title="previous chapter"><span class="section-number">4. </span>Digital Modulation</a></li>
+      <li>Next: <a href="noise.html" title="next chapter"><span class="section-number">6. </span>Noise and dB</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="digital_modulation.html" title="Previous document"><span class="section-number">4. </span>Digital Modulation</a>
+        </li>
+        <li>
+          <a href="noise.html" title="Next document"><span class="section-number">6. </span>Noise and dB</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
 
           <div class="body" role="main">
             
   <div class="section" id="plutosdr-basics">
-<h1><span class="section-number">5. </span>PlutoSDR Basics<a class="headerlink" href="#plutosdr-basics" title="Permalink to this headline">¶</a></h1>
+<span id="pluto-chapter"></span><h1><span class="section-number">5. </span>PlutoSDR Basics<a class="headerlink" href="#plutosdr-basics" title="Permalink to this headline">¶</a></h1>
 <a class="reference internal image-reference" href="../_images/pluto.png"><img alt="../_images/pluto.png" class="align-center" src="../_images/pluto.png" style="width: 323.5px; height: 250.0px;" /></a>
 <p>In this chapter we learn how to use the Python API for the PlutoSDR.</p>
 <div class="section" id="software-drivers-install">
@@ -44,37 +128,37 @@
 <h3>Setting up VM<a class="headerlink" href="#setting-up-vm" title="Permalink to this headline">¶</a></h3>
 <p>While the Python code provided in this textbook should work under Windows, Mac, and Linux, the install instructions below are specific to Ubuntu 18, so if you are having trouble getting the software set up using Analog Device’s instructions on your OS, I would recommend just installing an Ubuntu 18 VM and trying the instructions below.</p>
 <ol class="arabic simple">
-<li><p>Install VirtualBox - <a class="reference external" href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a>, then open it</p></li>
-<li><p>Create new VM.  For memory size, I recommend 50% of your computer’s RAM</p></li>
-<li><p>Create virtual hard disk, choose VDI, and dynamically allocate size.  15 GB should be enough, if you want to be really safe you can use more</p></li>
-<li><p>Download Ubuntu 18 Desktop .iso- <a class="reference external" href="http://releases.ubuntu.com/18.04/">http://releases.ubuntu.com/18.04/</a></p></li>
-<li><p>Start the VM, it will ask you for installation media, choose the Ubuntu 18 desktop .iso file.  Choose “install ubuntu”, use default options, it will pop up warning you about the changes you are about to make, hit continue.  Choose name/password and then wait for it to finish.  After finishing it will restart, but power off the VM after the restart.</p></li>
-<li><p>Go into the VM settings (the gear icon)</p></li>
-<li><p>Under system &gt; processor &gt; choose at least 3 CPUs.  If you have an actual video card then in display &gt; video memory &gt; choose something much higher</p></li>
-<li><p>Start up your VM</p></li>
-<li><p>I recommend installing VM guest additions- within the VM go to Devices &gt; Insert Guest Additions CD &gt; hit run when a box pops up.  Follow instructions. Restart VM.  The shared clipboard can be enabled through Devices &gt; Shared Clipboard &gt; Bidirectional</p></li>
+<li>Install VirtualBox - <a class="reference external" href="https://www.virtualbox.org/wiki/Downloads" rel="noopener noreferrer" target="_blank">https://www.virtualbox.org/wiki/Downloads</a>, then open it</li>
+<li>Create new VM.  For memory size, I recommend 50% of your computer’s RAM</li>
+<li>Create virtual hard disk, choose VDI, and dynamically allocate size.  15 GB should be enough, if you want to be really safe you can use more</li>
+<li>Download Ubuntu 18 Desktop .iso- <a class="reference external" href="http://releases.ubuntu.com/18.04/" rel="noopener noreferrer" target="_blank">http://releases.ubuntu.com/18.04/</a></li>
+<li>Start the VM, it will ask you for installation media, choose the Ubuntu 18 desktop .iso file.  Choose “install ubuntu”, use default options, it will pop up warning you about the changes you are about to make, hit continue.  Choose name/password and then wait for it to finish.  After finishing it will restart, but power off the VM after the restart.</li>
+<li>Go into the VM settings (the gear icon)</li>
+<li>Under system &gt; processor &gt; choose at least 3 CPUs.  If you have an actual video card then in display &gt; video memory &gt; choose something much higher</li>
+<li>Start up your VM</li>
+<li>I recommend installing VM guest additions- within the VM go to Devices &gt; Insert Guest Additions CD &gt; hit run when a box pops up.  Follow instructions. Restart VM.  The shared clipboard can be enabled through Devices &gt; Shared Clipboard &gt; Bidirectional</li>
 </ol>
 </div>
 <div class="section" id="connecting-plutosdr">
 <h3>Connecting PlutoSDR<a class="headerlink" href="#connecting-plutosdr" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><p>If running OSX, within OSX, not the VM, in system preferences, enable “kernel extensions”.  Then install HoRNDIS (you may need to reboot after).</p></li>
-<li><p>If running Windows, install this driver: <a class="reference external" href="https://github.com/analogdevicesinc/plutosdr-m2k-drivers-win/releases/download/v0.7/PlutoSDR-M2k-USB-Drivers.exe">https://github.com/analogdevicesinc/plutosdr-m2k-drivers-win/releases/download/v0.7/PlutoSDR-M2k-USB-Drivers.exe</a></p></li>
-<li><p>If running Linux you shouldn’t have to do anything special</p></li>
-<li><p>Plug Pluto into the host machine over USB, make sure to use middle port on Pluto.  It should create a virtual network adapter, i.e. the Pluto appears like a USB ethernet adapter</p></li>
-<li><p>On the host machine (not VM), open a terminal or whatever ping tool you want and ping 192.168.2.1.  If that doesn’t work stop here, and debug the network interface.</p></li>
-<li><p>Within the VM, open a new terminal</p></li>
-<li><p>Ping 192.168.2.1.  If that doesn’t work stop here and debug.  If the ping works then you should be good to go, assuming 192.168.2.1 was actually the Pluto and not some random computer on the network (unlikely but possible)</p></li>
-<li><p>If you want to be 100% sure 192.168.2.1 is your pluto, try doing “ssh <a class="reference external" href="mailto:root&#37;&#52;&#48;192&#46;168&#46;2&#46;1">root<span>&#64;</span>192<span>&#46;</span>168<span>&#46;</span>2<span>&#46;</span>1</a>” pass: analog, and it should log into it</p></li>
+<li>If running OSX, within OSX, not the VM, in system preferences, enable “kernel extensions”.  Then install HoRNDIS (you may need to reboot after).</li>
+<li>If running Windows, install this driver: <a class="reference external" href="https://github.com/analogdevicesinc/plutosdr-m2k-drivers-win/releases/download/v0.7/PlutoSDR-M2k-USB-Drivers.exe" rel="noopener noreferrer" target="_blank">https://github.com/analogdevicesinc/plutosdr-m2k-drivers-win/releases/download/v0.7/PlutoSDR-M2k-USB-Drivers.exe</a></li>
+<li>If running Linux you shouldn’t have to do anything special</li>
+<li>Plug Pluto into the host machine over USB, make sure to use middle USB port on Pluto, the other one is power only.  It should create a virtual network adapter, i.e. the Pluto appears like a USB ethernet adapter</li>
+<li>On the host machine (not VM), open a terminal or whatever ping tool you want and ping 192.168.2.1.  If that doesn’t work stop here, and debug the network interface.</li>
+<li>Within the VM, open a new terminal</li>
+<li>Ping 192.168.2.1.  If that doesn’t work stop here and debug.  If the ping works then you should be good to go, assuming 192.168.2.1 was actually the Pluto and not some random computer on the network (unlikely but possible)</li>
+<li>If you want to be 100% sure 192.168.2.1 is your pluto, try doing “ssh <a class="reference external" href="mailto:root&#37;&#52;&#48;192&#46;168&#46;2&#46;1" rel="noopener noreferrer" target="_blank">root<span>&#64;</span>192<span>&#46;</span>168<span>&#46;</span>2<span>&#46;</span>1</a>” pass: analog, and it should log into it</li>
 </ol>
 </div>
 <div class="section" id="installing-plutosdr-driver">
 <h3>Installing PlutoSDR Driver<a class="headerlink" href="#installing-plutosdr-driver" title="Permalink to this headline">¶</a></h3>
 <p>The terminal commands below should build and install the latest version of:</p>
 <ol class="arabic simple">
-<li><p><strong>libiio</strong>, Analog Device’s “cross-platform” library for interfacing hardware</p></li>
-<li><p><strong>libad9361-iio</strong>, AD9361 is the specific RF chip inside the PlutoSDR</p></li>
-<li><p><strong>pyadi-iio</strong>, the Pluto’s Python API, <em>this is our end goal</em>, but it depends on the previous two libraries</p></li>
+<li><strong>libiio</strong>, Analog Device’s “cross-platform” library for interfacing hardware</li>
+<li><strong>libad9361-iio</strong>, AD9361 is the specific RF chip inside the PlutoSDR</li>
+<li><strong>pyadi-iio</strong>, the Pluto’s Python API, <em>this is our end goal</em>, but it depends on the previous two libraries</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git libxml2 libxml2-dev bison flex libcdk5-dev cmake python3-pip
 <span class="nb">cd</span> ~
@@ -112,6 +196,10 @@ sdr.rx<span class="o">()</span>
 </div>
 <p>If you get this far without an error then continue with the next steps</p>
 </div>
+<div class="section" id="changing-pluto-s-ip-address">
+<h3>Changing Pluto’s IP Address<a class="headerlink" href="#changing-pluto-s-ip-address" title="Permalink to this headline">¶</a></h3>
+<p>If for some reason the default IP of 192.168.2.1 won’t work because you already have a 192.168.2.0 subnet, or because you want multiple Pluto’s connected at the same time, you can change the IP by editing the config.txt file on the PlutoSDR mass storage device (i.e. the USB-drive looking thing that shows up after you plug in the Pluto).</p>
+</div>
 <div class="section" id="hack-plutosdr-to-increase-rf-range">
 <h3>“Hack” PlutoSDR to Increase RF Range<a class="headerlink" href="#hack-plutosdr-to-increase-rf-range" title="Permalink to this headline">¶</a></h3>
 <p>The PlutoSDR’s ship with a limited center frequency range and sampling rate, but the underlying chip is capable of much higher, and these steps will unlock the ful range.  Note that this process is provided by Analog Devices, it is as low risk as you can get, the reason for the limitation has to do with Analog Devices “binning” the AD9364 based on strict performance requirements at the higher frequencies, stuff we don’t really care about as SDR enthusiasts.</p>
@@ -127,7 +215,7 @@ fw_setenv attr_val ad9364
 reboot
 </pre></div>
 </div>
-<p>You should now be able to tune up to 6 GHz and use a sample rate up to 56 MHz!</p>
+<p>You should now be able to tune up to 6 GHz, down to 70 MHz, and use a sample rate up to 56 MHz!  Yay!</p>
 </div>
 </div>
 <div class="section" id="python-exercises">
@@ -168,13 +256,13 @@ reboot
 </div>
 <div class="section" id="exercise-2-create-a-spectrogram-waterfall">
 <h3>Exercise 2: Create a Spectrogram/Waterfall<a class="headerlink" href="#exercise-2-create-a-spectrogram-waterfall" title="Permalink to this headline">¶</a></h3>
-<p>For this exercise you will create a spectrogram, a.k.a. waterfall, like we learned about at the end of the Frequency Domain chapter.  A spectrogram is simply a bunch of FFT’s displayed stacked on top of each other, i.e. it’s an image with one axis representing frequency and the other axis representing time.</p>
-<p>In the Frequency Domain chapter we saw the Python code to perform an FFT.  For this exercise you can use code snippets from the previous exercise, as well as a little bit of basic python code.</p>
+<p>For this exercise you will create a spectrogram, a.k.a. waterfall, like we learned about at the end of the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> chapter.  A spectrogram is simply a bunch of FFT’s displayed stacked on top of each other, i.e. it’s an image with one axis representing frequency and the other axis representing time.</p>
+<p>In the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> chapter we saw the Python code to perform an FFT.  For this exercise you can use code snippets from the previous exercise, as well as a little bit of basic python code.</p>
 <p>Hints:</p>
 <ol class="arabic simple">
-<li><p>Try setting sdr.rx_buffer_size to the FFT size so that you always perform 1 FFT for each call to <cite>sdr.rx()</cite>.</p></li>
-<li><p>Build a 2d array to hold all the FFT results, each row is 1 FFT.  A 2d array filled with zeros can be created with: <cite>np.zeros((num_rows, fft_size))</cite>.  Access row i of the array with: <cite>waterfall_2darray[i,:]</cite>.</p></li>
-<li><p><cite>plt.imshow()</cite> is a convenient way to display a 2d array, and have it scale the color automatically.</p></li>
+<li>Try setting sdr.rx_buffer_size to the FFT size so that you always perform 1 FFT for each call to <cite>sdr.rx()</cite>.</li>
+<li>Build a 2d array to hold all the FFT results, each row is 1 FFT.  A 2d array filled with zeros can be created with: <cite>np.zeros((num_rows, fft_size))</cite>.  Access row i of the array with: <cite>waterfall_2darray[i,:]</cite>.</li>
+<li><cite>plt.imshow()</cite> is a convenient way to display a 2d array, and have it scale the color automatically.</li>
 </ol>
 <p>As a stretch goal, make the spectrogram update live.</p>
 </div>
@@ -183,74 +271,26 @@ reboot
 
 
           </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="digital_modulation.html" title="Previous document"><span class="section-number">4. </span>Digital Modulation</a>
+        </li>
+        <li>
+          <a href="noise.html" title="Next document"><span class="section-number">6. </span>Noise and dB</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<p class="logo">
-  <a href="../index.html">
-    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
-    
-    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
-    
-  </a>
-</p>
-
-
-
-<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">5. PlutoSDR Basics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#software-drivers-install">Software/Drivers Install</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#python-exercises">Python Exercises</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="digital_modulation.html" title="previous chapter"><span class="section-number">4. </span>Digital Modulation</a></li>
-      <li>Next: <a href="noise.html" title="next chapter"><span class="section-number">6. </span>Noise and dB</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2020, Marc Lichtman.
       

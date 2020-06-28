@@ -25,25 +25,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
 
-    <div class="document">
+
+
+<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Filters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#filter-basics">Filter Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filter-representation">Filter Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filter-implementation">Filter Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filter-design-tools">Filter Design Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convolution">Convolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#filter-design-in-python">Filter Design in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#intro-to-pulse-shaping">Intro to Pulse Shaping</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://repl.it/languages/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="noise.html" title="previous chapter"><span class="section-number">6. </span>Noise and dB</a></li>
+      <li>Next: <a href="link_budgets.html" title="next chapter"><span class="section-number">8. </span>Link Budgets</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="noise.html" title="Previous document"><span class="section-number">6. </span>Noise and dB</a>
+        </li>
+        <li>
+          <a href="link_budgets.html" title="Next document"><span class="section-number">8. </span>Link Budgets</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
 
           <div class="body" role="main">
             
   <div class="section" id="filters">
-<h1><span class="section-number">7. </span>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h1>
+<span id="filters-chapter"></span><h1><span class="section-number">7. </span>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h1>
 <p>In this chapter we get introduced to filters.  We learn about the types of filters, how filters are represented digitally, and how they are designed.  We finish with an introduction to pulse shaping, a topic explored in depth in its own chapter.</p>
 <div class="section" id="filter-basics">
 <h2>Filter Basics<a class="headerlink" href="#filter-basics" title="Permalink to this headline">¶</a></h2>
 <p>Filters are used in many disciplines, for example image processing makes heavy use of 2D filters, where the input and output are images.  You might use a filter every morning to make your coffee, which filters out solids from liquid.  In DSP, filters are primarily used for:</p>
 <ol class="arabic simple">
-<li><p>Separation of signals that have been combined (e.g. pulling out the signal you want)</p></li>
-<li><p>Removing excess noise after receiving a signal</p></li>
-<li><p>Restoration of signals that have been distorted in some way (e.g. an audio equalizer is a filter)</p></li>
+<li>Separation of signals that have been combined (e.g. pulling out the signal you want)</li>
+<li>Removing excess noise after receiving a signal</li>
+<li>Restoration of signals that have been distorted in some way (e.g. an audio equalizer is a filter)</li>
 </ol>
 <p>There are certainly other uses for filters.</p>
 <p>There are analog filters and digital filters.  You may think we only care about digital filters; this is a DSP based textbook after all, but it’s also important to know that a lot of filters will be analog, such as filters in our SDRs that come before the analog-to-digital converter (ADC) on the receive side.</p>
@@ -204,8 +293,8 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 <h3>FIR vs. IIR<a class="headerlink" href="#fir-vs-iir" title="Permalink to this headline">¶</a></h3>
 <p>There are two main classes of digital filters: FIR and IIR</p>
 <ol class="arabic simple">
-<li><p>Finite impulse response (FIR)</p></li>
-<li><p>Infinite impulse response (IIR)</p></li>
+<li>Finite impulse response (FIR)</li>
+<li>Infinite impulse response (IIR)</li>
 </ol>
 <p>We won’t get too deep into the theory, but for now just remember: FIR filters are easier to design, and can do anything you want if you use enough taps.  IIR filters are more complicated, have potential to be unstable, but are more efficient (use less CPU and memory for the given filter). If someone just gives you a list of taps, it’s assumed they are taps for an FIR filter.  If they start mentioning “poles”, they are talking about IIR filters.  We will stick with FIR filters in this textbook.</p>
 <p>Below is an example frequency response, showing the comparison of an FIR and IIR filter that do almost exactly the same filtering; they have a similar transition-width, which as we learned will determine how many taps are required.  The FIR filter has 50 taps and the IIR filter has 12 poles, which is like having 12 taps in terms of computations required.</p>
@@ -218,14 +307,13 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 <summary><a>Answers</a></summary><p>A moving average filter is a low pass filter because it smooths out “high frequency” changes, which is usually why people will use one.  The reason to use taps that decay to zero on both ends is to avoid a sudden change in the output, like if the signal being filtered was zero for a while and then suddenly jumped up.</p>
 </details><p>Now for an FIR example.  Have any of you ever done this:</p>
 <blockquote>
-<div><p>x = x*0.99 + new_value*0.01</p>
-</div></blockquote>
+<div>x = x*0.99 + new_value*0.01</div></blockquote>
 <p>where the 0.99 and 0.01 represent the speed the value updates (or rate of decay, same thing).  It’s a convenient way to slowly update some variable without having to remember the last several values.  This is actually a form of low pass IIR Filter.  Hopefully you can see why IIR filters have less stability than FIR.  Values never fully go away!</p>
 </div>
 </div>
 <div class="section" id="filter-design-tools">
 <h2>Filter Design Tools<a class="headerlink" href="#filter-design-tools" title="Permalink to this headline">¶</a></h2>
-<p>In practice, most people will use a filter designer tool, or a function in code that designs the filter.  There are plenty of different tools, but for students I recommend this easy-to-use web app by Peter Isza that will show you impulse and frequency response: <a class="reference external" href="http://t-filter.engineerjs.com">http://t-filter.engineerjs.com</a>.  Using the default values, at the time of writing this at least, it’s set up to design a low-pass filter with a passband from 0 to 400 Hz and stopband from 500 Hz and up.  The sample rate is 2 kHz, so the max frequency we can “see” is 1 kHz.</p>
+<p>In practice, most people will use a filter designer tool, or a function in code that designs the filter.  There are plenty of different tools, but for students I recommend this easy-to-use web app by Peter Isza that will show you impulse and frequency response: <a class="reference external" href="http://t-filter.engineerjs.com" rel="noopener noreferrer" target="_blank">http://t-filter.engineerjs.com</a>.  Using the default values, at the time of writing this at least, it’s set up to design a low-pass filter with a passband from 0 to 400 Hz and stopband from 500 Hz and up.  The sample rate is 2 kHz, so the max frequency we can “see” is 1 kHz.</p>
 <a class="reference internal image-reference" href="../_images/filter_designer1.PNG"><img alt="../_images/filter_designer1.PNG" class="align-center" src="../_images/filter_designer1.PNG" style="width: 659.4px; height: 156.79999999999998px;" /></a>
 <p>Click the “Design Filter” button to create the taps and plot the frequency response.</p>
 <a class="reference internal image-reference" href="../_images/filter_designer2.PNG"><img alt="../_images/filter_designer2.PNG" class="align-center" src="../_images/filter_designer2.PNG" style="width: 970.9px; height: 401.79999999999995px;" /></a>
@@ -236,7 +324,7 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 <div class="section" id="convolution">
 <h2>Convolution<a class="headerlink" href="#convolution" title="Permalink to this headline">¶</a></h2>
 <p>We will take a brief detour to introduce the convolution operator, feel free to skip this section if you are already familiar with it.</p>
-<p>Adding two signals together is one way of combining two signals into one, in the Fourier chapter we talked about how the linearity property applies when adding two signals together.  Convolution is another way to combine two signals into one, but it is very different than simply adding them.  The convolution of two signals is like sliding one across the other and integrating.  It is <em>very</em> similar to a cross-correlation, if you are familiar with that operation, in fact it is equivalent to a cross-correlation in many cases.</p>
+<p>Adding two signals together is one way of combining two signals into one, in the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> chapter we talked about how the linearity property applies when adding two signals together.  Convolution is another way to combine two signals into one, but it is very different than simply adding them.  The convolution of two signals is like sliding one across the other and integrating.  It is <em>very</em> similar to a cross-correlation, if you are familiar with that operation, in fact it is equivalent to a cross-correlation in many cases.</p>
 <p>I believe the convolution operation is best learned through examples.  In this first example, we convolve two square pulses together:</p>
 <a class="reference internal image-reference" href="../_images/convolution_animation1.gif"><img alt="../_images/convolution_animation1.gif" class="align-center" src="../_images/convolution_animation1.gif" style="width: 480.0px; height: 360.0px;" /></a>
 <p>Because it’s just a sliding integreation, the result is a triangle, with a maximum at the point where both square pulses lined up perfectly.  Let’s look at what happens if we convolve a square pulse with a triangular pulse:</p>
@@ -247,7 +335,13 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 <p>This might be confusing because earlier we mentioned that convolution takes in two <em>signals</em> and outputs one signal.  Well we can treat the impulse response like a signal, convolution is just a math operator after all, which operates on two 1D arrays.  If one of those 1D arrays is the filter’s impulse response, the other 1D array can be a piece of the input signal, and the output will be a filtered version of the input.  Let’s see another example to help this click.  In the example below, the triangle will represent our filter’s impulse response, and the <span class="green">green</span> signal is our signal being filtered.</p>
 <a class="reference internal image-reference" href="../_images/convolution.gif"><img alt="../_images/convolution.gif" class="align-center" src="../_images/convolution.gif" style="width: 358.4px; height: 358.4px;" /></a>
 <p>The <span class="red">red</span> output is the filtered signal.</p>
-<p>Question: What kind of filter was the triangle?  Well it smoothed out the high frequency components of the green signal (i.e. the sharp transitions of the square) so it’s acting as a low-pass filter.</p>
+<p>Question: What kind of filter was the triangle?</p>
+<details>
+<summary><a>Answers</a></summary><p>It smoothed out the high frequency components of the green signal (i.e. the sharp transitions of the square) so it’s acting as a low-pass filter.</p>
+</details><p>Now that we are starting to understand convolution, I will present to you the mathematical equation for it.  The asterisk is typically used as the symbol for convolution:</p>
+<div class="math">
+<p><img src="../_images/math/ef8e9cf9b5e1ed3093ee71fd9b8d1d4c92726693.svg" alt="(f * g)(t) = \int f(\tau) g(t - \tau) d\tau"/></p>
+</div><p>In this above expression, <img class="math" src="../_images/math/cbb9334036d822d51e4eac3510e2186f3bdfbbdf.svg" alt="g(t)"/> is the one that is flipped and slides across <img class="math" src="../_images/math/90b2784922f8eb4c71fae53b32ce51593054e5a4.svg" alt="f(t)"/>, but they can be swapped and it’s still the same expression.  Typically, the shorter array will be used as <img class="math" src="../_images/math/cbb9334036d822d51e4eac3510e2186f3bdfbbdf.svg" alt="g(t)"/>.  Convolution is equal to a cross-correlation, defined as <img class="math" src="../_images/math/49a7dd0e8b56496ace0c96543c01ab2bff092755.svg" alt="\int f(\tau) g(t+\tau)"/>, when <img class="math" src="../_images/math/cbb9334036d822d51e4eac3510e2186f3bdfbbdf.svg" alt="g(t)"/> is symmetrical, i.e. when it doesn’t change when flipped about the origin.</p>
 </div>
 <div class="section" id="filter-design-in-python">
 <h2>Filter Design in Python<a class="headerlink" href="#filter-design-in-python" title="Permalink to this headline">¶</a></h2>
@@ -309,11 +403,11 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 <div class="section" id="intro-to-pulse-shaping">
 <h2>Intro to Pulse Shaping<a class="headerlink" href="#intro-to-pulse-shaping" title="Permalink to this headline">¶</a></h2>
 <p>We will briefly introduce a very interesting topic within DSP, pulse shaping, a topic we explore in depth in its own chapter.</p>
-<p>As we learned, digital signals use symbols to represent one or more bits of information.  We use a digital modulation scheme like ASK, PSK, QAM, FSK, etc, to modulate a carrier so they can be sent wirelessly.  When we simulated QPSK in the Digital Modulation chapter, we only simulated one sample per symbol, i.e. each complex number we created was one of the points on the constellation, it was one symbol.  In practice we usually generate multiple samples per symbol, and the reason has to do with filtering.</p>
+<p>As we learned, digital signals use symbols to represent one or more bits of information.  We use a digital modulation scheme like ASK, PSK, QAM, FSK, etc, to modulate a carrier so they can be sent wirelessly.  When we simulated QPSK in the <a class="reference internal" href="digital_modulation.html#modulation-chapter"><span class="std std-ref">Digital Modulation</span></a> chapter, we only simulated one sample per symbol, i.e. each complex number we created was one of the points on the constellation, it was one symbol.  In practice we usually generate multiple samples per symbol, and the reason has to do with filtering.</p>
 <p>We use filters to craft the “shape” of our symbols, since the shape in the time domain will change the shape in the frequency domain.  The frequency domain is what tells us how much spectrum/bandwidth our signal is going to use, and we usually want to minimize it.  Now what’s important to understand is that the spectral characteristics (frequency domain) of the baseband symbols doesn’t change when we modulate a carrier, it just shifts it up in frequency, the shape stays the same, which means the amount of bandwidth it uses stays the same.  When we use 1 sample per symbol, it’s kind of like transmitting square pulses, in fact BPSK using 1 sample per symbol <em>is</em> just a square wave of random 1’s and -1’s:</p>
 <a class="reference internal image-reference" href="../_images/bpsk.PNG"><img alt="../_images/bpsk.PNG" class="align-center" src="../_images/bpsk.PNG" style="width: 468.90000000000003px; height: 287.1px;" /></a>
 <p>And as we have learned, square pulses are not the best, they use an excess amount of spectrum:</p>
-<a class="reference internal image-reference" href="../_images/square-wave.png"><img alt="../_images/square-wave.png" class="align-center" src="../_images/square-wave.png" style="width: 659.4px; height: 249.89999999999998px;" /></a>
+<a class="reference internal image-reference" href="../_images/square-wave.png"><img alt="../_images/square-wave.png" class="align-center" src="../_images/square-wave.png" style="width: 626.5px; height: 230.29999999999998px;" /></a>
 <p>So what we do is we “pulse shape” these blocky looking symbols so that they take up less bandwidth in the frequency domain.  We do this using a low-pass filter, because it will filter out the higher frequency components of our symbols.  Below shows an example of symbols in the time (top) and frequency (bottom) domain, before and after a pulse shaping filter has been applied:</p>
 <a class="reference internal image-reference" href="../_images/pulse_shaping.PNG"><img alt="../_images/pulse_shaping.PNG" class="align-center" src="../_images/pulse_shaping.PNG" style="width: 613.1999999999999px; height: 179.89999999999998px;" /></a>
 <div class="line-block">
@@ -323,93 +417,40 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 <p>Note how much quicker the signal drops off in frequency; the sidelobes are around 30 dB lower after pulse shaping, that’s 1000x less!  And more importantly, the main lobe is more narrow, so less spectrum is used for the same amount of bits per second.</p>
 <p>For now, be aware that common pulse shaping filters include:</p>
 <ol class="arabic simple">
-<li><p>Raised-cosine filter</p></li>
-<li><p>Root raised-cosine filter</p></li>
-<li><p>Sinc filter</p></li>
-<li><p>Gaussian filter</p></li>
+<li>Raised-cosine filter</li>
+<li>Root raised-cosine filter</li>
+<li>Sinc filter</li>
+<li>Gaussian filter</li>
 </ol>
 <p>And these filters usually have some parameter you can adjust to tell it how tight you want the bandwidth.  For example, below shows the time and frequency domain of a raised-cosine filter with different values of <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/>, the parameter that defines how steep the roll-off is.</p>
 <a class="reference internal image-reference" href="../_images/pulse_shaping_rolloff.PNG"><img alt="../_images/pulse_shaping_rolloff.PNG" class="align-center" src="../_images/pulse_shaping_rolloff.PNG" style="width: 707.2px; height: 202.8px;" /></a>
 <p>You can see that a lower value of <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> leads to less spectrum being used (for the same amount of data), but if you go too low then the time domain symbols take longer to decay to zero, in fact when <img class="math" src="../_images/math/4f3447a0acb350996ffd4de1145f4b22132893f0.svg" alt="\beta=0"/> they never fully decay to zero which means we can’t actually transmit such symbols in practice.  A <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> around 0.35 is common.</p>
-<p>You will learn a lot more about pulse shaping, including some special properties that pulse shaping filters must satisfy, in the chapter dedicated to pulse shaping filters.</p>
+<p>You will learn a lot more about pulse shaping, including some special properties that pulse shaping filters must satisfy, in the <a class="reference internal" href="pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Pulse Shaping</span></a> chapter.</p>
 </div>
 </div>
 
 
           </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="noise.html" title="Previous document"><span class="section-number">6. </span>Noise and dB</a>
+        </li>
+        <li>
+          <a href="link_budgets.html" title="Next document"><span class="section-number">8. </span>Link Budgets</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<p class="logo">
-  <a href="../index.html">
-    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
-    
-    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
-    
-  </a>
-</p>
-
-
-
-<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Filters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#filter-basics">Filter Basics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#filter-representation">Filter Representation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#filter-implementation">Filter Implementation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#filter-design-tools">Filter Design Tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#convolution">Convolution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#filter-design-in-python">Filter Design in Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#intro-to-pulse-shaping">Intro to Pulse Shaping</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="noise.html" title="previous chapter"><span class="section-number">6. </span>Noise and dB</a></li>
-      <li>Next: <a href="link_budgets.html" title="next chapter"><span class="section-number">8. </span>Link Budgets</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2020, Marc Lichtman.
       

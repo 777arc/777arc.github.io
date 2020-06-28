@@ -25,17 +25,110 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
 
-    <div class="document">
+
+
+<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. IQ Sampling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sampling-basics">Sampling Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nyquist-sampling">Nyquist Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quadrature-sampling">Quadrature Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#complex-numbers">Complex Numbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#receiver-side">Receiver Side</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#carrier-and-downconversion">Carrier and Downconversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#baseband">Baseband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dc-spike-and-offset-tuning">DC Spike and Offset Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sampling-using-the-plutosdr">Sampling Using the PlutoSDR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calculating-average-power">Calculating Average Power</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calculating-power-spectral-density">Calculating Power Spectral Density</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://repl.it/languages/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="frequency_domain.html" title="previous chapter"><span class="section-number">2. </span>The Frequency Domain</a></li>
+      <li>Next: <a href="digital_modulation.html" title="next chapter"><span class="section-number">4. </span>Digital Modulation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="frequency_domain.html" title="Previous document"><span class="section-number">2. </span>The Frequency Domain</a>
+        </li>
+        <li>
+          <a href="digital_modulation.html" title="Next document"><span class="section-number">4. </span>Digital Modulation</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
 
           <div class="body" role="main">
             
   <div class="section" id="iq-sampling">
-<h1><span class="section-number">3. </span>IQ Sampling<a class="headerlink" href="#iq-sampling" title="Permalink to this headline">¶</a></h1>
+<span id="sampling-chapter"></span><h1><span class="section-number">3. </span>IQ Sampling<a class="headerlink" href="#iq-sampling" title="Permalink to this headline">¶</a></h1>
 <p>In this chapter we introduce a concept called IQ Sampling, a.k.a. complex sampling or quadrature sampling.  This is the form of sampling that an SDR performs, as well as many digital receivers (and transmitters) in general.  It’s just a slightly more complex version of regular digital sampling (pun intended).</p>
 <div class="section" id="sampling-basics">
 <h2>Sampling Basics<a class="headerlink" href="#sampling-basics" title="Permalink to this headline">¶</a></h2>
@@ -58,7 +151,7 @@
 <a class="reference internal image-reference" href="../_images/max_freq.png"><img alt="../_images/max_freq.png" class="align-center" src="../_images/max_freq.png" style="width: 350.0px; height: 210.0px;" /></a>
 <p>So we must identify the highest one, then double it, and make sure we sample at that rate or faster. The minimum frequency is known as the Nyquist Rate, and it’s an extremely important piece of theory that shows up in more fields than just DSP and SDR.</p>
 <a class="reference internal image-reference" href="../_images/nyquist_rate.png"><img alt="../_images/nyquist_rate.png" class="align-center" src="../_images/nyquist_rate.png" style="width: 364.7px; height: 158.2px;" /></a>
-<p>If we don’t sample fast enough we get something called aliasing, which we will learn about later, but we try to avoid it at all costs.  In general, our SDRs will make sure that we are sampling fast enough to avoid aliasing, which means if we give our SDR a sample rate that’s too low, we will simply cut off the signal (in frequency), and not be able to see the whole thing.  Our SDRs go to great lengths to provide us with samples free of aliasing and other imperfections.</p>
+<p>If we don’t sample fast enough we get something called aliasing, which we will learn about later, but we try to avoid it at all costs.  What our SDRs do (and most receivers in general), is filter out everything above Fs/2 right before the sampling is performed. So if we attempt to receive a signal with too low a sample rate, that filter will chop off part of the signal.  Our SDRs go to great lengths to provide us with samples free of aliasing and other imperfections.</p>
 </div>
 <div class="section" id="quadrature-sampling">
 <h2>Quadrature Sampling<a class="headerlink" href="#quadrature-sampling" title="Permalink to this headline">¶</a></h2>
@@ -87,7 +180,7 @@ Q \sin(2\pi ft)"/></p>
 <a class="reference internal image-reference" href="../_images/complex_plane_1.png"><img alt="../_images/complex_plane_1.png" class="align-center" src="../_images/complex_plane_1.png" style="width: 258.3px; height: 251.99999999999997px;" /></a>
 <p>A complex number is really just two numbers together, a real and an imaginary portion.  But a complex number also has a magnitude and phase, which makes more sense if you think about it as a vector instead of a point. Magnitude is the length of the line between the origin and the point (i.e. length of the vector), while phase is the angle between the vector and 0 degrees, which we define as the positive real axis:</p>
 <a class="reference internal image-reference" href="../_images/complex_plane_2.png"><img alt="../_images/complex_plane_2.png" class="align-center" src="../_images/complex_plane_2.png" style="width: 246.39999999999998px; height: 240.79999999999998px;" /></a>
-<p>This is sometimes called a “phasor diagram” which sounds more complicated than it is.  It’s really just plotting complex numbers and treating them as vectors.  Now what is the magnitude and phase of our example complex number 0.7-0.4j?</p>
+<p>This is sometimes called a “phasor diagram” which sounds more complicated than it is.  It’s really just plotting complex numbers and treating them as vectors.  Now what is the magnitude and phase of our example complex number 0.7-0.4j?  For a given complex number where <img class="math" src="../_images/math/375383b47352eb6cd2f5c760a77a36e69e4ed098.svg" alt="a"/> is the real part and <img class="math" src="../_images/math/b9226f3d70379a250fb90320a3c57039c88e5f51.svg" alt="b"/> is the imaginary part:</p>
 <div class="math">
 <p><img src="../_images/math/b5a551214962cc324e2172e9b8f0227114232a90.svg" alt="\mathrm{magnitude} = \sqrt{a^2 + b^2} = 0.806
 
@@ -160,7 +253,7 @@ Fortunately, this process of offtuning, a.k.a applying an LO offset, is often bu
 <div class="section" id="sampling-using-the-plutosdr">
 <h2>Sampling Using the PlutoSDR<a class="headerlink" href="#sampling-using-the-plutosdr" title="Permalink to this headline">¶</a></h2>
 <p>Sampling using the PlutoSDR’s Python API is pretty straightforward.  With any SDR app we know we must tell the SDR the center frequency, sample rate, and gain (or whether to use automatic gain control).  There might be other details, but those three are nessesary for the SDR to have enough information to do anything.  Some SDRs have a command to tell it to start sampling, while others like the Pluto will just start sampling as soon as you initialize it, and just drop the samples as the buffer fills up. All SDR APIs have some sort of “receive samples” function, for the pluto it’s rx(), and it returns a certain number of samples, defined by the buffer size that was set beforehand.</p>
-<p>Refer to the PlutoSDR Basics chapter for installing the software.  The code below assumes you have the Pluto’s Python API installed.  This code initializes the Pluto, sets the sample rate to 1 MHz, center frequency to 100 MHz, and gain to 50 dB, with automatic gain control turned off.  It usually doesn’t matter what order you set the center frequency, gain, and sample rate.  We tell the Pluto that we want it to give us 10,000 samples per call to rx().</p>
+<p>Refer to the <a class="reference internal" href="pluto_intro.html#pluto-chapter"><span class="std std-ref">PlutoSDR Basics</span></a> chapter for installing the software.  The code below assumes you have the Pluto’s Python API installed.  This code initializes the Pluto, sets the sample rate to 1 MHz, center frequency to 100 MHz, and gain to 50 dB, with automatic gain control turned off.  It usually doesn’t matter what order you set the center frequency, gain, and sample rate.  We tell the Pluto that we want it to give us 10,000 samples per call to rx().</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">adi</span>
 
@@ -207,12 +300,12 @@ You can also just subtract out the mean from the samples in your window of obser
 All DSP engineers know this, but when it comes to actually finding the PSD of a batch of samples and plotting it, you need to do more than just take an FFT.
 We must do the following six operations:</p>
 <ol class="arabic simple">
-<li><p>Take the FFT of our samples.  If we have x samples, the FFT size will be the length of x by default, so let’s only use the first 1024 samples as an example, to create a 1024-size FFT.  The output will be 1024 complex float.</p></li>
-<li><p>Take the magnitude of the FFT output, which provides us 1024 real floats.</p></li>
-<li><p>Normalize: divide by our sample rate (<img class="math" src="../_images/math/b585a310928e16b1311b9409741740aa4dfc89b3.svg" alt="F_s"/>).</p></li>
-<li><p>Square the resulting magnitude, to get power.</p></li>
-<li><p>Convert to dB using <img class="math" src="../_images/math/f4455b0aaee830c84338328975fa7b9956463d04.svg" alt="10 \log_{10}()"/>, we always view PSDs in log scale.</p></li>
-<li><p>Perform an FFT shift, like we learned about last chapter, to move “0 Hz” in the center and negative frequencies to the left of center.</p></li>
+<li>Take the FFT of our samples.  If we have x samples, the FFT size will be the length of x by default, so let’s only use the first 1024 samples as an example, to create a 1024-size FFT.  The output will be 1024 complex float.</li>
+<li>Take the magnitude of the FFT output, which provides us 1024 real floats.</li>
+<li>Normalize: divide by our sample rate (<img class="math" src="../_images/math/b585a310928e16b1311b9409741740aa4dfc89b3.svg" alt="F_s"/>).</li>
+<li>Square the resulting magnitude, to get power.</li>
+<li>Convert to dB using <img class="math" src="../_images/math/f4455b0aaee830c84338328975fa7b9956463d04.svg" alt="10 \log_{10}()"/>, we always view PSDs in log scale.</li>
+<li>Perform an FFT shift, like we learned about last chapter, to move “0 Hz” in the center and negative frequencies to the left of center.</li>
 </ol>
 <p>In Python this looks like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Fs</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># lets say we sampled at 1 MHz</span>
@@ -277,83 +370,26 @@ Alternatively, if you know your signal is not changing, it’s not a sin to only
 
 
           </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="frequency_domain.html" title="Previous document"><span class="section-number">2. </span>The Frequency Domain</a>
+        </li>
+        <li>
+          <a href="digital_modulation.html" title="Next document"><span class="section-number">4. </span>Digital Modulation</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<p class="logo">
-  <a href="../index.html">
-    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
-    
-    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
-    
-  </a>
-</p>
-
-
-
-<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">3. IQ Sampling</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#sampling-basics">Sampling Basics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#nyquist-sampling">Nyquist Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#quadrature-sampling">Quadrature Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#complex-numbers">Complex Numbers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#receiver-side">Receiver Side</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#carrier-and-downconversion">Carrier and Downconversion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#baseband">Baseband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dc-spike-and-offset-tuning">DC Spike and Offset Tuning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sampling-using-the-plutosdr">Sampling Using the PlutoSDR</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#calculating-average-power">Calculating Average Power</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#calculating-power-spectral-density">Calculating Power Spectral Density</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="frequency_domain.html" title="previous chapter"><span class="section-number">2. </span>The Frequency Domain</a></li>
-      <li>Next: <a href="digital_modulation.html" title="next chapter"><span class="section-number">4. </span>Digital Modulation</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2020, Marc Lichtman.
       

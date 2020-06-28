@@ -25,17 +25,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
 
-    <div class="document">
+
+
+<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">10. IQ Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#binary-files">Binary Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-examples">Python Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#max-values-and-saturation">Max Values and Saturation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#annotating-iq-files">Annotating IQ Files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://repl.it/languages/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="channel_coding.html" title="previous chapter"><span class="section-number">9. </span>Channel Coding</a></li>
+      <li>Next: <a href="multipath_fading.html" title="next chapter"><span class="section-number">11. </span>Multipath Fading</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="channel_coding.html" title="Previous document"><span class="section-number">9. </span>Channel Coding</a>
+        </li>
+        <li>
+          <a href="multipath_fading.html" title="Next document"><span class="section-number">11. </span>Multipath Fading</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
 
           <div class="body" role="main">
             
   <div class="section" id="iq-files">
-<h1><span class="section-number">10. </span>IQ Files<a class="headerlink" href="#iq-files" title="Permalink to this headline">¶</a></h1>
+<span id="iq-files-chapter"></span><h1><span class="section-number">10. </span>IQ Files<a class="headerlink" href="#iq-files" title="Permalink to this headline">¶</a></h1>
 <p>In our Python examples we have stored signals as 1d numpy arrays of type “complex float”.  In this chapter we learn how signals can be stored to a file, and how to read them back into Python.  You may want to record a signal to a file in order to manually analyze it offline, or share it with a colleague.</p>
 <div class="section" id="binary-files">
 <h2>Binary Files<a class="headerlink" href="#binary-files" title="Permalink to this headline">¶</a></h2>
@@ -115,76 +201,26 @@
 
 
           </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="channel_coding.html" title="Previous document"><span class="section-number">9. </span>Channel Coding</a>
+        </li>
+        <li>
+          <a href="multipath_fading.html" title="Next document"><span class="section-number">11. </span>Multipath Fading</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<p class="logo">
-  <a href="../index.html">
-    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
-    
-    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
-    
-  </a>
-</p>
-
-
-
-<p class="blurb">By <a href="https://www.cs.umd.edu/people/sdr">Dr. Marc Lichtman</a></p>
-
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">10. IQ Files</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#binary-files">Binary Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#python-examples">Python Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#max-values-and-saturation">Max Values and Saturation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#annotating-iq-files">Annotating IQ Files</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="channel_coding.html" title="previous chapter"><span class="section-number">9. </span>Channel Coding</a></li>
-      <li>Next: <a href="multipath_fading.html" title="next chapter"><span class="section-number">11. </span>Multipath Fading</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2020, Marc Lichtman.
       

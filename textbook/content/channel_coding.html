@@ -25,120 +25,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <div class="section" id="channel-coding">
-<h1><span class="section-number">9. </span>Channel Coding<a class="headerlink" href="#channel-coding" title="Permalink to this headline">¶</a></h1>
-<p>In this chapter we take a brief look into the basics of channel coding, a.k.a. forward error correction (FEC).  Channel coding is an enormous area within wireless communications, and it really falls under the study of a branch called “information theory” which is the study of the quantification, storage, and communication of information.</p>
-<div class="section" id="why-we-need-channel-coding">
-<h2>Why We Need Channel Coding<a class="headerlink" href="#why-we-need-channel-coding" title="Permalink to this headline">¶</a></h2>
-<p>As we learned in the Noise chapter, wireless channels are noisy, and our digital symbols won’t reach the receiver perfectly.  If you have taken a networking course you may already know about cyclic redundancy checks (CRCs) which <strong>detect</strong> errors at the receiving end.  The purpose of channel coding is to detect <strong>and correct</strong> errors at the receiver.  If we allow some room for error, then we can transmit at a higher order modulation scheme, for example, without having a broken link.  As a visual example, consider the following constellations showing QPSK (left) and 16QAM (right), under the same amount of noise.  QPSK provides 2 bits per symbol, 16QAM uses 4 bits per symbol, so twice the data rate.  But note how in the QPSK constellation, the symbols tend to not pass the symbol decision boundary which is the x-axis and y-axis for QPSK, which means the symbols will be received correctly.  Meanwhile in the 16QAM plot, there is overlap in the clusters and there will be many incorrectly received symbols.</p>
-<a class="reference internal image-reference" href="../_images/qpsk_vs_16qam.PNG"><img alt="../_images/qpsk_vs_16qam.PNG" class="align-center" src="../_images/qpsk_vs_16qam.PNG" style="width: 591.3000000000001px; height: 217.8px;" /></a>
-<p>A failed CRC will usually result in a retransmission, at least when using a protocol like TCP.  If Alice is sending a message to Bob, we would rather not have to make Bob send a message back to Alice requesting the information again.  The main purpose of channel coding is to transmit <strong>redundant</strong> information to reduce the amount of erroneous packets, and reduce retransmissions or dropped data.</p>
-<p>We discussed why we need channel coding, but now let’s see where it occurs in the transmit and receive chain:</p>
-<a class="reference internal image-reference" href="../_images/tx_rx_chain.PNG"><img alt="../_images/tx_rx_chain.PNG" class="align-center" src="../_images/tx_rx_chain.PNG" style="width: 703.1999999999999px; height: 299.4px;" /></a>
-<p>Note that source coding is not the same as channel coding; source coding is meant to compress the data to be transmitted as much as possible, just like when you zip files to reduce the space taken.  I.e., the output of the Source Encoding block should be <strong>smaller</strong> than the input, but the output of Channel Encoding will be larger than the input because redundancy is added.</p>
-</div>
-<div class="section" id="types-of-codes">
-<h2>Types of Codes<a class="headerlink" href="#types-of-codes" title="Permalink to this headline">¶</a></h2>
-<p>To perform channel coding we use an “error correction code”.  This code tells us, given what bits we have to transmit, what bits do we actually transmit?  The most basic code is called “repetition coding”, and it’s when you simply repeat the bit N times, in a row.  For the repetition-3 code, the code is simply:</p>
-<ul class="simple">
-<li><p>0 <span class="raw-html">&rarr;</span> 000</p></li>
-<li><p>1 <span class="raw-html">&rarr;</span> 111</p></li>
-</ul>
-<p>So the message 10010110 is transmitted as 111000000111000111111000.  Some codes work on “blocks” of input bits, others use a stream approach. Codes that work on blocks are called “Block Codes”, while codes that work on a stream of bits are called “Convolutional Codes”.  These are the two primary types of codes.  Our repetition-3 code was a block code, and worked on blocks of three bits.</p>
-<p>As an aside- these error correction codes are not just used in channel coding for wireless links.  Ever store information to a hard drive or SSD and wonder how there are never bit errors when reading information back off?  Writing, then reading, from memory is kind of like a communication system.  Hard drive/SSD controllers have error correction built in, it’s transparent to the OS, and can be proprietary since it’s all onboard the hard drive/SSD.  For portable media like CDs, the error correction must be standardized.  Reed Solomon codes were common in CD-ROMs.</p>
-</div>
-<div class="section" id="code-rate">
-<h2>Code-Rate<a class="headerlink" href="#code-rate" title="Permalink to this headline">¶</a></h2>
-<p>All error correction includes some form of redundancy.  That means if we want to transmit 100 bits of information, we will have to actually send <strong>more than</strong> 100 bits.  “Code-rate” is the ratio between the number of information bits and the total number of bits sent (i.e. information plus redundancy bits).  E.g. if I have 100 bits of information and I use repetition-3 coding:</p>
-<ul class="simple">
-<li><p>300 bits are sent</p></li>
-<li><p>Only 100 bits represent information</p></li>
-<li><p>Code-rate = 100/300 = 1/3</p></li>
-</ul>
-<p>The code rate will always be less than 1, and there is a trade-off between redundancy and throughput.  A lower code-rate means more redundancy and less throughput.</p>
-</div>
-<div class="section" id="modulation-and-coding">
-<h2>Modulation and Coding<a class="headerlink" href="#modulation-and-coding" title="Permalink to this headline">¶</a></h2>
-<p>In the Digital Modulation chapter we talked about how at low SNR you need a low-order modulation scheme (e.g. QPSK) to deal with the noise, and at high SNR you can use modulation like 256QAM to get more bits per second.  Channel coding is the same; you want lower code-rates at low SNR, and at high SNR you can use a code-rate of almost 1.  What modern communications systems do is have a set of combined modulation and coding schemes, called MCS.  Each MCS specifies a modulation scheme and a coding scheme, and there is a minimum SNR it works under.</p>
-<p>Modern communications adaptively change the MCS in real-time, based on the wireless channel conditions.  The receiver sends feedback to the transmitter, indicating the channel quality.  Feedback must be shared before the wireless channel changes, which could be on the order of ms.  This adaptive process leads to the highest throughput comms possible, and is used by modern technologies like LTE, 5G, and WiFi.</p>
-<a class="reference internal image-reference" href="../_images/adaptive_mcs.PNG"><img alt="../_images/adaptive_mcs.PNG" class="align-center" src="../_images/adaptive_mcs.PNG" style="width: 309.6px; height: 209.60000000000002px;" /></a>
-<p>When using adaptive MCS, if you plot throughput over SNR, you get a staircase shaped curve.  Protocols like LTE often have a table indicating which MCS should be used at what SNR.</p>
-<a class="reference internal image-reference" href="../_images/adaptive_mcs2.PNG"><img alt="../_images/adaptive_mcs2.PNG" class="align-center" src="../_images/adaptive_mcs2.PNG" style="width: 544.0px; height: 443.0px;" /></a>
-</div>
-<div class="section" id="hamming-code">
-<h2>Hamming Code<a class="headerlink" href="#hamming-code" title="Permalink to this headline">¶</a></h2>
-<p>Let’s look at one of the simpler error correcting codes.  Hamming Code was the first non-trivial code developed.  In the late 1940s Richard Hamming was working at Bell Labs, using an electromechanical computer that used punched paper tape.  When errors in the machine were detected, it would stop and operators would have to come and fix it. Hamming grew frustrated with having to restart his programs from scratch due to detected errors.  He said, “Damn it, if the machine can detect an error, why can’t it locate the position of the error and correct it?”  He spent the next few years developing the Hamming Code.</p>
-<p>In Hamming Codes, extra bits are added for redundancy, and are called parity bits.  All bit positions that are powers of two are parity bits: 1, 2, 4, 8, etc,  highlighted in green below.  Each parity bit “covers” all bits where the bitwise AND of the parity and the bit position is non-zero, marked with a red X below.  If we want to use a data bit, we need the parity bits that cover it.  E.g. to be able to go up to data bit d9, we need parity bit p8 and all the parity bits that come before it, so this tells us how many parity bits we need for a certain number of bits.  This pattern continues indefinitely.</p>
-<a class="reference internal image-reference" href="../_images/hamming.PNG"><img alt="../_images/hamming.PNG" class="align-center" src="../_images/hamming.PNG" style="width: 714.0px; height: 179.4px;" /></a>
-<p>Hamming codes are block codes so they operate on N data bits at a time.  So with 3 parity bits we can operate on blocks of four data bits at a time.  We call it Hamming(7,4), first arg is total bits transmitted, second arg is data bits.</p>
-<a class="reference internal image-reference" href="../_images/hamming2.PNG"><img alt="../_images/hamming2.PNG" class="align-center" src="../_images/hamming2.PNG" style="width: 408.0px; height: 172.8px;" /></a>
-<p>The following are three important properties of Hamming codes:</p>
-<ul class="simple">
-<li><p>The minimal number of bit changes needed to go from any code word to any other code word is three</p></li>
-<li><p>It can correct one-bit errors</p></li>
-<li><p>It can detect but not correct two-bit errors</p></li>
-</ul>
-<p>Algorithmically, the coding process can be done using a simple matrix multiply, using what is called the “generator matrix”.  In the example below, the vector 1011 is the data to be encoded, i.e. the information we want to send to the receiver.  The 2D matrix is the generator matrix, and it defines the code scheme.  The result of the multiply provides the code word to transmit.</p>
-<a class="reference internal image-reference" href="../_images/hamming3.PNG"><img alt="../_images/hamming3.PNG" class="align-center" src="../_images/hamming3.PNG" style="width: 720.0px; height: 108.0px;" /></a>
-<p>The point of diving into Hamming codes was to give a taste of how coding works.  Block codes tend to follow this type of pattern.  Convolutional codes work totally differently but we won’t get into it here; they often use Trellis-style decoding, which often involves a diagram that looks like this:</p>
-<a class="reference internal image-reference" href="../_images/trellis.PNG"><img alt="../_images/trellis.PNG" class="align-center" src="../_images/trellis.PNG" style="width: 472.0px; height: 207.0px;" /></a>
-</div>
-<div class="section" id="soft-vs-hard-decoding">
-<h2>Soft vs Hard Decoding<a class="headerlink" href="#soft-vs-hard-decoding" title="Permalink to this headline">¶</a></h2>
-<p>Recall that at the receiver, demodulation comes before decoding.  The demodulator can tell us its best guess as to which symbol was sent, or it can output the “soft” value.  E.g. for BPSK, instead of telling us 1 or 0, the demodulator can say 0.3423 or -1.1234, whatever the “soft” value of the symbol was.   Typically the decoding is designed to use hard or soft values.</p>
-<ul class="simple">
-<li><p><strong>Soft decision decoding</strong> – uses the soft values</p></li>
-<li><p><strong>Hard decision decoding</strong> – uses only the 1’s and 0’s</p></li>
-</ul>
-<p>Soft is more robust because you are using all of the information at your disposal, but soft is also much more complicated to implement.  The Hamming Codes we talked about used hard decisions, convolutional codes tend to use soft.</p>
-</div>
-<div class="section" id="shannon-limit">
-<h2>Shannon Limit<a class="headerlink" href="#shannon-limit" title="Permalink to this headline">¶</a></h2>
-<p>The Shannon limit is an incredible piece of theory, it tells us how many bits per second of error-free information we can send:</p>
-<div class="math">
-<p><img src="../_images/math/64252d6abb25eef45398e28a159e06f80531a981.svg" alt="C = B \cdot log_2 \left( 1 + \frac{S}{N}   \right)"/></p>
-</div><ul class="simple">
-<li><p>C – Channel capacity [bits/sec]</p></li>
-<li><p>B – Bandwidth of channel [Hz]</p></li>
-<li><p>S – Average received signal power [watts]</p></li>
-<li><p>N – Average noise power [watts]</p></li>
-</ul>
-<p>This equation represents the best any MCS can do, when operating at a high enough SNR to be error-free.  It makes more sense to plot bits/sec/Hz, i.e. bits/sec per amount of spectrum, and it’s also more common to have SNR in dB, as we have learned:</p>
-<div class="math">
-<p><img src="../_images/math/ffb025726aef66f6cd231f7c6323e920d4b314fa.svg" alt="\frac{C}{B} = log_2 \left( 1 + \mathrm{SNR_{dB}}   \right)"/></p>
-</div><a class="reference internal image-reference" href="../_images/shannon_limit.PNG"><img alt="../_images/shannon_limit.PNG" class="align-center" src="../_images/shannon_limit.PNG" style="width: 405.6px; height: 332.8px;" /></a>
-<p>Another way to display the Shannon Limit is with the y-axis using log scale.  The points shown in the plot below assume no channel coding is used and the symbol error rate is 1e-5.  An interesting mathematical property of the Shannon limit is the asymptote at <img class="math" src="../_images/math/683479db7cc705b2b7d19b2f0ac9aab6be604c12.svg" alt="\ln(2)"/> when the bandwidth is not limited.</p>
-<a class="reference internal image-reference" href="../_images/shannon_limit2.PNG"><img alt="../_images/shannon_limit2.PNG" class="align-center" src="../_images/shannon_limit2.PNG" style="width: 622.4000000000001px; height: 843.2px;" /></a>
-<p>The proof behind the Shannon limit is pretty crazy, it involves math that looks like this:</p>
-<a class="reference internal image-reference" href="../_images/shannon_limit_proof.PNG"><img alt="../_images/shannon_limit_proof.PNG" class="align-center" src="../_images/shannon_limit_proof.PNG" style="width: 784.0px; height: 296.09999999999997px;" /></a>
-</div>
-<div class="section" id="state-of-the-art-codes">
-<h2>State of the Art Codes<a class="headerlink" href="#state-of-the-art-codes" title="Permalink to this headline">¶</a></h2>
-<p>Currently, the best channel coding schemes are:</p>
-<ol class="arabic simple">
-<li><p>Turbo codes, used in 3G, 4G, NASA’s spacecraft and many other places.</p></li>
-<li><p>LDPC codes, used in DVB-S2, WiMAX, IEEE 802.11n, and many others.</p></li>
-</ol>
-<p>Both of these codes approach the Shannon Limit (i.e., almost hit it under certain SNRs).  Hamming codes and other simpler codes get no where near the Shannon Limit.  So from a research point of view, there is not a lot of room left to improve, in terms of the codes themselves.  Current research is focusing more on making the decoding more computationally efficient, and on the adaptive aspect.</p>
-<p>Low-density parity-check (LDPC) codes are a class of highly efficient linear block codes.  They were first introduced by Robert G. Gallager in his PhD dissertation in 1960 at MIT.  Due to the computational complexity in implementing them, they were ignored until the 1990s!  He is 89 at the time of writing this, still alive, and has won many prizes for his work (decades after he did it).  It is not patented, so free to use (unlike turbo codes), which is why it was used in many open protocols.</p>
-<p>Turbo codes are based on convolutional codes.  It’s a class of code that combines two or more simpler convolutional codes and an interleaver.  The fundamental patent application for turbo codes was filed on April 23, 1991.  The inventors were French, so when Qualcomm wanted to use turbo codes in CDMA for 3G they had to create a fee-bearing patent license agreement with France Telecom.  The primary patent expired August 29, 2013.</p>
-</div>
-</div>
-
-
-          </div>
-          
-        </div>
-      </div>
+  <div class="document">
+    
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <p class="logo">
@@ -162,7 +50,7 @@
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
@@ -187,6 +75,13 @@
 <li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
 </ul>
 
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://repl.it/languages/python3">Online Python Console</a></li>
+    
+</ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
@@ -208,8 +103,149 @@
 <script>$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="link_budgets.html" title="Previous document"><span class="section-number">8. </span>Link Budgets</a>
+        </li>
+        <li>
+          <a href="iq_files.html" title="Next document"><span class="section-number">10. </span>IQ Files</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="channel-coding">
+<span id="channel-coding-chapter"></span><h1><span class="section-number">9. </span>Channel Coding<a class="headerlink" href="#channel-coding" title="Permalink to this headline">¶</a></h1>
+<p>In this chapter we take a brief look into the basics of channel coding, a.k.a. forward error correction (FEC).  Channel coding is an enormous area within wireless communications, and it really falls under the study of a branch called “information theory” which is the study of the quantification, storage, and communication of information.</p>
+<div class="section" id="why-we-need-channel-coding">
+<h2>Why We Need Channel Coding<a class="headerlink" href="#why-we-need-channel-coding" title="Permalink to this headline">¶</a></h2>
+<p>As we learned in the <a class="reference internal" href="noise.html#noise-chapter"><span class="std std-ref">Noise and dB</span></a> chapter, wireless channels are noisy, and our digital symbols won’t reach the receiver perfectly.  If you have taken a networking course you may already know about cyclic redundancy checks (CRCs) which <strong>detect</strong> errors at the receiving end.  The purpose of channel coding is to detect <strong>and correct</strong> errors at the receiver.  If we allow some room for error, then we can transmit at a higher order modulation scheme, for example, without having a broken link.  As a visual example, consider the following constellations showing QPSK (left) and 16QAM (right), under the same amount of noise.  QPSK provides 2 bits per symbol, 16QAM uses 4 bits per symbol, so twice the data rate.  But note how in the QPSK constellation, the symbols tend to not pass the symbol decision boundary which is the x-axis and y-axis for QPSK, which means the symbols will be received correctly.  Meanwhile in the 16QAM plot, there is overlap in the clusters and there will be many incorrectly received symbols.</p>
+<a class="reference internal image-reference" href="../_images/qpsk_vs_16qam.PNG"><img alt="../_images/qpsk_vs_16qam.PNG" class="align-center" src="../_images/qpsk_vs_16qam.PNG" style="width: 591.3000000000001px; height: 217.8px;" /></a>
+<p>A failed CRC will usually result in a retransmission, at least when using a protocol like TCP.  If Alice is sending a message to Bob, we would rather not have to make Bob send a message back to Alice requesting the information again.  The main purpose of channel coding is to transmit <strong>redundant</strong> information to reduce the amount of erroneous packets, and reduce retransmissions or dropped data.</p>
+<p>We discussed why we need channel coding, but now let’s see where it occurs in the transmit and receive chain:</p>
+<a class="reference internal image-reference" href="../_images/tx_rx_chain.PNG"><img alt="../_images/tx_rx_chain.PNG" class="align-center" src="../_images/tx_rx_chain.PNG" style="width: 703.1999999999999px; height: 299.4px;" /></a>
+<p>Note that source coding is not the same as channel coding; source coding is meant to compress the data to be transmitted as much as possible, just like when you zip files to reduce the space taken.  I.e., the output of the Source Encoding block should be <strong>smaller</strong> than the input, but the output of Channel Encoding will be larger than the input because redundancy is added.</p>
+</div>
+<div class="section" id="types-of-codes">
+<h2>Types of Codes<a class="headerlink" href="#types-of-codes" title="Permalink to this headline">¶</a></h2>
+<p>To perform channel coding we use an “error correction code”.  This code tells us, given what bits we have to transmit, what bits do we actually transmit?  The most basic code is called “repetition coding”, and it’s when you simply repeat the bit N times, in a row.  For the repetition-3 code, the code is simply:</p>
+<ul class="simple">
+<li>0 <span class="raw-html">&rarr;</span> 000</li>
+<li>1 <span class="raw-html">&rarr;</span> 111</li>
+</ul>
+<p>So the message 10010110 is transmitted as 111000000111000111111000.  Some codes work on “blocks” of input bits, others use a stream approach. Codes that work on blocks are called “Block Codes”, while codes that work on a stream of bits are called “Convolutional Codes”.  These are the two primary types of codes.  Our repetition-3 code was a block code, and worked on blocks of three bits.</p>
+<p>As an aside- these error correction codes are not just used in channel coding for wireless links.  Ever store information to a hard drive or SSD and wonder how there are never bit errors when reading information back off?  Writing, then reading, from memory is kind of like a communication system.  Hard drive/SSD controllers have error correction built in, it’s transparent to the OS, and can be proprietary since it’s all onboard the hard drive/SSD.  For portable media like CDs, the error correction must be standardized.  Reed Solomon codes were common in CD-ROMs.</p>
+</div>
+<div class="section" id="code-rate">
+<h2>Code-Rate<a class="headerlink" href="#code-rate" title="Permalink to this headline">¶</a></h2>
+<p>All error correction includes some form of redundancy.  That means if we want to transmit 100 bits of information, we will have to actually send <strong>more than</strong> 100 bits.  “Code-rate” is the ratio between the number of information bits and the total number of bits sent (i.e. information plus redundancy bits).  E.g. if I have 100 bits of information and I use repetition-3 coding:</p>
+<ul class="simple">
+<li>300 bits are sent</li>
+<li>Only 100 bits represent information</li>
+<li>Code-rate = 100/300 = 1/3</li>
+</ul>
+<p>The code rate will always be less than 1, and there is a trade-off between redundancy and throughput.  A lower code-rate means more redundancy and less throughput.</p>
+</div>
+<div class="section" id="modulation-and-coding">
+<h2>Modulation and Coding<a class="headerlink" href="#modulation-and-coding" title="Permalink to this headline">¶</a></h2>
+<p>In the <a class="reference internal" href="digital_modulation.html#modulation-chapter"><span class="std std-ref">Digital Modulation</span></a> chapter we talked about how at low SNR you need a low-order modulation scheme (e.g. QPSK) to deal with the noise, and at high SNR you can use modulation like 256QAM to get more bits per second.  Channel coding is the same; you want lower code-rates at low SNR, and at high SNR you can use a code-rate of almost 1.  What modern communications systems do is have a set of combined modulation and coding schemes, called MCS.  Each MCS specifies a modulation scheme and a coding scheme, and there is a minimum SNR it works under.</p>
+<p>Modern communications adaptively change the MCS in real-time, based on the wireless channel conditions.  The receiver sends feedback to the transmitter, indicating the channel quality.  Feedback must be shared before the wireless channel changes, which could be on the order of ms.  This adaptive process leads to the highest throughput comms possible, and is used by modern technologies like LTE, 5G, and WiFi.</p>
+<a class="reference internal image-reference" href="../_images/adaptive_mcs.PNG"><img alt="../_images/adaptive_mcs.PNG" class="align-center" src="../_images/adaptive_mcs.PNG" style="width: 309.6px; height: 209.60000000000002px;" /></a>
+<p>When using adaptive MCS, if you plot throughput over SNR, you get a staircase shaped curve.  Protocols like LTE often have a table indicating which MCS should be used at what SNR.</p>
+<a class="reference internal image-reference" href="../_images/adaptive_mcs2.PNG"><img alt="../_images/adaptive_mcs2.PNG" class="align-center" src="../_images/adaptive_mcs2.PNG" style="width: 544.0px; height: 443.0px;" /></a>
+</div>
+<div class="section" id="hamming-code">
+<h2>Hamming Code<a class="headerlink" href="#hamming-code" title="Permalink to this headline">¶</a></h2>
+<p>Let’s look at one of the simpler error correcting codes.  Hamming Code was the first non-trivial code developed.  In the late 1940s Richard Hamming was working at Bell Labs, using an electromechanical computer that used punched paper tape.  When errors in the machine were detected, it would stop and operators would have to come and fix it. Hamming grew frustrated with having to restart his programs from scratch due to detected errors.  He said, “Damn it, if the machine can detect an error, why can’t it locate the position of the error and correct it?”  He spent the next few years developing the Hamming Code.</p>
+<p>In Hamming Codes, extra bits are added for redundancy, and are called parity bits.  All bit positions that are powers of two are parity bits: 1, 2, 4, 8, etc,  highlighted in green below.  Each parity bit “covers” all bits where the bitwise AND of the parity and the bit position is non-zero, marked with a red X below.  If we want to use a data bit, we need the parity bits that cover it.  E.g. to be able to go up to data bit d9, we need parity bit p8 and all the parity bits that come before it, so this tells us how many parity bits we need for a certain number of bits.  This pattern continues indefinitely.</p>
+<a class="reference internal image-reference" href="../_images/hamming.PNG"><img alt="../_images/hamming.PNG" class="align-center" src="../_images/hamming.PNG" style="width: 714.0px; height: 179.4px;" /></a>
+<p>Hamming codes are block codes so they operate on N data bits at a time.  So with 3 parity bits we can operate on blocks of four data bits at a time.  We call it Hamming(7,4), first arg is total bits transmitted, second arg is data bits.</p>
+<a class="reference internal image-reference" href="../_images/hamming2.PNG"><img alt="../_images/hamming2.PNG" class="align-center" src="../_images/hamming2.PNG" style="width: 408.0px; height: 172.8px;" /></a>
+<p>The following are three important properties of Hamming codes:</p>
+<ul class="simple">
+<li>The minimal number of bit changes needed to go from any code word to any other code word is three</li>
+<li>It can correct one-bit errors</li>
+<li>It can detect but not correct two-bit errors</li>
+</ul>
+<p>Algorithmically, the coding process can be done using a simple matrix multiply, using what is called the “generator matrix”.  In the example below, the vector 1011 is the data to be encoded, i.e. the information we want to send to the receiver.  The 2D matrix is the generator matrix, and it defines the code scheme.  The result of the multiply provides the code word to transmit.</p>
+<a class="reference internal image-reference" href="../_images/hamming3.PNG"><img alt="../_images/hamming3.PNG" class="align-center" src="../_images/hamming3.PNG" style="width: 720.0px; height: 108.0px;" /></a>
+<p>The point of diving into Hamming codes was to give a taste of how coding works.  Block codes tend to follow this type of pattern.  Convolutional codes work totally differently but we won’t get into it here; they often use Trellis-style decoding, which often involves a diagram that looks like this:</p>
+<a class="reference internal image-reference" href="../_images/trellis.PNG"><img alt="../_images/trellis.PNG" class="align-center" src="../_images/trellis.PNG" style="width: 472.0px; height: 207.0px;" /></a>
+</div>
+<div class="section" id="soft-vs-hard-decoding">
+<h2>Soft vs Hard Decoding<a class="headerlink" href="#soft-vs-hard-decoding" title="Permalink to this headline">¶</a></h2>
+<p>Recall that at the receiver, demodulation comes before decoding.  The demodulator can tell us its best guess as to which symbol was sent, or it can output the “soft” value.  E.g. for BPSK, instead of telling us 1 or 0, the demodulator can say 0.3423 or -1.1234, whatever the “soft” value of the symbol was.   Typically the decoding is designed to use hard or soft values.</p>
+<ul class="simple">
+<li><strong>Soft decision decoding</strong> – uses the soft values</li>
+<li><strong>Hard decision decoding</strong> – uses only the 1’s and 0’s</li>
+</ul>
+<p>Soft is more robust because you are using all of the information at your disposal, but soft is also much more complicated to implement.  The Hamming Codes we talked about used hard decisions, convolutional codes tend to use soft.</p>
+</div>
+<div class="section" id="shannon-limit">
+<h2>Shannon Limit<a class="headerlink" href="#shannon-limit" title="Permalink to this headline">¶</a></h2>
+<p>The Shannon limit is an incredible piece of theory, it tells us how many bits per second of error-free information we can send:</p>
+<div class="math">
+<p><img src="../_images/math/64252d6abb25eef45398e28a159e06f80531a981.svg" alt="C = B \cdot log_2 \left( 1 + \frac{S}{N}   \right)"/></p>
+</div><ul class="simple">
+<li>C – Channel capacity [bits/sec]</li>
+<li>B – Bandwidth of channel [Hz]</li>
+<li>S – Average received signal power [watts]</li>
+<li>N – Average noise power [watts]</li>
+</ul>
+<p>This equation represents the best any MCS can do, when operating at a high enough SNR to be error-free.  It makes more sense to plot bits/sec/Hz, i.e. bits/sec per amount of spectrum, and it’s also more common to have SNR in dB, as we have learned:</p>
+<div class="math">
+<p><img src="../_images/math/ffb025726aef66f6cd231f7c6323e920d4b314fa.svg" alt="\frac{C}{B} = log_2 \left( 1 + \mathrm{SNR_{dB}}   \right)"/></p>
+</div><a class="reference internal image-reference" href="../_images/shannon_limit.PNG"><img alt="../_images/shannon_limit.PNG" class="align-center" src="../_images/shannon_limit.PNG" style="width: 405.6px; height: 332.8px;" /></a>
+<p>Another way to display the Shannon Limit is with the y-axis using log scale.  The points shown in the plot below assume no channel coding is used and the symbol error rate is 1e-5.  An interesting mathematical property of the Shannon limit is the asymptote at <img class="math" src="../_images/math/683479db7cc705b2b7d19b2f0ac9aab6be604c12.svg" alt="\ln(2)"/> when the bandwidth is not limited.</p>
+<a class="reference internal image-reference" href="../_images/shannon_limit2.PNG"><img alt="../_images/shannon_limit2.PNG" class="align-center" src="../_images/shannon_limit2.PNG" style="width: 622.4000000000001px; height: 843.2px;" /></a>
+<p>The proof behind the Shannon limit is pretty crazy, it involves math that looks like this:</p>
+<a class="reference internal image-reference" href="../_images/shannon_limit_proof.PNG"><img alt="../_images/shannon_limit_proof.PNG" class="align-center" src="../_images/shannon_limit_proof.PNG" style="width: 784.0px; height: 296.09999999999997px;" /></a>
+</div>
+<div class="section" id="state-of-the-art-codes">
+<h2>State of the Art Codes<a class="headerlink" href="#state-of-the-art-codes" title="Permalink to this headline">¶</a></h2>
+<p>Currently, the best channel coding schemes are:</p>
+<ol class="arabic simple">
+<li>Turbo codes, used in 3G, 4G, NASA’s spacecraft and many other places.</li>
+<li>LDPC codes, used in DVB-S2, WiMAX, IEEE 802.11n, and many others.</li>
+</ol>
+<p>Both of these codes approach the Shannon Limit (i.e., almost hit it under certain SNRs).  Hamming codes and other simpler codes get no where near the Shannon Limit.  So from a research point of view, there is not a lot of room left to improve, in terms of the codes themselves.  Current research is focusing more on making the decoding more computationally efficient, and on the adaptive aspect.</p>
+<p>Low-density parity-check (LDPC) codes are a class of highly efficient linear block codes.  They were first introduced by Robert G. Gallager in his PhD dissertation in 1960 at MIT.  Due to the computational complexity in implementing them, they were ignored until the 1990s!  He is 89 at the time of writing this, still alive, and has won many prizes for his work (decades after he did it).  It is not patented, so free to use (unlike turbo codes), which is why it was used in many open protocols.</p>
+<p>Turbo codes are based on convolutional codes.  It’s a class of code that combines two or more simpler convolutional codes and an interleaver.  The fundamental patent application for turbo codes was filed on April 23, 1991.  The inventors were French, so when Qualcomm wanted to use turbo codes in CDMA for 3G they had to create a fee-bearing patent license agreement with France Telecom.  The primary patent expired August 29, 2013.</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="link_budgets.html" title="Previous document"><span class="section-number">8. </span>Link Budgets</a>
+        </li>
+        <li>
+          <a href="iq_files.html" title="Next document"><span class="section-number">10. </span>IQ Files</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2020, Marc Lichtman.
       
