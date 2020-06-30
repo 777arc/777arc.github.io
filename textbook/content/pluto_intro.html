@@ -165,11 +165,11 @@
 git clone https://github.com/analogdevicesinc/libiio.git
 <span class="nb">cd</span> libiio
 cmake ./
-make all -j3
+make all -j4
 sudo make install
-
 <span class="nb">cd</span> bindings/python/
-sudo python3 setup.py install
+sudo python3 setup.py.cmakein install
+
 <span class="nb">cd</span> ~
 git clone https://github.com/analogdevicesinc/libad9361-iio.git
 <span class="nb">cd</span> libad9361-iio

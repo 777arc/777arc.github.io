@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="4. Digital Modulation" href="digital_modulation.html" />
-    <link rel="prev" title="2. The Frequency Domain" href="frequency_domain.html" />
+    <link rel="prev" title="2. Frequency Domain" href="frequency_domain.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -50,7 +50,7 @@
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. The Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">3. IQ Sampling</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#sampling-basics">Sampling Basics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#nyquist-sampling">Nyquist Sampling</a></li>
@@ -89,7 +89,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="frequency_domain.html" title="previous chapter"><span class="section-number">2. </span>The Frequency Domain</a></li>
+      <li>Previous: <a href="frequency_domain.html" title="previous chapter"><span class="section-number">2. </span>Frequency Domain</a></li>
       <li>Next: <a href="digital_modulation.html" title="next chapter"><span class="section-number">4. </span>Digital Modulation</a></li>
   </ul></li>
 </ul>
@@ -114,7 +114,7 @@
     <ul>
         <li>
           &larr;
-          <a href="frequency_domain.html" title="Previous document"><span class="section-number">2. </span>The Frequency Domain</a>
+          <a href="frequency_domain.html" title="Previous document"><span class="section-number">2. </span>Frequency Domain</a>
         </li>
         <li>
           <a href="digital_modulation.html" title="Next document"><span class="section-number">4. </span>Digital Modulation</a>
@@ -141,13 +141,12 @@
 <div class="section" id="nyquist-sampling">
 <h2>Nyquist Sampling<a class="headerlink" href="#nyquist-sampling" title="Permalink to this headline">¶</a></h2>
 <p>When we sample something, we need to be mindful of the sample period, i.e. the time between samples are taken.  If you calculate the inverse of the sample period, you will get the sample rate, which is usually what we will use when talking about SDRs.</p>
-<p>For a given signal, the big question often is, how fast must we sample?  Let’s look at a signal that is just a sine wave, of frequency f.  Let’s say we sample at a rate Fs.  If we sample that signal at a rate equal to f (i.e., Fs = f), we will get something that looks like:</p>
-<a class="reference internal image-reference" href="../_images/sampling1.png"><img alt="../_images/sampling1.png" class="align-center" src="../_images/sampling1.png" style="width: 435.20000000000005px; height: 183.20000000000002px;" /></a>
-<p>In yellow is the original sine wave we are sampling, red shows the samples, and then in blue we show a different (incorrect) function that could have lead to the same samples being recorded.  This indicates that our sample rate was too low.  Let’s try sampling a little faster, at Fs = 1.2f:</p>
-<a class="reference internal image-reference" href="../_images/sampling2.png"><img alt="../_images/sampling2.png" class="align-center" src="../_images/sampling2.png" style="width: 464.8px; height: 190.8px;" /></a>
-<p>Once again, there is a different signal that could fit in these samples, and that ambiguity means that if someone gave us the list of samples, we wouldn’t know which signal was the original one.  How about sampling at Fs = 1.5f:</p>
-<a class="reference internal image-reference" href="../_images/sampling3.png"><img alt="../_images/sampling3.png" class="align-center" src="../_images/sampling3.png" style="width: 451.20000000000005px; height: 190.0px;" /></a>
-<p>Still not fast enough.  It turns out you have to sample at <strong>twice</strong> the frequency of the signal in order to remove the ambiguity we are experiencing.  Since most signals will have many frequency components to them, it’s really “twice the frequency of the maximum frequency component” in our signal.  Here’s a way to visualize that:</p>
+<p>For a given signal, the big question often is, how fast must we sample?  Let’s look at a signal that is just a sine wave, of frequency f, shown in green below.  Let’s say we sample at a rate Fs, samples shown in blue.  If we sample that signal at a rate equal to f (i.e., Fs = f), we will get something that looks like:</p>
+<img alt="../_images/sampling_Fs_0.3.svg" class="align-center" src="../_images/sampling_Fs_0.3.svg" /><p>The red shows a different (incorrect) function that could have lead to the same samples being recorded.  This indicates that our sample rate was too low, because the same samples could have come from two different functions, leading to ambiguity.  Let’s try sampling a little faster, at Fs = 1.2f:</p>
+<img alt="../_images/sampling_Fs_0.36.svg" class="align-center" src="../_images/sampling_Fs_0.36.svg" /><p>Once again, there is a different signal that could fit in these samples, and that ambiguity means that if someone gave us the list of samples, we wouldn’t know which signal was the original one.  How about sampling at Fs = 1.5f:</p>
+<img alt="../_images/sampling_Fs_0.45.svg" class="align-center" src="../_images/sampling_Fs_0.45.svg" /><p>Still not fast enough.  It turns out you have to sample at <strong>twice</strong> the frequency of the signal in order to remove the ambiguity we are experiencing:</p>
+<img alt="../_images/sampling_Fs_0.6.svg" class="align-center" src="../_images/sampling_Fs_0.6.svg" /><p>There’s no incorrect signal this time, because we sampled fast enough that no signal exists that fits these samples other than the one you see (unless you go <em>higher</em> in frequency, but we will discuss that later).</p>
+<p>Since most signals will have many frequency components to them, it’s really “twice the frequency of the maximum frequency component” in our signal.  Here’s a way to visualize that:</p>
 <a class="reference internal image-reference" href="../_images/max_freq.png"><img alt="../_images/max_freq.png" class="align-center" src="../_images/max_freq.png" style="width: 350.0px; height: 210.0px;" /></a>
 <p>So we must identify the highest one, then double it, and make sure we sample at that rate or faster. The minimum frequency is known as the Nyquist Rate, and it’s an extremely important piece of theory that shows up in more fields than just DSP and SDR.</p>
 <a class="reference internal image-reference" href="../_images/nyquist_rate.png"><img alt="../_images/nyquist_rate.png" class="align-center" src="../_images/nyquist_rate.png" style="width: 364.7px; height: 158.2px;" /></a>
@@ -376,7 +375,7 @@ Alternatively, if you know your signal is not changing, it’s not a sin to only
     <ul>
         <li>
           &larr;
-          <a href="frequency_domain.html" title="Previous document"><span class="section-number">2. </span>The Frequency Domain</a>
+          <a href="frequency_domain.html" title="Previous document"><span class="section-number">2. </span>Frequency Domain</a>
         </li>
         <li>
           <a href="digital_modulation.html" title="Next document"><span class="section-number">4. </span>Digital Modulation</a>
