@@ -181,10 +181,10 @@
 <p>To go back to the time domain it’s almost exactly the same aside from a scaling factor and negative sign:</p>
 <div class="math">
 <p><img src="../_images/math/5be5072ccaf0978ad48c208cd73799c36aef51cd.svg" alt="x(t) = \frac{1}{2 \pi} \int X(f) e^{j2\pi ft} df"/></p>
-</div><p>Note that a lot of textbooks and other resources use <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> instead of <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/>.  <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> is angular frequency in radians, while <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is in Hz.  All you have to know that</p>
+</div><p>Note that a lot of textbooks and other resources use <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> in place of the <img class="math" src="../_images/math/f2db2fc8f3c55a36937062e1797243b47a90f001.svg" alt="2\pi f"/>.  <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> is angular frequency in radians, while <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is in Hz.  All you have to know that</p>
 <div class="math">
 <p><img src="../_images/math/198ad5c1c03eb34cf94aa5de5ecc4e89624a2964.svg" alt="\omega = 2 \pi f"/></p>
-</div><p>Even though it adds a <img class="math" src="../_images/math/adbf740b3ae712140edad99b950ffd8c9ec2919b.svg" alt="2 \pi"/> term to many equations, I find it easier to just stick with frequency in Hz since that is what ends up being used when you actually implement DSP algorithms.</p>
+</div><p>Even though it adds a <img class="math" src="../_images/math/adbf740b3ae712140edad99b950ffd8c9ec2919b.svg" alt="2 \pi"/> term to many equations, it’s easier to just stick with frequency in Hz, since Hz will ultimately be the units you work with in your SDR application.</p>
 <p>The above equation for the Fourier Transform is the continuous form, which you will only see in math problems.  The discrete form is much closer to what is implemented in code:</p>
 <div class="math">
 <p><img src="../_images/math/d94eb6f124e7e929c0420fd6d6a19eb14903b593.svg" alt="X_k = \sum_{n=0}^{N-1} x_n e^{-\frac{j2\pi}{N}kn}"/></p>
@@ -204,10 +204,10 @@
 <li>Frequency Shift Property:</li>
 </ol>
 <div class="math">
-<p><img src="../_images/math/dacfc99d2042a0cb01f1ee1b4473a7b3827e3df5.svg" alt="e^{jf_0t}x(t) \leftrightarrow X(f-f_0)"/></p>
-</div><p>The term to the left of x(t) is what we call a “complex sinusoid” or “complex exponential”, and for now all we need to know is that it’s essentially just a sine wave.  So what this property is telling us is that if we take a signal x(t) and multiply it by a sine wave, then in the frequency domain we get the same X(f) except shifted by a certain frequency.  Here is a visual showing what I mean by shifted in frequency:</p>
+<p><img src="../_images/math/be894b85227c716548c31342eccabe9c1b515b57.svg" alt="e^{2 \pi j f_0 t}x(t) \leftrightarrow X(f-f_0)"/></p>
+</div><p>The term to the left of x(t) is what we call a “complex sinusoid” or “complex exponential”, and for now all we need to know is that it’s essentially just a sine wave at frequency <img class="math" src="../_images/math/da647bd66569f61d6a3f16c3c2e09085c351a343.svg" alt="f_0"/>.  So what this property is telling us is that if we take a signal <img class="math" src="../_images/math/b52a14c3452fbd1a467b640bb6269127e997a8e3.svg" alt="x(t)"/> and multiply it by a sine wave, then in the frequency domain we get <img class="math" src="../_images/math/8107fe72abc774dcc596c9fa4ee452bf8f6748af.svg" alt="X(f)"/> except shifted by a certain frequency, <img class="math" src="../_images/math/da647bd66569f61d6a3f16c3c2e09085c351a343.svg" alt="f_0"/>.  This shift in frequency might be easier to visualize:</p>
 <a class="reference internal image-reference" href="../_images/freq-shift.png"><img alt="../_images/freq-shift.png" class="align-center" src="../_images/freq-shift.png" style="width: 521.3000000000001px; height: 169.0px;" /></a>
-<p>This is a very important concept in DSP, because we will want to shift signals up and down in frequency for many reasons, and this property tells us how to do that (multiply by a sine wave).  Here’s another way to think about that:</p>
+<p>This is a very important concept in DSP, because we will want to shift signals up and down in frequency for many reasons, and this property tells us how to do that (multiply by a sine wave).  Here’s another way to visualize this property:</p>
 <a class="reference internal image-reference" href="../_images/freq-shift-diagram.png"><img alt="../_images/freq-shift-diagram.png" class="align-center" src="../_images/freq-shift-diagram.png" style="width: 314.6px; height: 176.0px;" /></a>
 <ol class="arabic simple" start="3">
 <li>Scaling in Time Property:</li>

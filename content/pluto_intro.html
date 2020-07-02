@@ -148,8 +148,8 @@
 <li>Plug Pluto into the host machine over USB, make sure to use middle USB port on Pluto, the other one is power only.  It should create a virtual network adapter, i.e. the Pluto appears like a USB ethernet adapter</li>
 <li>On the host machine (not VM), open a terminal or whatever ping tool you want and ping 192.168.2.1.  If that doesn’t work stop here, and debug the network interface.</li>
 <li>Within the VM, open a new terminal</li>
-<li>Ping 192.168.2.1.  If that doesn’t work stop here and debug.  If the ping works then you should be good to go, assuming 192.168.2.1 was actually the Pluto and not some random computer on the network (unlikely but possible)</li>
-<li>If you want to be 100% sure 192.168.2.1 is your pluto, try doing “ssh <a class="reference external" href="mailto:root&#37;&#52;&#48;192&#46;168&#46;2&#46;1" rel="noopener noreferrer" target="_blank">root<span>&#64;</span>192<span>&#46;</span>168<span>&#46;</span>2<span>&#46;</span>1</a>” pass: analog, and it should log into it</li>
+<li>Ping 192.168.2.1.  If that doesn’t work stop here and debug.  If the ping works then you should be good to go, assuming 192.168.2.1 was actually the Pluto and not some random computer on the network (unlikely but possible).  If you want to be 100% sure 192.168.2.1 is your pluto, try doing “ssh <a class="reference external" href="mailto:root&#37;&#52;&#48;192&#46;168&#46;2&#46;1" rel="noopener noreferrer" target="_blank">root<span>&#64;</span>192<span>&#46;</span>168<span>&#46;</span>2<span>&#46;</span>1</a>” pass: analog, and it should log into it.</li>
+<li>Write down the IP address somewhere because you’ll need it when we start using the Pluto in Python</li>
 </ol>
 </div>
 <div class="section" id="installing-plutosdr-driver">
@@ -167,6 +167,7 @@ git clone https://github.com/analogdevicesinc/libiio.git
 cmake ./
 make all -j4
 sudo make install
+sudo ldconfig
 <span class="nb">cd</span> bindings/python/
 sudo python3 setup.py.cmakein install
 
@@ -189,7 +190,7 @@ sudo python3 setup.py install
 <p>Open a new terminal (in your VM) and type the following commands:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3
 import adi
-<span class="nv">sdr</span> <span class="o">=</span> adi.Pluto<span class="o">(</span><span class="s1">&#39;ip:192.168.2.1&#39;</span><span class="o">)</span>
+<span class="nv">sdr</span> <span class="o">=</span> adi.Pluto<span class="o">(</span><span class="s1">&#39;ip:192.168.2.1&#39;</span><span class="o">)</span> <span class="c1"># or whatever your Pluto&#39;s IP is</span>
 sdr.sample_rate <span class="o">=</span> int<span class="o">(</span><span class="m">2</span>.5e6<span class="o">)</span>
 sdr.rx<span class="o">()</span>
 </pre></div>
@@ -198,7 +199,13 @@ sdr.rx<span class="o">()</span>
 </div>
 <div class="section" id="changing-pluto-s-ip-address">
 <h3>Changing Pluto’s IP Address<a class="headerlink" href="#changing-pluto-s-ip-address" title="Permalink to this headline">¶</a></h3>
-<p>If for some reason the default IP of 192.168.2.1 won’t work because you already have a 192.168.2.0 subnet, or because you want multiple Pluto’s connected at the same time, you can change the IP by editing the config.txt file on the PlutoSDR mass storage device (i.e. the USB-drive looking thing that shows up after you plug in the Pluto).</p>
+<p>If for some reason the default IP of 192.168.2.1 won’t work because you already have a 192.168.2.0 subnet, or because you want multiple Pluto’s connected at the same time, you can change the IP using these steps:</p>
+<ol class="arabic simple">
+<li>Edit the config.txt file on the PlutoSDR mass storage device (i.e. the USB-drive looking thing that shows up after you plug in the Pluto).  Enter the new IP you want.</li>
+<li>Eject the mass storage device (don’t unplug the Pluto!), in Ubuntu 18 there’s an eject symbol next to the PlutoSDR device, when looking at the file explorer.</li>
+<li>Give it a few seconds, and then cycle power by unplugging it and plugging it back in.  Go back into the config.txt to make sure it stuck</li>
+</ol>
+<p>Note that this procedure is also used to flash a different firmware image onto the Pluto, for more details see <a class="reference external" href="https://wiki.analog.com/university/tools/pluto/users/firmware" rel="noopener noreferrer" target="_blank">https://wiki.analog.com/university/tools/pluto/users/firmware</a>.</p>
 </div>
 <div class="section" id="hack-plutosdr-to-increase-rf-range">
 <h3>“Hack” PlutoSDR to Increase RF Range<a class="headerlink" href="#hack-plutosdr-to-increase-rf-range" title="Permalink to this headline">¶</a></h3>
