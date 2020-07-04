@@ -32,13 +32,13 @@ The basics of the frequency domain starts with understanding that any signal can
 Here is another example; the red curve below shows an approximation of a sawtooth wave using up to five sine waves added together.  We can see that it's not a perfect reconstruction, it would take an infinite number of sine waves to reproduce this sawtooth wave due to the sharp transitions:
 
 .. image:: ../_static/fourier_series_triangle.gif
-   :scale: 100 %   
+   :scale: 70 %   
    :align: center  
    
 Some signals require more sine waves than others, and some require an infinite amount of sine waves, although they can always be approximated with a limited number.  Here is another example of a signal being broken down into a series of sine waves:
 
 .. image:: ../_static/fourier_series_arbitrary_function.gif
-   :scale: 100 %   
+   :scale: 70 %   
    :align: center  
 
 To understand how we can break down a signal into sine waves, we need to first review the three attributes of a sine wave, also known as sinusoid:
@@ -47,10 +47,9 @@ To understand how we can break down a signal into sine waves, we need to first r
 #. Phase
 #. Frequency
 
-Amplitude indicates the "strength" of the wave, while phase is used to represent how the sine wave is shifted in time, anywhere from 0 to 360 degrees.  Frequency is the number of waves per second, and is the inverse of period.
+Amplitude indicates the "strength" of the wave, while phase is used to represent how the sine wave is shifted in time, anywhere from 0 to 360 degrees (or 0 to :math:`2\pi`).  Frequency is the number of waves per second, and is the inverse of period.
 
-.. image:: ../_static/amplitude_and_phase.gif
-   :scale: 100 % 
+.. image:: ../_static/amplitude_phase_period.svg
    :align: center  
    
 At this point you may have realized that a "signal" is essentially just a function, usually represented "over time".  I.e., the x-axis is time.  This means the period of a sinusoid is the amount of time, in seconds, for the wave to finish one cycle.  Thus, the units of frequency, is 1/seconds, or Hz.
@@ -83,8 +82,7 @@ As we can see, a spike/impulse in the time domain is flat in the frequency domai
 
 Next lets look at the time and frequency domain plots of a square wave:
 
-.. image:: ../_static/square-wave.png
-   :scale: 80 % 
+.. image:: ../_static/square-wave.svg
    :align: center 
    
 This one is also less intuitive, but we can see that the frequency domain has a strong spike at 10 Hz, which is the frequency of the square wave, but it also seems to keep going.  This is because of the quick change in time domain, just like in the previous example.  But it's not flat in frequency, it has spikes at intervals, and the level slowly decays (although it will continue forever).  It turns out that a square wave in time domain has a sin(x)/x pattern in the frequency domain (a.k.a. the sinc function).  
@@ -284,7 +282,7 @@ First, let us create a signal in the time domain.  Feel free to follow along wit
 If we plot s it looks like:
 
 .. image:: ../_static/fft-python1.png
-   :scale: 100 % 
+   :scale: 70 % 
    :align: center 
 
 Next let's use Numpy's FFT function:
@@ -360,8 +358,7 @@ When we use an FFT to measure the frequency components of our signal, the FFT as
 
 The way we make up for this cyclic property is through "windowing".  Right before the FFT, we multiply the slice of signal by a window function, which is just any function that tapers to zero on both ends.  That ensures the slice of signal will begin and end at zero, and connect.  Common window functions include Hamming, Hanning, Blackman, and Kaiser.  When you don't apply any windowing, it's called using a "rectangular" window, because it's like multiplying by an array of ones.   Here is what several window functions look like:
 
-.. image:: ../_static/windows.png
-   :scale: 80 % 
+.. image:: ../_static/windows.svg
    :align: center 
 
 A simple approach for beginners is to just stick with a Hamming window, which can be created in Python with :code:`np.hamming(N)` where N is the number of elements in the array, which is just your FFT size.  In the above exercise, we would apply the window right before the FFT, so after the 2nd line of code we would insert:

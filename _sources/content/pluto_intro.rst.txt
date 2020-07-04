@@ -98,7 +98,7 @@ If for some reason the default IP of 192.168.2.1 won't work because you already 
 
 1. Edit the config.txt file on the PlutoSDR mass storage device (i.e. the USB-drive looking thing that shows up after you plug in the Pluto).  Enter the new IP you want.
 2. Eject the mass storage device (don't unplug the Pluto!), in Ubuntu 18 there's an eject symbol next to the PlutoSDR device, when looking at the file explorer.  
-3. Give it a few seconds, and then cycle power by unplugging it and plugging it back in.  Go back into the config.txt to make sure it stuck
+3. Give it a few seconds, and then cycle power by unplugging it and plugging it back in.  Go back into the config.txt to make sure it stuck.
 
 Note that this procedure is also used to flash a different firmware image onto the Pluto, for more details see https://wiki.analog.com/university/tools/pluto/users/firmware.
 
