@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>12. Pulse Shaping &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <title>13. Pulse Shaping &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
@@ -16,8 +16,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="13. Textbook Comparison" href="appendix_text_comparison.html" />
-    <link rel="prev" title="11. Multipath Fading" href="multipath_fading.html" />
+    <link rel="next" title="14. Textbook Comparison" href="appendix_text_comparison.html" />
+    <link rel="prev" title="12. Multipath Fading" href="multipath_fading.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -54,13 +54,14 @@
 <li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">12. Pulse Shaping</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="pluto_advanced.html">6. PlutoSDR Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">13. Pulse Shaping</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#inter-symbol-interference-isi">Inter-Symbol-Interference (ISI)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#matched-filter">Matched Filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#splitting-a-filter-in-half">Splitting a Filter in Half</a></li>
@@ -69,8 +70,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#python-exercise">Python Exercise</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">14. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">15. About the Author</a></li>
 </ul>
 
 
@@ -84,8 +85,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="multipath_fading.html" title="previous chapter"><span class="section-number">11. </span>Multipath Fading</a></li>
-      <li>Next: <a href="appendix_text_comparison.html" title="next chapter"><span class="section-number">13. </span>Textbook Comparison</a></li>
+      <li>Previous: <a href="multipath_fading.html" title="previous chapter"><span class="section-number">12. </span>Multipath Fading</a></li>
+      <li>Next: <a href="appendix_text_comparison.html" title="next chapter"><span class="section-number">14. </span>Textbook Comparison</a></li>
   </ul></li>
 </ul>
 </div>
@@ -109,10 +110,10 @@
     <ul>
         <li>
           &larr;
-          <a href="multipath_fading.html" title="Previous document"><span class="section-number">11. </span>Multipath Fading</a>
+          <a href="multipath_fading.html" title="Previous document"><span class="section-number">12. </span>Multipath Fading</a>
         </li>
         <li>
-          <a href="appendix_text_comparison.html" title="Next document"><span class="section-number">13. </span>Textbook Comparison</a>
+          <a href="appendix_text_comparison.html" title="Next document"><span class="section-number">14. </span>Textbook Comparison</a>
           &rarr;
         </li>
     </ul>
@@ -123,7 +124,7 @@
           <div class="body" role="main">
             
   <div class="section" id="pulse-shaping">
-<span id="pulse-shaping-chapter"></span><h1><span class="section-number">12. </span>Pulse Shaping<a class="headerlink" href="#pulse-shaping" title="Permalink to this headline">¶</a></h1>
+<span id="pulse-shaping-chapter"></span><h1><span class="section-number">13. </span>Pulse Shaping<a class="headerlink" href="#pulse-shaping" title="Permalink to this headline">¶</a></h1>
 <p>You can consider this Part II of the Filters chapter, where we take a deeper dive into pulse shaping.</p>
 <div class="section" id="inter-symbol-interference-isi">
 <h2>Inter-Symbol-Interference (ISI)<a class="headerlink" href="#inter-symbol-interference-isi" title="Permalink to this headline">¶</a></h2>
@@ -273,10 +274,10 @@
     <ul>
         <li>
           &larr;
-          <a href="multipath_fading.html" title="Previous document"><span class="section-number">11. </span>Multipath Fading</a>
+          <a href="multipath_fading.html" title="Previous document"><span class="section-number">12. </span>Multipath Fading</a>
         </li>
         <li>
-          <a href="appendix_text_comparison.html" title="Next document"><span class="section-number">13. </span>Textbook Comparison</a>
+          <a href="appendix_text_comparison.html" title="Next document"><span class="section-number">14. </span>Textbook Comparison</a>
           &rarr;
         </li>
     </ul>

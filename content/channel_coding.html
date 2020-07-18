@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9. Channel Coding &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <title>10. Channel Coding &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
@@ -16,8 +16,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="10. IQ Files" href="iq_files.html" />
-    <link rel="prev" title="8. Link Budgets" href="link_budgets.html" />
+    <link rel="next" title="11. IQ Files" href="iq_files.html" />
+    <link rel="prev" title="9. Link Budgets" href="link_budgets.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -54,10 +54,11 @@
 <li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">9. Channel Coding</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="pluto_advanced.html">6. PlutoSDR Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">10. Channel Coding</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#why-we-need-channel-coding">Why We Need Channel Coding</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#types-of-codes">Types of Codes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#code-rate">Code-Rate</a></li>
@@ -68,11 +69,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#state-of-the-art-codes">State of the Art Codes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">14. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">15. About the Author</a></li>
 </ul>
 
 
@@ -86,8 +87,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="link_budgets.html" title="previous chapter"><span class="section-number">8. </span>Link Budgets</a></li>
-      <li>Next: <a href="iq_files.html" title="next chapter"><span class="section-number">10. </span>IQ Files</a></li>
+      <li>Previous: <a href="link_budgets.html" title="previous chapter"><span class="section-number">9. </span>Link Budgets</a></li>
+      <li>Next: <a href="iq_files.html" title="next chapter"><span class="section-number">11. </span>IQ Files</a></li>
   </ul></li>
 </ul>
 </div>
@@ -111,10 +112,10 @@
     <ul>
         <li>
           &larr;
-          <a href="link_budgets.html" title="Previous document"><span class="section-number">8. </span>Link Budgets</a>
+          <a href="link_budgets.html" title="Previous document"><span class="section-number">9. </span>Link Budgets</a>
         </li>
         <li>
-          <a href="iq_files.html" title="Next document"><span class="section-number">10. </span>IQ Files</a>
+          <a href="iq_files.html" title="Next document"><span class="section-number">11. </span>IQ Files</a>
           &rarr;
         </li>
     </ul>
@@ -125,7 +126,7 @@
           <div class="body" role="main">
             
   <div class="section" id="channel-coding">
-<span id="channel-coding-chapter"></span><h1><span class="section-number">9. </span>Channel Coding<a class="headerlink" href="#channel-coding" title="Permalink to this headline">¶</a></h1>
+<span id="channel-coding-chapter"></span><h1><span class="section-number">10. </span>Channel Coding<a class="headerlink" href="#channel-coding" title="Permalink to this headline">¶</a></h1>
 <p>In this chapter we take a brief look into the basics of channel coding, a.k.a. forward error correction (FEC).  Channel coding is an enormous area within wireless communications, and it really falls under the study of a branch called “information theory” which is the study of the quantification, storage, and communication of information.</p>
 <div class="section" id="why-we-need-channel-coding">
 <h2>Why We Need Channel Coding<a class="headerlink" href="#why-we-need-channel-coding" title="Permalink to this headline">¶</a></h2>
@@ -202,14 +203,16 @@
 <li>S – Average received signal power [watts]</li>
 <li>N – Average noise power [watts]</li>
 </ul>
-<p>This equation represents the best any MCS can do, when operating at a high enough SNR to be error-free.  It makes more sense to plot bits/sec/Hz, i.e. bits/sec per amount of spectrum, and it’s also more common to have SNR in dB, as we have learned:</p>
+<p>This equation represents the best any MCS can do, when operating at a high enough SNR to be error-free.  It makes more sense to plot bits/sec/Hz, i.e. bits/sec per amount of spectrum:</p>
 <div class="math">
-<p><img src="../_images/math/ffb025726aef66f6cd231f7c6323e920d4b314fa.svg" alt="\frac{C}{B} = log_2 \left( 1 + \mathrm{SNR_{dB}}   \right)"/></p>
-</div><a class="reference internal image-reference" href="../_images/shannon_limit.PNG"><img alt="../_images/shannon_limit.PNG" class="align-center" src="../_images/shannon_limit.PNG" style="width: 405.6px; height: 332.8px;" /></a>
-<p>Another way to display the Shannon Limit is with the y-axis using log scale.  The points shown in the plot below assume no channel coding is used and the symbol error rate is 1e-5.  An interesting mathematical property of the Shannon limit is the asymptote at <img class="math" src="../_images/math/683479db7cc705b2b7d19b2f0ac9aab6be604c12.svg" alt="\ln(2)"/> when the bandwidth is not limited.</p>
-<a class="reference internal image-reference" href="../_images/shannon_limit2.PNG"><img alt="../_images/shannon_limit2.PNG" class="align-center" src="../_images/shannon_limit2.PNG" style="width: 622.4000000000001px; height: 843.2px;" /></a>
+<p><img src="../_images/math/baccf5717719d4baf9026eb75dad3377e7586ec3.svg" alt="\frac{C}{B} = log_2 \left( 1 + \mathrm{SNR}   \right)"/></p>
+</div><p>When actually plotting it, we usually represent SNR in dB, which is essentially just using a log scale for the x-axis:</p>
+<img alt="../_images/shannon_limit.svg" class="align-center" src="../_images/shannon_limit.svg" /><p>If you see Shannon limit plots elsewhere that look a little different, they are probably using an x-axis of “energy per bit” or <img class="math" src="../_images/math/0939b649ae229cc6f5075427efe1ffea03ae78d6.svg" alt="E_b/N_0"/>, which is just an alternative to working in SNR.</p>
+<p>It might help simplify things to realize when the SNR is fairly high (e.g. 10 dB or higher), the Shannon limit can be approximated as <img class="math" src="../_images/math/8368696f9451b8c50ec95976a6c944c80e17c2e9.svg" alt="log_2 \left( \mathrm{SNR_{dB}} \right)"/> which is roughly <img class="math" src="../_images/math/a03b818e424e7b62c448b6b892f1469605d2b3c0.svg" alt="(\mathrm{SNR_{dB}})/3"/>.  For example, at 24 dB SNR you’re looking at 8 bits/sec/Hz, so if you have 1 MHz to use, that’s 8 Mbps.  You might be thinking “well that’s just the theoretical limit”, but modern communications get fairly close to that limit, so at a minimum it gives you a rough ballpark.  You can always cut that number in half to take into account packet/frame overhead and non-ideal MCS.</p>
+<p>The max throughput of 802.11n WiFi operating in the 2.4 GHz band (which uses 20 MHz wide channels), according to the specs, is 300 Mbps.  Obviously you could sit right next to your router and get an extremely high SNR, e.g. 60 dB, but to be reliable/practical the max throughput MCS (recall the staircase curve from above) is unlikely to require an SNR that high.  You can even take a look at the MCS list for 802.11n <a class="reference external" href="https://en.wikipedia.org/wiki/IEEE_802.11n-2009#Data_rates" rel="noopener noreferrer" target="_blank">here</a>.  802.11n goes up to 64-QAM, and combined with channel coding, it requires an SNR around 25 dB according to <a class="reference external" href="https://d2cpnw0u24fjm4.cloudfront.net/wp-content/uploads/802.11n-and-802.11ac-MCS-SNR-and-RSSI.pdf" rel="noopener noreferrer" target="_blank">this table</a>.  That means, even at 60 dB SNR your WiFi will still use 64-QAM.  So at 25 dB the Shannon limit is roughly 8.3 bits/s/Hz, which given 20 MHz of spectrum is 166 Mbps.  But when you take into account MIMO, which we will cover in a future chapter, you can get four of those streams running in parallel, resulting in 664 Mbps.  Cut that number in half and you get something very close to the advertised max speed of 300 Mbps, for 802.11n WiFi in the 2.4 GHz band.</p>
 <p>The proof behind the Shannon limit is pretty crazy, it involves math that looks like this:</p>
 <a class="reference internal image-reference" href="../_images/shannon_limit_proof.PNG"><img alt="../_images/shannon_limit_proof.PNG" class="align-center" src="../_images/shannon_limit_proof.PNG" style="width: 784.0px; height: 296.09999999999997px;" /></a>
+<p>For more info see <a class="reference external" href="https://en.wikipedia.org/wiki/Shannon%E2%80%93Hartley_theorem" rel="noopener noreferrer" target="_blank">here</a>.</p>
 </div>
 <div class="section" id="state-of-the-art-codes">
 <h2>State of the Art Codes<a class="headerlink" href="#state-of-the-art-codes" title="Permalink to this headline">¶</a></h2>
@@ -232,10 +235,10 @@
     <ul>
         <li>
           &larr;
-          <a href="link_budgets.html" title="Previous document"><span class="section-number">8. </span>Link Budgets</a>
+          <a href="link_budgets.html" title="Previous document"><span class="section-number">9. </span>Link Budgets</a>
         </li>
         <li>
-          <a href="iq_files.html" title="Next document"><span class="section-number">10. </span>IQ Files</a>
+          <a href="iq_files.html" title="Next document"><span class="section-number">11. </span>IQ Files</a>
           &rarr;
         </li>
     </ul>

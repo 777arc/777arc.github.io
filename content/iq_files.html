@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>10. IQ Files &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <title>11. IQ Files &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
@@ -16,8 +16,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="11. Multipath Fading" href="multipath_fading.html" />
-    <link rel="prev" title="9. Channel Coding" href="channel_coding.html" />
+    <link rel="next" title="12. Multipath Fading" href="multipath_fading.html" />
+    <link rel="prev" title="10. Channel Coding" href="channel_coding.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -54,21 +54,22 @@
 <li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filters.html">7. Filters</a></li>
-<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">10. IQ Files</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="pluto_advanced.html">6. PlutoSDR Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">11. IQ Files</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#binary-files">Binary Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#python-examples">Python Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#max-values-and-saturation">Max Values and Saturation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#annotating-iq-files">Annotating IQ Files</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">14. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">15. About the Author</a></li>
 </ul>
 
 
@@ -82,8 +83,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="channel_coding.html" title="previous chapter"><span class="section-number">9. </span>Channel Coding</a></li>
-      <li>Next: <a href="multipath_fading.html" title="next chapter"><span class="section-number">11. </span>Multipath Fading</a></li>
+      <li>Previous: <a href="channel_coding.html" title="previous chapter"><span class="section-number">10. </span>Channel Coding</a></li>
+      <li>Next: <a href="multipath_fading.html" title="next chapter"><span class="section-number">12. </span>Multipath Fading</a></li>
   </ul></li>
 </ul>
 </div>
@@ -107,10 +108,10 @@
     <ul>
         <li>
           &larr;
-          <a href="channel_coding.html" title="Previous document"><span class="section-number">9. </span>Channel Coding</a>
+          <a href="channel_coding.html" title="Previous document"><span class="section-number">10. </span>Channel Coding</a>
         </li>
         <li>
-          <a href="multipath_fading.html" title="Next document"><span class="section-number">11. </span>Multipath Fading</a>
+          <a href="multipath_fading.html" title="Next document"><span class="section-number">12. </span>Multipath Fading</a>
           &rarr;
         </li>
     </ul>
@@ -121,7 +122,7 @@
           <div class="body" role="main">
             
   <div class="section" id="iq-files">
-<span id="iq-files-chapter"></span><h1><span class="section-number">10. </span>IQ Files<a class="headerlink" href="#iq-files" title="Permalink to this headline">¶</a></h1>
+<span id="iq-files-chapter"></span><h1><span class="section-number">11. </span>IQ Files<a class="headerlink" href="#iq-files" title="Permalink to this headline">¶</a></h1>
 <p>In our Python examples we have stored signals as 1d numpy arrays of type “complex float”.  In this chapter we learn how signals can be stored to a file, and how to read them back into Python.  You may want to record a signal to a file in order to manually analyze it offline, or share it with a colleague.</p>
 <div class="section" id="binary-files">
 <h2>Binary Files<a class="headerlink" href="#binary-files" title="Permalink to this headline">¶</a></h2>
@@ -207,10 +208,10 @@
     <ul>
         <li>
           &larr;
-          <a href="channel_coding.html" title="Previous document"><span class="section-number">9. </span>Channel Coding</a>
+          <a href="channel_coding.html" title="Previous document"><span class="section-number">10. </span>Channel Coding</a>
         </li>
         <li>
-          <a href="multipath_fading.html" title="Next document"><span class="section-number">11. </span>Multipath Fading</a>
+          <a href="multipath_fading.html" title="Next document"><span class="section-number">12. </span>Multipath Fading</a>
           &rarr;
         </li>
     </ul>

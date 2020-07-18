@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7. Filters &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <title>8. Filters &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
@@ -16,8 +16,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="8. Link Budgets" href="link_budgets.html" />
-    <link rel="prev" title="6. Noise and dB" href="noise.html" />
+    <link rel="next" title="9. Link Budgets" href="link_budgets.html" />
+    <link rel="prev" title="7. Noise and dB" href="noise.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -54,8 +54,9 @@
 <li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="noise.html">6. Noise and dB</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Filters</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="pluto_advanced.html">6. PlutoSDR Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">8. Filters</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#filter-basics">Filter Basics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#filter-representation">Filter Representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#filter-implementation">Filter Implementation</a></li>
@@ -65,13 +66,13 @@
 <li class="toctree-l2"><a class="reference internal" href="#intro-to-pulse-shaping">Intro to Pulse Shaping</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">8. Link Budgets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">9. Channel Coding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="iq_files.html">10. IQ Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">11. Multipath Fading</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">12. Pulse Shaping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">13. Textbook Comparison</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">14. About the Author</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">14. Textbook Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">15. About the Author</a></li>
 </ul>
 
 
@@ -85,8 +86,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="noise.html" title="previous chapter"><span class="section-number">6. </span>Noise and dB</a></li>
-      <li>Next: <a href="link_budgets.html" title="next chapter"><span class="section-number">8. </span>Link Budgets</a></li>
+      <li>Previous: <a href="noise.html" title="previous chapter"><span class="section-number">7. </span>Noise and dB</a></li>
+      <li>Next: <a href="link_budgets.html" title="next chapter"><span class="section-number">9. </span>Link Budgets</a></li>
   </ul></li>
 </ul>
 </div>
@@ -110,10 +111,10 @@
     <ul>
         <li>
           &larr;
-          <a href="noise.html" title="Previous document"><span class="section-number">6. </span>Noise and dB</a>
+          <a href="noise.html" title="Previous document"><span class="section-number">7. </span>Noise and dB</a>
         </li>
         <li>
-          <a href="link_budgets.html" title="Next document"><span class="section-number">8. </span>Link Budgets</a>
+          <a href="link_budgets.html" title="Next document"><span class="section-number">9. </span>Link Budgets</a>
           &rarr;
         </li>
     </ul>
@@ -124,7 +125,7 @@
           <div class="body" role="main">
             
   <div class="section" id="filters">
-<span id="filters-chapter"></span><h1><span class="section-number">7. </span>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h1>
+<span id="filters-chapter"></span><h1><span class="section-number">8. </span>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h1>
 <p>In this chapter we get introduced to filters.  We learn about the types of filters, how filters are represented digitally, and how they are designed.  We finish with an introduction to pulse shaping, a topic explored in depth in its own chapter.</p>
 <div class="section" id="filter-basics">
 <h2>Filter Basics<a class="headerlink" href="#filter-basics" title="Permalink to this headline">¶</a></h2>
@@ -436,10 +437,10 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
     <ul>
         <li>
           &larr;
-          <a href="noise.html" title="Previous document"><span class="section-number">6. </span>Noise and dB</a>
+          <a href="noise.html" title="Previous document"><span class="section-number">7. </span>Noise and dB</a>
         </li>
         <li>
-          <a href="link_budgets.html" title="Next document"><span class="section-number">8. </span>Link Budgets</a>
+          <a href="link_budgets.html" title="Next document"><span class="section-number">9. </span>Link Budgets</a>
           &rarr;
         </li>
     </ul>
