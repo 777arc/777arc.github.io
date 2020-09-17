@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>5. PlutoSDR Basics &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -236,9 +236,9 @@ reboot
 <p><strong>Your task is to create a Python script that determines the rate samples are actually being received in Python, i.e. count the samples received and keep track of time to figure out the rate.  Then, try using different sample_rate’s and buffer_size’s to see how it impacts the highest achievable rate.</strong></p>
 <p>Kepe in mind, if you receive less samples per second than the specified sample_rate, it means you are losing/dropping some fraction of samples, which will likely happen at high sample_rate’s, since the Pluto only uses USB 2.0.</p>
 <p>The following code will act as a starting point, and provides almost all the code you need to accomplish this task.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">adi</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">10e6</span> <span class="c1"># Hz</span>
@@ -256,7 +256,7 @@ reboot
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 <span class="c1"># do stuff</span>
 <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;seconds elapsed:&#39;</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;seconds elapsed:&#39;</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Hint 1: You’ll need to put the line “samples = sdr.rx()” into a loop that runs many times (e.g. 100 times), and count how many samples you get each call to sdr.rx(), while keeping track of how much time has elapsed.</p>

@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>6. PlutoSDR Advanced Topics &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -139,7 +139,7 @@
 <li><code class="code docutils literal notranslate"><span class="pre">sdr.gain_control_mode_chan0</span> <span class="pre">=</span> <span class="pre">&quot;fast_attack&quot;</span></code></li>
 </ol>
 <p>And with AGC enabled you don’t provide a value to <code class="code docutils literal notranslate"><span class="pre">rx_hardwaregain_chan0</span></code>.  The fast attack will react quicker, i.e. the gain value will change faster when the received signal changes level.  With either mode, if there is no signal present, just noise, the AGC will max out the gain setting, which means when a signal does show up it will saturate the receiver briefly, until the AGC is able to react and ramp down the gain.  You can always check the current gain level in realtime with:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdr</span><span class="o">.</span><span class="n">_get_iio_attr</span><span class="p">(</span><span class="s1">&#39;voltage0&#39;</span><span class="p">,</span><span class="s1">&#39;hardwaregain&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdr</span><span class="o">.</span><span class="n">_get_iio_attr</span><span class="p">(</span><span class="s1">&#39;voltage0&#39;</span><span class="p">,</span><span class="s1">&#39;hardwaregain&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>For more details about the Pluto’s AGC, such as how to change the advanced AGC settings, refer to <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-drivers/iio-transceiver/ad9361" rel="noopener noreferrer" target="_blank">the “RX Gain Control” section of this page</a>.</p>
