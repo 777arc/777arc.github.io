@@ -135,7 +135,7 @@
 <p>As a simplified example, let’s say we have a wire and are sending 1’s and 0’s using high and low voltage levels.  A symbol is one of those 1’s or 0’s:</p>
 <a class="reference internal image-reference" href="../_images/symbols.PNG"><img alt="../_images/symbols.PNG" class="align-center" src="../_images/symbols.PNG" style="width: 602.4px; height: 102.0px;" /></a>
 <p>In the above example each symbol represents one bit.  How can we convey more than one bit per symbol?  Let’s look at the signals that travel down Ethernet cables, which is defined in an IEEE standard called IEEE 802.3 1000BASE-T.  The common operating mode of ethernet uses a 4-level amplitude modulation (2 bits per symbol) with 8 ns symbols.</p>
-<a class="reference internal image-reference" href="../_images/ethernet.PNG"><img alt="../_images/ethernet.PNG" class="align-center" src="../_images/ethernet.PNG" style="width: 591.2px; height: 231.20000000000002px;" /></a>
+<a class="reference external image-reference" href="../_static/ethernet.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ethernet.svg" class="align-center" src="../_images/ethernet.svg" /></a>
 <p>Take a moment to try to answer these questions:</p>
 <ol class="arabic simple">
 <li>How many bits per second are transmitted in the example shown below?</li>
@@ -158,7 +158,8 @@
 <li>Low frequencies require <em>huge</em> antennas</li>
 <li>Square waves take an excessive amount of spectrum for the bits per second, recall from the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> chapter that sharp changes in time domain use a large amount of bandwidth/spectrum:</li>
 </ol>
-<img alt="../_images/square-wave.svg" class="align-center" src="../_images/square-wave.svg" /><p>What we do for wireless signals is start with a carrier, which is just a sinusoid.  E.g. FM radio uses a carrier like 101.1 MHz or 100.3 MHz.  We modulate that carrier in some way (there are many ways).  For FM radio it’s an analog modulation, not digital, but it’s the same concept as digital modulation.</p>
+<a class="reference external image-reference" href="../_static/square-wave.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/square-wave.svg" class="align-center" src="../_images/square-wave.svg" /></a>
+<p>What we do for wireless signals is start with a carrier, which is just a sinusoid.  E.g. FM radio uses a carrier like 101.1 MHz or 100.3 MHz.  We modulate that carrier in some way (there are many ways).  For FM radio it’s an analog modulation, not digital, but it’s the same concept as digital modulation.</p>
 <p>In what ways can we modulation the carrier?  Well what are the different properties of a sinusoid?</p>
 <ol class="arabic simple">
 <li>Amplitude</li>
@@ -188,9 +189,9 @@
 <li>180 degree phase change</li>
 </ol>
 <p>Example of BPSK (note the phase changes):</p>
-<a class="reference internal image-reference" href="../_images/bpsk.PNG"><img alt="../_images/bpsk.PNG" class="align-center" src="../_images/bpsk.PNG" style="width: 468.90000000000003px; height: 287.1px;" /></a>
+<a class="reference external image-reference" href="../_static/bpsk.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/bpsk.svg" class="align-center" src="../_images/bpsk.svg" /></a>
 <p>It’s not very fun to look at plots like this:</p>
-<a class="reference internal image-reference" href="../_images/bpsk2.PNG"><img alt="../_images/bpsk2.PNG" class="align-center" src="../_images/bpsk2.PNG" style="width: 1055.7px; height: 201.6px;" /></a>
+<a class="reference external image-reference" href="../_static/bpsk2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/bpsk2.svg" class="align-center" src="../_images/bpsk2.svg" /></a>
 <p>So instead we usually represent the phase in the complex plane.</p>
 </div>
 <div class="section" id="iq-plots-constellations">
@@ -221,7 +222,7 @@
 <p>For a QAM modulation scheme, we can technically put points wherever we want to on the IQ plot, since QAM means the phase and amplitude are being modulated.  The “parameters” of a given QAM scheme are best defined by simply showing the QAM constellation. Alternatively, you could simply list the I and Q values for each point, like below for QPSK:</p>
 <a class="reference internal image-reference" href="../_images/qpsk_list.PNG"><img alt="../_images/qpsk_list.PNG" class="align-center" src="../_images/qpsk_list.PNG" style="width: 308.8px; height: 215.20000000000002px;" /></a>
 <p>Back to the time domain for a second.  Everything except the various ASK’s and BPSK are pretty hard to “see” in the time domain.  To prove my point, here is an example of QAM in time domain, note how it’s tough to see the phase of each symbol:</p>
-<a class="reference internal image-reference" href="../_images/qam_time_domain.PNG"><img alt="../_images/qam_time_domain.PNG" class="align-center" src="../_images/qam_time_domain.PNG" style="width: 690.5px; height: 206.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/qam_time_domain.PNG"><img alt="../_images/qam_time_domain.PNG" class="align-center" src="../_images/qam_time_domain.PNG" style="width: 658.0px; height: 148.0px;" /></a>
 <p>This is why we usually use IQ plots, instead of showing the time domain signal.  We might show the time domain signal if there’s a certain packet structure, or the sequence of symbols matters.</p>
 </div>
 <div class="section" id="frequency-shift-keying-fsk">
@@ -234,11 +235,12 @@
 <li>1.1990 GHz</li>
 </ol>
 <p>This would be 4-FSK, and there would be two bits per symbol.  A 4-FSK signal in the frequency domain might look something like this:</p>
-<img alt="../_images/fsk.svg" class="align-center" src="../_images/fsk.svg" /><p>If you are going to use FSK, there is one big question to ask: What should the spacing between frequencies be?  We often denote this spacing as <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/>, in Hz. We want to avoid overlap in the frequency domain, so <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/> must be large enough.  The width of each carrier in frequency is a function of our symbol rate.  More symbols per second means shorter symbols, which means wider bandwidth (recall the inverse relationship between time and frequency scaling).  So the faster we transmit symbols, the wider each carrier will get, and the larger we have to make <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/> to avoid overlapping carriers.  We won’t go into any more details about the design of FSK in this textbook.</p>
+<a class="reference external image-reference" href="../_static/fsk.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fsk.svg" class="align-center" src="../_images/fsk.svg" /></a>
+<p>If you are going to use FSK, there is one big question to ask: What should the spacing between frequencies be?  We often denote this spacing as <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/>, in Hz. We want to avoid overlap in the frequency domain, so <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/> must be large enough.  The width of each carrier in frequency is a function of our symbol rate.  More symbols per second means shorter symbols, which means wider bandwidth (recall the inverse relationship between time and frequency scaling).  So the faster we transmit symbols, the wider each carrier will get, and the larger we have to make <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/> to avoid overlapping carriers.  We won’t go into any more details about the design of FSK in this textbook.</p>
 <p>IQ plots can’t be used to show different frequencies, they only show magnitude and phase.  While it is possible to show FSK in the time domain, any more than 2 frequencies and it gets hard to see the difference between symbols:</p>
-<a class="reference internal image-reference" href="../_images/fsk2.jpg"><img alt="../_images/fsk2.jpg" class="align-center" src="../_images/fsk2.jpg" style="width: 408.0px; height: 227.0px;" /></a>
+<a class="reference external image-reference" href="../_static/fsk2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fsk2.svg" class="align-center" src="../_images/fsk2.svg" /></a>
 <p>As an aside, note that FM radio uses Frequency Modulation (FM) which is like an analog version of FSK.  Instead of having discrete frequencies we jump between, FM radio uses a continuous audio signal to modulate the frequency of the carrier.  Here is an example of FM and AM modulation, the “signal” at the top is the audio signal being modulated onto to the carrier.</p>
-<a class="reference internal image-reference" href="../_images/AM_FM.gif"><img alt="../_images/AM_FM.gif" class="align-center" src="../_images/AM_FM.gif" style="width: 307.2px; height: 240.0px;" /></a>
+<a class="reference internal image-reference" href="https://www.thenakedscientists.com/sites/default/files/media/Amfm3-en-de.gif.pagespeed.ce.0o6A-u33nd.gif"><img alt="https://www.thenakedscientists.com/sites/default/files/media/Amfm3-en-de.gif.pagespeed.ce.0o6A-u33nd.gif" class="align-center" src="https://www.thenakedscientists.com/sites/default/files/media/Amfm3-en-de.gif.pagespeed.ce.0o6A-u33nd.gif" style="width: 400px;" /></a>
 <p>In this textbook we are mainly concerned about digital forms of modulation.</p>
 </div>
 <div class="section" id="python-example">
