@@ -340,10 +340,10 @@
     <span class="n">freq_log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">freq</span> <span class="o">/</span> <span class="mf">50.0</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
     <span class="n">phase</span> <span class="o">+=</span> <span class="n">freq</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">error</span><span class="p">)</span>
 
-    <span class="c1"># Adjust phase so its always between 0 and 2pi, recall that phase wraps around every 2pi</span>
-    <span class="k">while</span> <span class="n">phase</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+    <span class="c1"># Optional: Adjust phase so its always between 0 and 2pi, recall that phase wraps around every 2pi</span>
+    <span class="k">while</span> <span class="n">phase</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
         <span class="n">phase</span> <span class="o">-=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
-    <span class="k">while</span> <span class="n">phase</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+    <span class="k">while</span> <span class="n">phase</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">phase</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
 
 <span class="c1"># Plot freq over time to see how long it takes to hit the right offset</span>
