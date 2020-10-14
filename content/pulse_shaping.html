@@ -131,7 +131,7 @@
 <h2>Inter-Symbol-Interference (ISI)<a class="headerlink" href="#inter-symbol-interference-isi" title="Permalink to this headline">¶</a></h2>
 <p>In the <a class="reference internal" href="filters.html#filters-chapter"><span class="std std-ref">Filters</span></a> chapter we learned that blocky shaped symbols/pulses use an excess amount of spectrum, and we can greatly reduce the amount of spectrum used by “shaping” our pulses.  But you can’t just use any low-pass filter, or you might get inter-symbol-interference (ISI), which is when symbols bleed into each other and interfere with each other.</p>
 <p>When we transmit digital symbols, we transmit them back-to-back (as opposed to waiting some time between symbols).  But when you apply a pulse-shaping filter, it elongates the pulse in the time domain (in order to condense it in frequency), which causes adjacent symbols to overlap with each other.  And this is fine, as long as your pulse shaping filter meets this one criterion: all of the pulses must add up to zero at every multiple of our symbol period T, except for one of the pulses.  This is best understood through the following visualization:</p>
-<a class="reference internal image-reference" href="../_images/pulse_train.PNG"><img alt="../_images/pulse_train.PNG" class="align-center" src="../_images/pulse_train.PNG" style="width: 406.0px; height: 222.4px;" /></a>
+<a class="reference internal image-reference" href="../_images/pulse_train.png"><img alt="../_images/pulse_train.png" class="align-center" src="../_images/pulse_train.png" style="width: 406.0px; height: 222.4px;" /></a>
 <p>As you can see, at every interval of T, there is one peak of a pulse, and the rest of the pulses are at 0 (they cross the x-axis).  When the receiver goes to sample the signal, it does so at the perfect time (at the peak of the pulses), meaning that is the only point in time which matters.  Usually there is a symbol synchronization block at the receiver that makes sure the symbols are sampled at the peaks.</p>
 </div>
 <div class="section" id="matched-filter">
@@ -143,7 +143,7 @@
 </ol>
 <p>What we do in modern comms is split the pulse shaping filter equally between the Tx and Rx.  They don’t <em>have</em> to be identical filters, but theoretically, the optimal linear filter for maximizing the SNR in the presence of AWGN is to use the same filter at both the Tx and Rx.  This is called the “matched filter” concept.</p>
 <p>Another way of thinking about matched filters is that the receiver correlates the received signal with the known template signal.  The template signal is essentially the pulses the transmitter sends, irrespective of the phase/amplitude shifts applied to them.  Recall that filtering is done by convolution, which is essentially correlation (in fact they are mathematically the same when the template is symmetrical).  This process of correlating the received signal with the template gives us our best chance at recovering what was sent, and is why it’s theoretically optimal.  As an analogy, think of an image recognition system that looks for faces using a template of a face, and a 2d correlation:</p>
-<a class="reference internal image-reference" href="../_images/face_template.PNG"><img alt="../_images/face_template.PNG" class="align-center" src="../_images/face_template.PNG" style="width: 451.49999999999994px; height: 175.7px;" /></a>
+<a class="reference internal image-reference" href="../_images/face_template.png"><img alt="../_images/face_template.png" class="align-center" src="../_images/face_template.png" style="width: 451.49999999999994px; height: 175.7px;" /></a>
 </div>
 <div class="section" id="splitting-a-filter-in-half">
 <h2>Splitting a Filter in Half<a class="headerlink" href="#splitting-a-filter-in-half" title="Permalink to this headline">¶</a></h2>
@@ -164,9 +164,9 @@
 <div class="section" id="raised-cosine-filter">
 <h3>Raised-Cosine Filter<a class="headerlink" href="#raised-cosine-filter" title="Permalink to this headline">¶</a></h3>
 <p>The most popular pulse-shaping filter seems to be the “raised-cosine” filter.  It’s a good low-pass filter for limiting the bandwidth our signal will occupy, and it also has the property of summing to zero at intervals of T:</p>
-<a class="reference internal image-reference" href="../_images/raised_cosine.PNG"><img alt="../_images/raised_cosine.PNG" class="align-center" src="../_images/raised_cosine.PNG" style="width: 622.3px; height: 345.09999999999997px;" /></a>
+<a class="reference internal image-reference" href="../_images/raised_cosine.png"><img alt="../_images/raised_cosine.png" class="align-center" src="../_images/raised_cosine.png" style="width: 622.3px; height: 345.09999999999997px;" /></a>
 <p>Note that the above plot is in the time domain, it shows the impulse response of the filter.  The <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> parameter is the only parameter for the raised-cosine filter, and it determines how quickly the filter tapers off in the time domain, which will be inversely proportional with how quickly it tapers off in frequency:</p>
-<a class="reference internal image-reference" href="../_images/raised_cosine_freq.PNG"><img alt="../_images/raised_cosine_freq.PNG" class="align-center" src="../_images/raised_cosine_freq.PNG" style="width: 583.5px; height: 313.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/raised_cosine_freq.png"><img alt="../_images/raised_cosine_freq.png" class="align-center" src="../_images/raised_cosine_freq.png" style="width: 583.5px; height: 313.0px;" /></a>
 <p>And the reason it’s called the raised-cosine filter is because the frequency domain when <img class="math" src="../_images/math/217d52f233550c7a726f575db158518ced478842.svg" alt="\beta = 1"/> is a half-cycle of a cosine wave, raised up to sit on the x-axis.</p>
 <p>The equation that defines the impulse response of the raised-cosine filter is:</p>
 <div class="math">
@@ -176,7 +176,7 @@
 <div class="section" id="root-raised-cosine-filter">
 <h3>Root Raised-Cosine Filter<a class="headerlink" href="#root-raised-cosine-filter" title="Permalink to this headline">¶</a></h3>
 <p>The root raised-cosine (RRC) filter is what we actually implement in our Tx and Rx, combined they form a normal raised-cosine filter, as we discussed.  Because splitting a filter in half involves a frequency-domain square root, the impulse response gets a bit messy:</p>
-<a class="reference internal image-reference" href="../_images/rrc_filter.PNG"><img alt="../_images/rrc_filter.PNG" class="align-center" src="../_images/rrc_filter.PNG" style="width: 353.0px; height: 129.5px;" /></a>
+<a class="reference internal image-reference" href="../_images/rrc_filter.png"><img alt="../_images/rrc_filter.png" class="align-center" src="../_images/rrc_filter.png" style="width: 353.0px; height: 129.5px;" /></a>
 <p>Luckily it’s a heavily used filter and there are plenty of implementations, including in Python.</p>
 </div>
 <div class="section" id="other-pulse-shaping-filters">
@@ -187,7 +187,7 @@
 <div class="section" id="roll-off-factor">
 <h2>Roll-off Factor<a class="headerlink" href="#roll-off-factor" title="Permalink to this headline">¶</a></h2>
 <p>Let’s look more into the parameter <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/>.  It is a number between 0 and 1, and is called the “roll-off” factor, or sometimes “excess bandwidth”.  It determines how fast, in the time domain, the filter rolls off to zero.  Remember, to be used as a filter, the impulse response should decay to zero on both sides:</p>
-<a class="reference internal image-reference" href="../_images/rrc_rolloff.PNG"><img alt="../_images/rrc_rolloff.PNG" class="align-center" src="../_images/rrc_rolloff.PNG" style="width: 600.8000000000001px; height: 320.8px;" /></a>
+<a class="reference internal image-reference" href="../_images/rrc_rolloff.png"><img alt="../_images/rrc_rolloff.png" class="align-center" src="../_images/rrc_rolloff.png" style="width: 600.8000000000001px; height: 320.8px;" /></a>
 <p>This means more filter taps are required the lower <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> gets, and when <img class="math" src="../_images/math/c272967e44cc0ec43f26404776c42e0bdac1824b.svg" alt="\beta = 0"/> the impulse response never fully hits zero, so we try to get <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> as low as possible without causing other issues.  The lower the roll-off, the more compact in frequency we can create our signal for a given symbol rate, which is always important.</p>
 <p>A common equation used to approximate bandwidth, in Hz, used for a given symbol rate and roll-off factor is:</p>
 <div class="math">
@@ -218,7 +218,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/pulse_shaping_python1.PNG"><img alt="../_images/pulse_shaping_python1.PNG" class="align-center" src="../_images/pulse_shaping_python1.PNG" style="width: 717.6px; height: 221.60000000000002px;" /></a>
+<a class="reference internal image-reference" href="../_images/pulse_shaping_python1.png"><img alt="../_images/pulse_shaping_python1.png" class="align-center" src="../_images/pulse_shaping_python1.png" style="width: 717.6px; height: 221.60000000000002px;" /></a>
 <p>At this point our symbols are still 1’s and -1’s, don’t get too caught up in the fact we used impulses.  In fact it might be easier to <em>not</em> visualize it, and just think of it as an array:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bits</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 <span class="n">BPSK</span> <span class="n">symbols</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
@@ -238,7 +238,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/pulse_shaping_python2.PNG"><img alt="../_images/pulse_shaping_python2.PNG" class="align-center" src="../_images/pulse_shaping_python2.PNG" style="width: 418.40000000000003px; height: 285.6px;" /></a>
+<a class="reference internal image-reference" href="../_images/pulse_shaping_python2.png"><img alt="../_images/pulse_shaping_python2.png" class="align-center" src="../_images/pulse_shaping_python2.png" style="width: 418.40000000000003px; height: 285.6px;" /></a>
 <p>Note how it definitely decays to zero.  The fact we are using 8 samples per symbol determines how narrow this filter appears, and how fast it decays to zero.  The above impulse response looks like a typical low-pass filter, and there’s really no way for us to know that it’s a pulse-shaping specific filter versus any other low-pass filter.</p>
 <p>Lastly, we can filter our signal x and look at the result.  Don’t get too caught up in the for loop below, we’ll discuss why it’s there.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter our signal, in order to apply the pulse shaping</span>
@@ -251,18 +251,18 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/pulse_shaping_python3.PNG"><img alt="../_images/pulse_shaping_python3.PNG" class="align-center" src="../_images/pulse_shaping_python3.PNG" style="width: 727.8px; height: 336.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/pulse_shaping_python3.png"><img alt="../_images/pulse_shaping_python3.png" class="align-center" src="../_images/pulse_shaping_python3.png" style="width: 727.8px; height: 336.0px;" /></a>
 <p>This resulting signal is really just a bunch of our impulse responses summed together, with around half of them multiplied by -1 first. It might look complicated, so let’s step through it.</p>
 <p>First off, there are transient samples before and after the data, because of the filter and the way convolution works.  These extra samples get included in our transmission but they don’t actually contain “peaks” of pulses.</p>
 <p>The vertical lines were created in the for loop, for visualization sake, and they are meant to show where intervals of Ts occur, which represents where this signal will actually be sampled by the receiver.  Note how on intervals of Ts, the curve has the value of exactly 1.0 or -1.0, that’s the biggest thing to take away here.</p>
 <p>If we were to upconvert and transmit this signal, the receiver would have to figure out when the boundaries of Ts are, using a symbol synchronization algorithm, so that it knows exactly when to sample to get the right data.  If it samples a little too early or late, it will see values that are a bit skewed due to ISI, and if it’s way off then it will get a bunch of weird numbers.  Here is an example created using GNU Radio that shows what the IQ plot (a.k.a. constellation) looks like when we sample at the right and wrong time.  Here are the original pulses, with the bit values annotated:</p>
-<a class="reference internal image-reference" href="../_images/symbol_sync1.PNG"><img alt="../_images/symbol_sync1.PNG" class="align-center" src="../_images/symbol_sync1.PNG" style="width: 562.5px; height: 241.5px;" /></a>
+<a class="reference internal image-reference" href="../_images/symbol_sync1.png"><img alt="../_images/symbol_sync1.png" class="align-center" src="../_images/symbol_sync1.png" style="width: 562.5px; height: 241.5px;" /></a>
 <p>And below shows the ideal position in time to sample, along with the IQ plot:</p>
-<a class="reference internal image-reference" href="../_images/symbol_sync2.PNG"><img alt="../_images/symbol_sync2.PNG" class="align-center" src="../_images/symbol_sync2.PNG" style="width: 667.6px; height: 194.8px;" /></a>
+<a class="reference internal image-reference" href="../_images/symbol_sync2.png"><img alt="../_images/symbol_sync2.png" class="align-center" src="../_images/symbol_sync2.png" style="width: 667.6px; height: 194.8px;" /></a>
 <p>Below shows the worst time to sample, note the three clusters in the constellation.  We are sampling directly in between each symbol, so our samples are going to be way off.</p>
-<a class="reference internal image-reference" href="../_images/symbol_sync3.PNG"><img alt="../_images/symbol_sync3.PNG" class="align-center" src="../_images/symbol_sync3.PNG" style="width: 676.4000000000001px; height: 195.60000000000002px;" /></a>
+<a class="reference internal image-reference" href="../_images/symbol_sync3.png"><img alt="../_images/symbol_sync3.png" class="align-center" src="../_images/symbol_sync3.png" style="width: 676.4000000000001px; height: 195.60000000000002px;" /></a>
 <p>This is somewhere in between, note the 4 clusters.  With a high SNR we might be able to get away with this.</p>
-<a class="reference internal image-reference" href="../_images/symbol_sync4.PNG"><img alt="../_images/symbol_sync4.PNG" class="align-center" src="../_images/symbol_sync4.PNG" style="width: 676.8000000000001px; height: 193.60000000000002px;" /></a>
+<a class="reference internal image-reference" href="../_images/symbol_sync4.png"><img alt="../_images/symbol_sync4.png" class="align-center" src="../_images/symbol_sync4.png" style="width: 676.8000000000001px; height: 193.60000000000002px;" /></a>
 <p>Remember that our Q values are not shown on the time domain plot, because they are roughly zero, hence why the IQ plots only spread horizontally.</p>
 </div>
 </div>

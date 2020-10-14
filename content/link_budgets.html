@@ -134,7 +134,7 @@
 <div class="section" id="signal-power-budget">
 <h2>Signal Power Budget<a class="headerlink" href="#signal-power-budget" title="Permalink to this headline">¶</a></h2>
 <p>Below shows the most basic diagram of a generic wireless link.  In this chapter we will focus on one direction, i.e. from a transmitter (Tx) to receiver (Rx).  For a given system, we know the transmit power, it is usually a setting in the transmitter, so how do we figure out the received power at the receiver?</p>
-<a class="reference internal image-reference" href="../_images/tx_rx_system.PNG"><img alt="../_images/tx_rx_system.PNG" class="align-center" src="../_images/tx_rx_system.PNG" style="width: 369.5px; height: 130.5px;" /></a>
+<a class="reference internal image-reference" href="../_images/tx_rx_system.png"><img alt="../_images/tx_rx_system.png" class="align-center" src="../_images/tx_rx_system.png" style="width: 369.5px; height: 130.5px;" /></a>
 <p>Let us define the following four system parameters:</p>
 <ul class="simple">
 <li><strong>Pt</strong> - Transmit power</li>
@@ -142,7 +142,7 @@
 <li><strong>Gr</strong> - Gain of receive antenna</li>
 <li><strong>Lp</strong> - Distance between Tx and Rx (i.e. how much wireless path loss)</li>
 </ul>
-<a class="reference internal image-reference" href="../_images/tx_rx_system_params.PNG"><img alt="../_images/tx_rx_system_params.PNG" class="align-center" src="../_images/tx_rx_system_params.PNG" style="width: 589.6px; height: 201.60000000000002px;" /></a>
+<a class="reference internal image-reference" href="../_images/tx_rx_system_params.png"><img alt="../_images/tx_rx_system_params.png" class="align-center" src="../_images/tx_rx_system_params.png" style="width: 589.6px; height: 201.60000000000002px;" /></a>
 <div class="section" id="transmit-power">
 <h3>Transmit Power<a class="headerlink" href="#transmit-power" title="Permalink to this headline">¶</a></h3>
 <p>Transmit power is fairly straightforward, it will be a value in watts, dBW, or dBm (recall dBm is shorthand for dBmW).  Every transmitter has one or more amplifiers, and the transmit power is mostly a function of those amplifiers.  An analogy of transmit power would be the watts of a light bulb; more watts means more light transmitted by the bulb.  Examples of approximate transmit power for different technologies:</p>
@@ -178,21 +178,21 @@
 <div class="section" id="antenna-gains">
 <h3>Antenna Gains<a class="headerlink" href="#antenna-gains" title="Permalink to this headline">¶</a></h3>
 <p>Transmit and receive antenna gains are very important, the numbers will be in dB (unit-less).  Typically, antennas are either omnidirectional or directional.  If they are omnidirectional their gain will be 0 dB to 3 dB.  A directional antenna can have a gain anywhere up to 50 dB or so.</p>
-<a class="reference internal image-reference" href="../_images/antenna_gain_patterns.PNG"><img alt="../_images/antenna_gain_patterns.PNG" class="align-center" src="../_images/antenna_gain_patterns.PNG" style="width: 829.6px; height: 283.2px;" /></a>
+<a class="reference internal image-reference" href="../_images/antenna_gain_patterns.png"><img alt="../_images/antenna_gain_patterns.png" class="align-center" src="../_images/antenna_gain_patterns.png" style="width: 829.6px; height: 283.2px;" /></a>
 <p>When a directional antenna is used, it must be either:</p>
 <ul class="simple">
 <li>Installed facing the correct direction</li>
 <li>It could also be attached to a mechanical gimbal</li>
 <li>It could also be a phased array which can be electronically steered (i.e. in software)</li>
 </ul>
-<a class="reference internal image-reference" href="../_images/antenna_steering.PNG"><img alt="../_images/antenna_steering.PNG" class="align-center" src="../_images/antenna_steering.PNG" style="width: 665.6px; height: 308.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/antenna_steering.png"><img alt="../_images/antenna_steering.png" class="align-center" src="../_images/antenna_steering.png" style="width: 665.6px; height: 308.0px;" /></a>
 <p>Omnidirectional antennas are used when pointing in the right direction is not possible, like your cellphone and laptop.  In 5G, phones can operate in the higher frequency bands like 28 GHz (Verizon) and 39 GHz (AT&amp;T) using an array of antennas and electronic beam steering.</p>
 <p>In a link budget, we must assume that any directional antenna, whether transmit or receive, is pointed in the right direction.  If it’s not pointed correctly then our link budget won’t be accurate and there could be loss of comms (e.g. satellite dish on your roof gets hit by basketball and moves).  In general, our link budgets assume ideal circumstances, but then add a miscellaneous loss to account for real-world factors.</p>
 </div>
 <div class="section" id="path-loss">
 <h3>Path Loss<a class="headerlink" href="#path-loss" title="Permalink to this headline">¶</a></h3>
 <p>As a signal moves through the air (or vacuum), it will reduce in strength.  Imagine holding a small solar panel up in front of a light bulb.  The further away the solar panel is, the less energy it will absorb from the light bulb.  <strong>Flux</strong> is a term in physics and mathematics, defined as “how much stuff goes through your thing”.  For us, it’s the amount of electromagnetic field passing into our receive antenna.  We want to know how much power is lost, for a given distance.</p>
-<a class="reference internal image-reference" href="../_images/flux.PNG"><img alt="../_images/flux.PNG" class="align-center" src="../_images/flux.PNG" style="width: 864.0px; height: 227.20000000000002px;" /></a>
+<a class="reference internal image-reference" href="../_images/flux.png"><img alt="../_images/flux.png" class="align-center" src="../_images/flux.png" style="width: 864.0px; height: 227.20000000000002px;" /></a>
 <p>Free Space Path Loss (FSPL) tells us the path loss when there are no obstacles, for a given distance.  In its general form, <img class="math" src="../_images/math/bf814d621aebaba97eb1449877cb80f950ecc7e9.svg" alt="\mathrm{FSPL} = ( 4\pi d / \lambda )^2"/>. Google Friis transmission formula for more info.  For generating link budgets, we can use this same equation but converted to dB:</p>
 <div class="math">
 <p><img src="../_images/math/dbf8ea71b418c2782288cf66c820e6ba4de2be0d.svg" alt="\mathrm{FSPL}_{dB} = 20 \log_{10} d + 20 \log_{10} f - 147.55 \left[ dB \right]"/></p>
@@ -223,7 +223,7 @@
 <li>Rain</li>
 </ul>
 <p>The plot below shows atmospheric loss in dB/km, over frequency (we will usually be &lt; 40 GHz).  If you take some time to understand the y-axis you’ll see that short range communications below 40 GHz, that are less than 1 km, have 1 dB or less of atmospheric loss, and thus we can usually ignore it.  When atmospheric loss really comes into play is with satellite communications, where the signal has to travel many km through the air.</p>
-<a class="reference internal image-reference" href="../_images/atmospheric_attenuation.PNG"><img alt="../_images/atmospheric_attenuation.PNG" class="align-center" src="../_images/atmospheric_attenuation.PNG" style="width: 576.8000000000001px; height: 397.6px;" /></a>
+<a class="reference internal image-reference" href="../_images/atmospheric_attenuation.png"><img alt="../_images/atmospheric_attenuation.png" class="align-center" src="../_images/atmospheric_attenuation.png" style="width: 576.8000000000001px; height: 397.6px;" /></a>
 </div>
 <div class="section" id="signal-power-equation">
 <h3>Signal Power Equation<a class="headerlink" href="#signal-power-equation" title="Permalink to this headline">¶</a></h3>
@@ -276,7 +276,7 @@
 <div class="section" id="snr">
 <h2>SNR<a class="headerlink" href="#snr" title="Permalink to this headline">¶</a></h2>
 <p>Now that we have both numbers, we can take the ratio to find SNR:</p>
-<a class="reference internal image-reference" href="../_images/SNR.PNG"><img alt="../_images/SNR.PNG" class="align-center" src="../_images/SNR.PNG" style="width: 319.5px; height: 120.5px;" /></a>
+<a class="reference internal image-reference" href="../_images/SNR.png"><img alt="../_images/SNR.png" class="align-center" src="../_images/SNR.png" style="width: 319.5px; height: 120.5px;" /></a>
 <p>We typically shoot for an SNR &gt; 10 dB, although it really depends on the application.  In practice, SNR can be verified by looking at the FFT of the received signal, or just calculating the power with and without the signal present (recall variance = power).  The higher the SNR, the more bits per symbol you can manage without too many errors.</p>
 </div>
 <div class="section" id="example-link-budget-ads-b">
