@@ -136,7 +136,7 @@
 <p>In this chapter we cover what the frequency domain means, how to convert between time and frequency (plus what happens when we do so), and some interesting principles we will use later on.  By the end of this textbook, you will be a master at working in the frequency domain, guaranteed!</p>
 <p>First, why do we like to look at signals in the frequency domain?  Well here are two example signals, shown in both the time and frequency domain.</p>
 <a class="reference internal image-reference" href="../_images/time_and_freq_domain_example_signals.png"><img alt="../_images/time_and_freq_domain_example_signals.png" class="align-center" src="../_images/time_and_freq_domain_example_signals.png" style="width: 576.0px; height: 238.8px;" /></a>
-<p>As you can see, in the time domain they both just kind of look like noise, but in the frequency domain we can see different features.  Everything is in the time domain in it’s nature form; when we sample signals we will be sampling them in the time domain, because you can’t <em>directly</em> sample a signal in the frequency domain.  But the interesting stuff usually happens in the frequency domain.</p>
+<p>As you can see, in the time domain they both just kind of look like noise, but in the frequency domain we can see different features.  Everything is in the time domain in its natural form; when we sample signals we will be sampling them in the time domain, because you can’t <em>directly</em> sample a signal in the frequency domain.  But the interesting stuff usually happens in the frequency domain.</p>
 <div class="section" id="fourier-series">
 <h2>Fourier Series<a class="headerlink" href="#fourier-series" title="Permalink to this headline">¶</a></h2>
 <p>The basics of the frequency domain start with understanding that any signal can be represented by sine waves summed together.  When we break a signal down into its composite sine waves, we call it a Fourier series.  Here is an example of a signal that is made up of only two sine waves:</p>
@@ -190,7 +190,7 @@
 <p>The above equation for the Fourier Transform is the continuous form, which you will only see in math problems.  The discrete form is much closer to what is implemented in code:</p>
 <div class="math">
 <p><img src="../_images/math/d94eb6f124e7e929c0420fd6d6a19eb14903b593.svg" alt="X_k = \sum_{n=0}^{N-1} x_n e^{-\frac{j2\pi}{N}kn}"/></p>
-</div><p>Note that the main difference is we replaced the integral with a summation.  The index <img class="math" src="../_images/math/30d4f39194cc2ced00937a2642c0345222fed6cd.svg" alt="k"/> goes from 0 to N.</p>
+</div><p>Note that the main difference is we replaced the integral with a summation.  The index <img class="math" src="../_images/math/30d4f39194cc2ced00937a2642c0345222fed6cd.svg" alt="k"/> goes from 0 to N-1.</p>
 <p>It’s OK if none of these equations mean much to you. We actually don’t need to use them directly to do cool stuff with DSP and SDRs!</p>
 </div>
 <div class="section" id="time-frequency-properties">

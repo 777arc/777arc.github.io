@@ -152,8 +152,6 @@
     <span class="n">pulse</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">bit</span><span class="o">*</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span> <span class="c1"># set the first value to either a 1 or -1</span>
     <span class="n">pulse_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">pulse_train</span><span class="p">,</span> <span class="n">pulse</span><span class="p">))</span> <span class="c1"># add the 8 samples to the signal</span>
 
-<span class="n">original_data</span> <span class="o">=</span> <span class="n">x</span> <span class="c1"># save for plotting later</span>
-
 <span class="c1"># Create our raised-cosine filter</span>
 <span class="n">num_taps</span> <span class="o">=</span> <span class="mi">101</span>
 <span class="n">beta</span> <span class="o">=</span> <span class="mf">0.35</span>
