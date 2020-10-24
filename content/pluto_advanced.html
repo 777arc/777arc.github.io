@@ -55,7 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">6. PlutoSDR Advanced Topics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#automatic-gain-control">Automatic Gain Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#receive-gain">Receive Gain</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#transmitting-over-the-air-legally">Transmitting Over the Air Legally</a></li>
 </ul>
 </li>
@@ -124,13 +124,13 @@
 <span id="pluto-adv-chapter"></span><h1><span class="section-number">6. </span>PlutoSDR Advanced Topics<a class="headerlink" href="#plutosdr-advanced-topics" title="Permalink to this headline">¶</a></h1>
 <a class="reference internal image-reference" href="../_images/pluto.png"><img alt="../_images/pluto.png" class="align-center" src="../_images/pluto.png" style="width: 323.5px; height: 250.0px;" /></a>
 <p>In this chapter we learn some more advanced topics related to the PlutoSDR.</p>
-<div class="section" id="automatic-gain-control">
-<h2>Automatic Gain Control<a class="headerlink" href="#automatic-gain-control" title="Permalink to this headline">¶</a></h2>
-<p>Automatic gain control (AGC) is a way to have the receive gain be automatically adjusted, to maintain a suitable signal level (-12dBFS for anyone who is curious).  AGC is not to be confused with the analog-to-digital converter (ADC) that digitizes the signal.  Technically speaking, AGC is a closed-loop feedback circuit that controls the amplifier’s gain in response to the received signal.  Its goal is to maintain a constant output power level, when there is a varying input power level.  Typically, the AGC will adjust the gain to avoid saturating the receiver (i.e. hitting the upper limit of the ADC’s range), while simultaneously allowing the signal to “fill in” as many ADC bits as possible.</p>
+<div class="section" id="receive-gain">
+<h2>Receive Gain<a class="headerlink" href="#receive-gain" title="Permalink to this headline">¶</a></h2>
+<p>The Pluto can be configured to either have a fixed receive gain, or an automatic one, known as Automatic gain control (AGC), which is a way to have the receive gain be automatically adjusted to maintain a strong signal level (-12dBFS for anyone who is curious).  AGC is not to be confused with the analog-to-digital converter (ADC) that digitizes the signal.  Technically speaking, AGC is a closed-loop feedback circuit that controls the amplifier’s gain in response to the received signal.  Its goal is to maintain a constant output power level despite a varying input power level.  Typically, the AGC will adjust the gain to avoid saturating the receiver (i.e. hitting the upper limit of the ADC’s range), while simultaneously allowing the signal to “fill in” as many ADC bits as possible.</p>
 <p>The RFIC inside the PlutoSDR has an AGC module with a few different settings.  First, note that the receive gain on the Pluto has a range from 0 to 74.5 dB.  When in “manual” AGC mode, AGC is turned off, and you must tell the Pluto what receive gain to use, e.g.:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gain</span> <span class="o">=</span> <span class="mf">50.0</span> <span class="c1"># 0 to 74.5 dB</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode_chan0</span> <span class="o">=</span> <span class="s2">&quot;manual&quot;</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain_chan0</span> <span class="o">=</span> <span class="n">gain</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode_chan0</span> <span class="o">=</span> <span class="s2">&quot;manual&quot;</span> <span class="c1"># turn off AGC</span>
+<span class="n">gain</span> <span class="o">=</span> <span class="mf">50.0</span> <span class="c1"># allowable range is 0 to 74.5 dB</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain_chan0</span> <span class="o">=</span> <span class="n">gain</span> <span class="c1"># set receive gain</span>
 </pre></div>
 </div>
 <p>If you want to enable the AGC, you must choose from one of two modes:</p>
@@ -138,7 +138,7 @@
 <li><code class="code docutils literal notranslate"><span class="pre">sdr.gain_control_mode_chan0</span> <span class="pre">=</span> <span class="pre">&quot;slow_attack&quot;</span></code></li>
 <li><code class="code docutils literal notranslate"><span class="pre">sdr.gain_control_mode_chan0</span> <span class="pre">=</span> <span class="pre">&quot;fast_attack&quot;</span></code></li>
 </ol>
-<p>And with AGC enabled you don’t provide a value to <code class="code docutils literal notranslate"><span class="pre">rx_hardwaregain_chan0</span></code>.  The fast attack will react quicker, i.e. the gain value will change faster when the received signal changes level.  With either mode, if there is no signal present, just noise, the AGC will max out the gain setting, which means when a signal does show up it will saturate the receiver briefly, until the AGC is able to react and ramp down the gain.  You can always check the current gain level in realtime with:</p>
+<p>And with AGC enabled you don’t provide a value to <code class="code docutils literal notranslate"><span class="pre">rx_hardwaregain_chan0</span></code>, it will get ignored.  The fast attack will react quicker, i.e. the gain value will change faster when the received signal changes level.  With either mode, if there is no signal present, just noise, the AGC will max out the gain setting, which means when a signal does show up it will saturate the receiver briefly, until the AGC is able to react and ramp down the gain.  You can always check the current gain level in realtime with:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdr</span><span class="o">.</span><span class="n">_get_iio_attr</span><span class="p">(</span><span class="s1">&#39;voltage0&#39;</span><span class="p">,</span><span class="s1">&#39;hardwaregain&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
 </pre></div>
 </div>
