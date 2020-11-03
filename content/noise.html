@@ -72,8 +72,7 @@
 <li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="appendix_text_comparison.html">15. Textbook Comparison</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. About the Author</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">15. About the Author</a></li>
 </ul>
 
 
@@ -212,7 +211,7 @@
 </div>
 <div class="section" id="noise-in-frequency-domain">
 <h2>Noise in Frequency Domain<a class="headerlink" href="#noise-in-frequency-domain" title="Permalink to this headline">¶</a></h2>
-<p>In the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> chapter we looked at “Fourier pairs”, i.e. what a certain time domain signal looks like in the frequency domain.  Well what does Gaussian noise look like in the frequency domain?  Below shows some simulated noise in the time domain, and then a plot of the FFT of that noise (many FFT’s were averaged together).</p>
+<p>In the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> chapter we looked at “Fourier pairs”, i.e. what a certain time domain signal looks like in the frequency domain.  Well what does Gaussian noise look like in the frequency domain?  Below shows some simulated noise in the time domain, and then a plot of the Power Spectral Density (PSD) of that noise.  These plots were taken from GNU Radio.</p>
 <a class="reference internal image-reference" href="../_images/noise_freq.png"><img alt="../_images/noise_freq.png" class="align-center" src="../_images/noise_freq.png" style="width: 599.5px; height: 506.00000000000006px;" /></a>
 <p>We can see that it looks roughly the same across all frequencies, and is fairly flat.   It turns out that Gaussian noise in the time domain is also Gaussian noise in the frequency domain.  So why don’t the two plots above look the same?  It’s because the frequency domain plot is showing the magnitude of the FFT, so there will only be positive numbers, and it’s using a log scale (it’s showing the magnitude in dB).  Otherwise they would look the same.  We can prove this to ourselves by generating some noise (in the time domain) in Python and then taking the FFT.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -230,7 +229,7 @@
 </div>
 <p>Note that the randn() function uses mean = 0 and variance = 1 by default.  Both of the plots will look something like this:</p>
 <a class="reference internal image-reference" href="../_images/noise_python.png"><img alt="../_images/noise_python.png" class="align-center" src="../_images/noise_python.png" style="width: 374.0px; height: 252.0px;" /></a>
-<p>The signal we generated and took the FFT of was a real signal (versus complex), and the FFT of any real signal will have matching negative and positive portions, so that’s why we only saved the positive portion of the FFT output (the 2nd half).  But why did we only generate “real” noise, and how do complex signals work into this?</p>
+<p>You can then produce the flat PSD that we had in GNU Radio by taking the log, and averaging a bunch together.  The signal we generated and took the FFT of was a real signal (versus complex), and the FFT of any real signal will have matching negative and positive portions, so that’s why we only saved the positive portion of the FFT output (the 2nd half).  But why did we only generate “real” noise, and how do complex signals work into this?</p>
 </div>
 <div class="section" id="complex-noise">
 <h2>Complex Noise<a class="headerlink" href="#complex-noise" title="Permalink to this headline">¶</a></h2>
