@@ -126,25 +126,26 @@
             
   <div class="section" id="noise-and-db">
 <span id="noise-chapter"></span><h1><span class="section-number">7. </span>Noise and dB<a class="headerlink" href="#noise-and-db" title="Permalink to this headline">¶</a></h1>
-<p>In this chapter we will discuss noise, including how it is modeled, and dealt with in a comms system.  We will also introduce dB along the way.</p>
+<p>In this chapter we will discuss noise, including how it is modeled and handled in a communications system. We will also introduce decibels (dB) along the way.</p>
 <div class="section" id="gaussian-noise">
 <h2>Gaussian Noise<a class="headerlink" href="#gaussian-noise" title="Permalink to this headline">¶</a></h2>
-<p>Most people are aware of the concept of noise, and how it looks something like:</p>
+<p>Most people are aware of the concept of noise: unwanted fluctuations that can obscure our desired signal(s). Noise looks something like:</p>
 <a class="reference internal image-reference" href="../_images/noise.png"><img alt="../_images/noise.png" class="align-center" src="../_images/noise.png" style="width: 663.5999999999999px; height: 352.09999999999997px;" /></a>
-<p>Note how the average value is zero.  If the average value wasn’t zero then we could just subtract the average value, call it a bias, and we would be left with an average of zero.  Also note that the individual points are <em>not</em> “uniformly random”, i.e. larger values are rarer, most of the points are closer to zero.</p>
-<p>We call this type of noise “Gaussian noise”, and it’s a good model for the type of noise that comes from many natural sources, such as thermal vibrations of atoms in the silicon of our receiver’s RF components.  The central limit theorem tells us that the summation of many random processes will tend to have a Gaussian distribution, even if the individual processes have some other distribution.  I.e., when we have a lot of random things happen, and they accumulate, the result appears Gaussian, even if the individual things are not.</p>
+<p>Note how the average value is zero in the time domain graph.  If the average value wasn’t zero, then we could subtract the average value, call it a bias, and we would be left with an average of zero.  Also note that the individual points in the graph are <em>not</em> “uniformly random”, i.e., larger values are rarer, most of the points are closer to zero.</p>
+<p>We call this type of noise “Gaussian noise”. It’s a good model for the type of noise that comes from many natural sources, such as thermal vibrations of atoms in the silicon of our receiver’s RF components.  The central limit theorem tells us that the summation of many random processes will tend to have a Gaussian distribution, even if the individual processes have some other distribution.  In other words, when a lot of random things happen and accumulate, the result appears Gaussian. The result will be Gaussian even when individual things are not distributed in this manner.</p>
 <img alt="../_images/central_limit_theorem.webp" class="align-center" src="../_images/central_limit_theorem.webp" />
-<p>The Gaussian distribution is also called the “Normal” distribution (recall bell curve).</p>
-<p>The Gaussian distribution has two parameters: mean and variance.  We already discussed how the mean can be considered zero, because you can always remove the mean if it’s not zero.  The variance changes how “strong” the noise is, a higher variance will result in larger numbers.  It is for this reason that variance defines the noise power.</p>
-<p>Note that variance equals standard deviation squared (<img class="math" src="../_images/math/6ba6a750dfd04fbdaf6ec0daeca3e068d61d54e1.svg" alt="\sigma^2"/>).</p>
+<p>The Gaussian distribution is also called the “Normal” distribution (recall a bell curve).</p>
+<p>The Gaussian distribution has two parameters: mean and variance.  We already discussed how the mean can be considered zero because you can always remove the mean, or bias, if it’s not zero.  The variance changes how “strong” the noise is.  A higher variance will result in larger numbers.  It is for this reason that variance defines the noise power.</p>
+<p>Variance equals standard deviation squared (<img class="math" src="../_images/math/6ba6a750dfd04fbdaf6ec0daeca3e068d61d54e1.svg" alt="\sigma^2"/>).</p>
 </div>
 <div class="section" id="decibels-db">
 <h2>Decibels (dB)<a class="headerlink" href="#decibels-db" title="Permalink to this headline">¶</a></h2>
-<p>We are going to take a quick tangent to formally introduce dB.  You have probably heard of dB, and if you are already familiar with it feel free to skip this section.</p>
-<p>Working in dB is extremely useful when we need to deal with small numbers and big numbers at the same time, or just a bunch of really big numbers.</p>
+<p>We are going to take a quick tangent to formally introduce dB.  You may have heard of dB, and if you are already familiar with it feel free to skip this section.</p>
+<p>Working in dB is extremely useful when we need to deal with small numbers and big numbers at the same time, or just a bunch of really big numbers. Consider how cumbersome it would be to work with numbers of the scale in Example 1 and Example 2.</p>
 <p>Example 1: Signal 1 is received at 2 watts and the noise floor is at 0.0000002 watts.</p>
 <p>Example 2: A garbage disposal is 100,000 times louder than a quiet rural area, and a chain saw is 10,000 times louder than a garbage disposal (in terms of power of sound waves).</p>
-<p>Without dB, i.e. working in normal “linear” terms, we need to use a lot of 0’s, and if we were to plot something like Signal 1 over time, we wouldn’t even see the noise floor, because the scale of the y-axis might go from 0 to 3 watts for example, causing the noise to be too small to show up in the plot.  By using dB we are essentially just working in a log-scale.  Below is an example waterfall showing three signals, the left-hand side is the original signal, and the right-hand side shows it converted to dB.  Both use the exact same colormap, where blue is lowest value and yellow is highest.  Note how you can barely see the signal on the left, in the linear scale.</p>
+<p>Without dB, meaning working in normal “linear” terms, we need to use a lot of 0s to represent the values in Examples 1 and 2. Frankly, if we were to plot something like Signal 1 over time, we wouldn’t even see the noise floor. If the scale of the y-axis went from 0 to 3 watts, for example, noise to be too small to show up in the plot. To represent these scales simultaneously, we work in a log-scale.</p>
+<p>To further illustrate the problems of scale we encounter in signal processing, consider the below waterfalls of three of the same signals. The left-hand side is the original signal in linear scale, and the right-hand side shows the signals converted to a logarithmic scale (dB).  Both representations use the exact same colormap, where blue is lowest value and yellow is highest.  You can barely see the signal on the left in the linear scale.</p>
 <a class="reference internal image-reference" href="../_images/linear_vs_log.png"><img alt="../_images/linear_vs_log.png" class="align-center" src="../_images/linear_vs_log.png" style="width: 686.0px; height: 240.79999999999998px;" /></a>
 <p>For a given value x, we can represent x in dB using the following formula:</p>
 <div class="math">
@@ -153,7 +154,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x_db</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You may have seen that <code class="code docutils literal notranslate"><span class="pre">10</span> <span class="pre">*</span></code> be a <code class="code docutils literal notranslate"><span class="pre">20</span> <span class="pre">*</span></code> in other domains.  Whenever you are dealing with a power of some sort, you use 10, and you use 20 if you are dealing with a voltage or current or some non-power value.  In DSP we are almost always dealing with a power, in fact there is not a single time in this whole textbook we need to use 20 instead of 10.</p>
+<p>You may have seen that <code class="code docutils literal notranslate"><span class="pre">10</span> <span class="pre">*</span></code> be a <code class="code docutils literal notranslate"><span class="pre">20</span> <span class="pre">*</span></code> in other domains.  Whenever you are dealing with a power of some sort, you use 10, and you use 20 if you are dealing with a non-power value like voltage or current.  In DSP we tend to deal with a power. In fact there is not a single time in this whole textbook we need to use 20 instead of 10.</p>
 <p>We convert from dB back to linear (normal numbers) using:</p>
 <div class="math">
 <p><img src="../_images/math/20766f0f56596f4a74c03729f1bfb5c48d266aca.svg" alt="x = 10^{x_{dB}/10}"/></p>
@@ -161,16 +162,16 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">(</span><span class="n">x_db</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>But don’t get caught up in the formula, there is a key concept to take away here.  In DSP we deal with really big numbers and really small numbers together (e.g. the strength of a signal compared to the strength of the noise), and dB lets us have more dynamic range when we express numbers or plot them.  It also provides some conveniences like being able to add when we would normally multiply (as we will see in the <a class="reference internal" href="link_budgets.html#link-budgets-chapter"><span class="std std-ref">Link Budgets</span></a> chapter).</p>
+<p>Don’t get caught up in the formula, as there is a key concept to take away here.  In DSP we deal with really big numbers and really small numbers together (e.g., the strength of a signal compared to the strength of the noise). The logarithmic scale of dB lets us have more dynamic range when we express numbers or plot them.  It also provides some conveniences like being able to add when we would normally multiply (as we will see in the <a class="reference internal" href="link_budgets.html#link-budgets-chapter"><span class="std std-ref">Link Budgets</span></a> chapter).</p>
 <p>Some common errors people will run into when new to dB are:</p>
 <ol class="arabic simple">
-<li>Using natural log instead of log base 10, because most programming language’s log() function is actually the natural log.</li>
+<li>Using natural log instead of log base 10 because most programming language’s log() function is actually the natural log.</li>
 <li>Forgetting to include the dB when expressing a number or labeling an axis.  If we are in dB we need to identify it somewhere.</li>
 <li>When you’re in dB you add/subtract values instead of multiplying/dividing, e.g.:</li>
 </ol>
 <a class="reference internal image-reference" href="../_images/db.png"><img alt="../_images/db.png" class="align-center" src="../_images/db.png" style="width: 640.8px; height: 166.2px;" /></a>
-<p>It is also important to understand that dB is not technically a “unit”.  A value in dB alone is unit-less, like if something is 2x larger, there are no units until I tell you the units.  dB is a relative thing.  In audio when they say dB they really mean dBA which is units for sound level (the A is the units). In wireless we typically refer to watts, to refer to an actual power level, so you might see dBW which is relative to 1 W, or dBmW (often written dBm for short) which is relative to 1 mW.   For example, someone might say “our transmitter is set to 3 dBW” (so 2 watts).  Sometimes we just say dB, meaning it is relative, there are no units, e.g. “our signal was received 20 dB above the noise floor”.  A little tip: 0 dBm = -30 dBW.</p>
-<p>Lastly, here are some common conversions that I would recommend remembering:</p>
+<p>It is also important to understand that dB is not technically a “unit”.  A value in dB alone is unit-less, like if something is 2x larger, there are no units until I tell you the units.  dB is a relative thing.  In audio when they say dB, they really mean dBA which is units for sound level (the A is the units). In wireless we typically use watts to refer to an actual power level.  Therefore, you may see dBW as a unit, which is relative to 1 W. You may also see dBmW (often written dBm for short) which is relative to 1 mW.   For example, someone can say “our transmitter is set to 3 dBW” (so 2 watts).  Sometimes we use dB by itself, meaning it is relative and there are no units. One can say, “our signal was received 20 dB above the noise floor”.  Here’s a little tip: 0 dBm = -30 dBW.</p>
+<p>Finally, here are some common conversions that I recommend memorizing:</p>
 <table border="1" class="docutils align-default">
 <colgroup>
 <col width="50%" />
@@ -211,9 +212,9 @@
 </div>
 <div class="section" id="noise-in-frequency-domain">
 <h2>Noise in Frequency Domain<a class="headerlink" href="#noise-in-frequency-domain" title="Permalink to this headline">¶</a></h2>
-<p>In the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> chapter we looked at “Fourier pairs”, i.e. what a certain time domain signal looks like in the frequency domain.  Well what does Gaussian noise look like in the frequency domain?  Below shows some simulated noise in the time domain, and then a plot of the Power Spectral Density (PSD) of that noise.  These plots were taken from GNU Radio.</p>
+<p>In the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> chapter we tackled “Fourier pairs”, i.e., what a certain time domain signal looks like in the frequency domain.  Well, what does Gaussian noise look like in the frequency domain?  The following graphs show some simulated noise in the time domain (top) and a plot of the Power Spectral Density (PSD) of that noise (below).  These plots were taken from GNU Radio.</p>
 <a class="reference internal image-reference" href="../_images/noise_freq.png"><img alt="../_images/noise_freq.png" class="align-center" src="../_images/noise_freq.png" style="width: 599.5px; height: 506.00000000000006px;" /></a>
-<p>We can see that it looks roughly the same across all frequencies, and is fairly flat.   It turns out that Gaussian noise in the time domain is also Gaussian noise in the frequency domain.  So why don’t the two plots above look the same?  It’s because the frequency domain plot is showing the magnitude of the FFT, so there will only be positive numbers, and it’s using a log scale (it’s showing the magnitude in dB).  Otherwise they would look the same.  We can prove this to ourselves by generating some noise (in the time domain) in Python and then taking the FFT.</p>
+<p>We can see that it looks roughly the same across all frequencies and is fairly flat.  It turns out that Gaussian noise in the time domain is also Gaussian noise in the frequency domain.  So why don’t the two plots above look the same?  It’s because the frequency domain plot is showing the magnitude of the FFT, so there will only be positive numbers. Importantly, it’s using a log scale, or showing the magnitude in dB.  Otherwise these graphs would look the same.  We can prove this to ourselves by generating some noise (in the time domain) in Python and then taking the FFT.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 
@@ -228,13 +229,13 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Note that the randn() function uses mean = 0 and variance = 1 by default.  Both of the plots will look something like this:</p>
+<p>Take note that the randn() function by default uses mean = 0 and variance = 1.  Both of the plots will look something like this:</p>
 <a class="reference internal image-reference" href="../_images/noise_python.png"><img alt="../_images/noise_python.png" class="align-center" src="../_images/noise_python.png" style="width: 374.0px; height: 252.0px;" /></a>
-<p>You can then produce the flat PSD that we had in GNU Radio by taking the log, and averaging a bunch together.  The signal we generated and took the FFT of was a real signal (versus complex), and the FFT of any real signal will have matching negative and positive portions, so that’s why we only saved the positive portion of the FFT output (the 2nd half).  But why did we only generate “real” noise, and how do complex signals work into this?</p>
+<p>You can then produce the flat PSD that we had in GNU Radio by taking the log and averaging a bunch together.  The signal we generated and took the FFT of was a real signal (versus complex), and the FFT of any real signal will have matching negative and positive portions, so that’s why we only saved the positive portion of the FFT output (the 2nd half).  But why did we only generate “real” noise, and how do complex signals work into this?</p>
 </div>
 <div class="section" id="complex-noise">
 <h2>Complex Noise<a class="headerlink" href="#complex-noise" title="Permalink to this headline">¶</a></h2>
-<p>“Complex Gaussian” noise is what we will experience when we have a signal at baseband; the noise power is split between the real and imaginary portions equally.  And most importantly, the real and imag parts are independent of each other; knowing the values of one doesn’t give you the values of the other.</p>
+<p>“Complex Gaussian” noise is what we will experience when we have a signal at baseband; the noise power is split between the real and imaginary portions equally.  And most importantly, the real and imaginary parts are independent of each other; knowing the values of one doesn’t give you the values of the other.</p>
 <p>We can generate complex Gaussian noise in Python using:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
 </pre></div>
@@ -243,7 +244,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>where np.var() is the function for variance.  It turns out that the power of our signal n is 2.  In order to generate complex noise with “unit power”, i.e. a power of 1 (which makes things convenient), we have to use:</p>
+<p>where np.var() is the function for variance.  Here the power of our signal n is 2.  In order to generate complex noise with “unit power”, i.e., a power of 1 (which makes things convenient), we have to use:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># AWGN with unity power</span>
 </pre></div>
 </div>
@@ -265,19 +266,19 @@
 </pre></div>
 </div>
 <a class="reference internal image-reference" href="../_images/noise_iq.png"><img alt="../_images/noise_iq.png" class="align-center" src="../_images/noise_iq.png" style="width: 357.59999999999997px; height: 330.0px;" /></a>
-<p>It looks how we would expect; a random blob centered around 0 + 0j, i.e. the origin.  Just for fun, let’s try adding noise to a QPSK signal to see what the IQ plot looks like:</p>
+<p>It looks how we would expect; a random blob centered around 0 + 0j, or the origin.  Just for fun, let’s try adding noise to a QPSK signal to see what the IQ plot looks like:</p>
 <a class="reference internal image-reference" href="../_images/noisey_qpsk.png"><img alt="../_images/noisey_qpsk.png" class="align-center" src="../_images/noisey_qpsk.png" style="width: 721.1999999999999px; height: 342.0px;" /></a>
 <p>Now what happens when the noise is stronger?</p>
 <a class="reference internal image-reference" href="../_images/noisey_qpsk2.png"><img alt="../_images/noisey_qpsk2.png" class="align-center" src="../_images/noisey_qpsk2.png" style="width: 643.5px; height: 229.0px;" /></a>
-<p>We are starting to get a feel why transmitting data wireless isn’t that simple, we want to send as many bits per symbol as we can, but if the noise is too high then we will get erroneous bits on the receiving end.</p>
+<p>We are starting to get a feel for why transmitting data wirelessly isn’t that simple. We want to send as many bits per symbol as we can, but if the noise is too high then we will get erroneous bits on the receiving end.</p>
 </div>
 <div class="section" id="awgn">
 <h2>AWGN<a class="headerlink" href="#awgn" title="Permalink to this headline">¶</a></h2>
-<p>Additive White Gaussian Noise (AWGN) is an abbreviation you will hear a lot in the DSP and SDR world.  The GN, Gaussian Noise, we already discussed.  Additive just means the noise is being added to our received signal.  White means in the frequency domain, the spectrum is flat across our entire observation band.  It will almost always be white in practice, or approximately white.  In this textbook we will use AWGN as the only form of noise, when dealing with communications links and link budgets and such.  Non-AWGN noise tends to be a niche topic.</p>
+<p>Additive White Gaussian Noise (AWGN) is an abbreviation you will hear a lot in the DSP and SDR world.  The GN, Gaussian Noise, we already discussed.  Additive just means the noise is being added to our received signal.  White, in the frequency domain, means the spectrum is flat across our entire observation band.  It will almost always be white in practice,or approximately white.  In this textbook we will use AWGN as the only form of noise when dealing with communications links and link budgets and such.  Non-AWGN noise tends to be a niche topic.</p>
 </div>
 <div class="section" id="snr">
 <h2>SNR<a class="headerlink" href="#snr" title="Permalink to this headline">¶</a></h2>
-<p>Signal-to-Noise Ratio (SNR) is how we will measure the differences in strength between the signal and noise, it’s a ratio (so it’s unit-less).  SNR is almost always in dB, in practice.  Often times in simulation we code in a way that our signals are unit power (power = 1).  That way, we can create an SNR of 10 dB by creating noise that is -10 dB in power, by adjusting the variance when we generate the noise.</p>
+<p>Signal-to-Noise Ratio (SNR) is how we will measure the differences in strength between the signal and noise. It’s a ratio so it’s unit-less.  SNR is almost always in dB, in practice.  Often in simulation we code in a way that our signals are one unit power (power = 1).  That way, we can create a SNR of 10 dB by producing noise that is -10 dB in power by adjusting the variance when we generate the noise.</p>
 <a class="reference internal image-reference" href="../_images/SNR.png"><img alt="../_images/SNR.png" class="align-center" src="../_images/SNR.png" style="width: 255.60000000000002px; height: 96.4px;" /></a>
 <p>If someone says “SNR = 0 dB” it means the signal and noise power are the same.  A positive SNR means our signal is higher power than the noise, while a negative SNR means the noise is higher power.  Detecting signals at negative SNR is usually pretty tough.</p>
 <p>Like we mentioned before, the power in a signal is equal to the variance of the signal.  So we can represent SNR as the ratio of the signal variance to noise variance:</p>
