@@ -126,25 +126,25 @@
 <span id="link-budgets-chapter"></span><h1><span class="section-number">9. </span>Link Budgets<a class="headerlink" href="#link-budgets" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="intro">
 <h2>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h2>
-<p>A link budget is an accounting of all of the gains and losses from the transmitter to the receiver in a communication system.  Link budgets describe one direction of the wireless link.  Most communications systems are bidirectional, so there must be a separate uplink and downlink budget.  The “result” of the link budget will tell you roughly how much SNR you should expect to have at your receiver.  Further analysis would be needed to check if that SNR is high enough for your application.</p>
-<p>You study link budgets not for the purpose of being able to actually make a link budget for some situation, but to learn, and develop a system-layer point of view of wireless communications.</p>
-<p>We will first go over the received signal power budget, then the noise power budget, and then combine the two to find SNR (signal power divided by noise power).</p>
+<p>A link budget is an accounting of all of the gains and losses from the transmitter to the receiver in a communication system.  Link budgets describe one direction of the wireless link.  Most communications systems are bidirectional, so there must be a separate uplink and downlink budget.  The “result” of the link budget will tell you roughly how much signal-to-noise ratio (abbreviated as SNR, which this textbook uses, or S/N) you should expect to have at your receiver.  Further analysis would be needed to check if that SNR is high enough for your application.</p>
+<p>You study link budgets not for the purpose of being able to actually make a link budget for some situation, but to learn and develop a system-layer point of view of wireless communications.</p>
+<p>We will first cover the received signal power budget, then the noise power budget, and finally combine the two to find SNR (signal power divided by noise power).</p>
 </div>
 <div class="section" id="signal-power-budget">
 <h2>Signal Power Budget<a class="headerlink" href="#signal-power-budget" title="Permalink to this headline">¶</a></h2>
-<p>Below shows the most basic diagram of a generic wireless link.  In this chapter we will focus on one direction, i.e. from a transmitter (Tx) to receiver (Rx).  For a given system, we know the transmit power, it is usually a setting in the transmitter, so how do we figure out the received power at the receiver?</p>
+<p>Below shows the most basic diagram of a generic wireless link.  In this chapter we will focus on one direction, i.e., from a transmitter (Tx) to receiver (Rx).  For a given system, we know the <em>transmit</em> power; it is usually a setting in the transmitter.  How do we figure out the <em>received</em> power at the receiver?</p>
 <a class="reference internal image-reference" href="../_images/tx_rx_system.png"><img alt="../_images/tx_rx_system.png" class="align-center" src="../_images/tx_rx_system.png" style="width: 369.5px; height: 130.5px;" /></a>
-<p>Let us define the following four system parameters:</p>
+<p>We need four system parameters to determine the received power, which are provided below with their common abbreviations. This chapter will delve into each of them.</p>
 <ul class="simple">
 <li><strong>Pt</strong> - Transmit power</li>
 <li><strong>Gt</strong> - Gain of transmit antenna</li>
 <li><strong>Gr</strong> - Gain of receive antenna</li>
-<li><strong>Lp</strong> - Distance between Tx and Rx (i.e. how much wireless path loss)</li>
+<li><strong>Lp</strong> - Distance between Tx and Rx (i.e., how much wireless path loss)</li>
 </ul>
 <a class="reference internal image-reference" href="../_images/tx_rx_system_params.png"><img alt="../_images/tx_rx_system_params.png" class="align-center" src="../_images/tx_rx_system_params.png" style="width: 589.6px; height: 201.60000000000002px;" /></a>
 <div class="section" id="transmit-power">
 <h3>Transmit Power<a class="headerlink" href="#transmit-power" title="Permalink to this headline">¶</a></h3>
-<p>Transmit power is fairly straightforward, it will be a value in watts, dBW, or dBm (recall dBm is shorthand for dBmW).  Every transmitter has one or more amplifiers, and the transmit power is mostly a function of those amplifiers.  An analogy of transmit power would be the watts of a light bulb; more watts means more light transmitted by the bulb.  Examples of approximate transmit power for different technologies:</p>
+<p>Transmit power is fairly straightforward; it will be a value in watts, dBW, or dBm (recall dBm is shorthand for dBmW).  Every transmitter has one or more amplifiers, and the transmit power is mostly a function of those amplifiers.  An analogy for transmit power would be the watt rating (power) of a light bulb: the higher the wattage, the more light transmitted by the bulb.  Here are examples of approximate transmit power for different technologies:</p>
 <table border="1" class="docutils align-default">
 <colgroup>
 <col width="60%" />
@@ -176,29 +176,25 @@
 </div>
 <div class="section" id="antenna-gains">
 <h3>Antenna Gains<a class="headerlink" href="#antenna-gains" title="Permalink to this headline">¶</a></h3>
-<p>Transmit and receive antenna gains are very important, the numbers will be in dB (unit-less).  Typically, antennas are either omnidirectional or directional.  If they are omnidirectional their gain will be 0 dB to 3 dB.  A directional antenna can have a gain anywhere up to 50 dB or so.</p>
+<p>Transmit and receive antenna gains are crucial for calculating link budgets. What is the antenna gain, you might ask?  It indicates the directivity of the antenna.  You might see it referred to as antenna power gain, but don’t let that mislead you, the only way for an antenna to have a higher gain is to direct energy in a more focused region.</p>
+<p>Gains will be depicted in dB (unit-less); feel free to learn or remind yourself why dB is unit-less for our scenario in the <a class="reference internal" href="noise.html#noise-chapter"><span class="std std-ref">Noise and dB</span></a> chapter.  Typically, antennas are either omnidirectional, meaning their power radiates in all directions, or directional, meaning their power radiates in a specific direction.  If they are omnidirectional their gain will be 0 dB to 3 dB.  A directional antenna will have a higher gain, usually 5 dB or higher, and anywhere up to 60 dB or so.</p>
 <a class="reference internal image-reference" href="../_images/antenna_gain_patterns.png"><img alt="../_images/antenna_gain_patterns.png" class="align-center" src="../_images/antenna_gain_patterns.png" style="width: 829.6px; height: 283.2px;" /></a>
-<p>When a directional antenna is used, it must be either:</p>
-<ul class="simple">
-<li>Installed facing the correct direction</li>
-<li>It could also be attached to a mechanical gimbal</li>
-<li>It could also be a phased array which can be electronically steered (i.e. in software)</li>
-</ul>
+<p>When a directional antenna is used, it must be either installed facing the correct direction or attached to a mechanical gimbal. It could also be a phased array, which can be electronically steered (i.e., by software).</p>
 <a class="reference internal image-reference" href="../_images/antenna_steering.png"><img alt="../_images/antenna_steering.png" class="align-center" src="../_images/antenna_steering.png" style="width: 665.6px; height: 308.0px;" /></a>
 <p>Omnidirectional antennas are used when pointing in the right direction is not possible, like your cellphone and laptop.  In 5G, phones can operate in the higher frequency bands like 28 GHz (Verizon) and 39 GHz (AT&amp;T) using an array of antennas and electronic beam steering.</p>
-<p>In a link budget, we must assume that any directional antenna, whether transmit or receive, is pointed in the right direction.  If it’s not pointed correctly then our link budget won’t be accurate and there could be loss of comms (e.g. satellite dish on your roof gets hit by basketball and moves).  In general, our link budgets assume ideal circumstances, but then add a miscellaneous loss to account for real-world factors.</p>
+<p>In a link budget, we must assume that any directional antenna, whether transmit or receive, is pointed in the right direction.  If it’s not pointed correctly then our link budget won’t be accurate and there could be loss of communication, (e.g., the satellite dish on your roof gets hit by basketball and moves).  In general, our link budgets assume ideal circumstances while adding a miscellaneous loss to account for real-world factors.</p>
 </div>
 <div class="section" id="path-loss">
 <h3>Path Loss<a class="headerlink" href="#path-loss" title="Permalink to this headline">¶</a></h3>
-<p>As a signal moves through the air (or vacuum), it will reduce in strength.  Imagine holding a small solar panel up in front of a light bulb.  The further away the solar panel is, the less energy it will absorb from the light bulb.  <strong>Flux</strong> is a term in physics and mathematics, defined as “how much stuff goes through your thing”.  For us, it’s the amount of electromagnetic field passing into our receive antenna.  We want to know how much power is lost, for a given distance.</p>
+<p>As a signal moves through the air (or vacuum), it reduces in strength.  Imagine holding a small solar panel in front of a light bulb.  The further away the solar panel is, the less energy it will absorb from the light bulb.  <strong>Flux</strong> is a term in physics and mathematics, defined as “how much stuff goes through your thing”.  For us, it’s the amount of electromagnetic field passing into our receive antenna.  We want to know how much power is lost, for a given distance.</p>
 <a class="reference internal image-reference" href="../_images/flux.png"><img alt="../_images/flux.png" class="align-center" src="../_images/flux.png" style="width: 864.0px; height: 227.20000000000002px;" /></a>
-<p>Free Space Path Loss (FSPL) tells us the path loss when there are no obstacles, for a given distance.  In its general form, <img class="math" src="../_images/math/bf814d621aebaba97eb1449877cb80f950ecc7e9.svg" alt="\mathrm{FSPL} = ( 4\pi d / \lambda )^2"/>. Google Friis transmission formula for more info.  For generating link budgets, we can use this same equation but converted to dB:</p>
+<p>Free Space Path Loss (FSPL) tells us the path loss when there are no obstacles for a given distance.  In its general form, <img class="math" src="../_images/math/bf814d621aebaba97eb1449877cb80f950ecc7e9.svg" alt="\mathrm{FSPL} = ( 4\pi d / \lambda )^2"/>. Google Friis transmission formula for more info.  (Fun fact: signals encounter 377 ohms impedance moving through free space.)  For generating link budgets, we can use this same equation but converted to dB:</p>
 <div class="math">
 <p><img src="../_images/math/dbf8ea71b418c2782288cf66c820e6ba4de2be0d.svg" alt="\mathrm{FSPL}_{dB} = 20 \log_{10} d + 20 \log_{10} f - 147.55 \left[ dB \right]"/></p>
-</div><p>In link budgets it will show up in dB, unit-less because it is a loss.  <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> is in meters and is the distance between the transmitter and receiver.  <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is in Hz and is the carrier frequency.  There’s only one problem with this simple equation; we won’t always have free space between the transmitter and receiver.  E.g. indoors there is a lot of bouncing (most frequencies can go through walls, just not metal or thick masonry). For these situations there are various non-free-space models. A common one for cities and suburban areas (e.g. cellular) is the Okumura–Hata model:</p>
+</div><p>In link budgets it will show up in dB, unit-less because it is a loss.  <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> is in meters and is the distance between the transmitter and receiver.  <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is in Hz and is the carrier frequency.  There’s only one problem with this simple equation; we won’t always have free space between the transmitter and receiver.  Frequencies bounce a lot indoors (most frequencies can go through walls, just not metal or thick masonry). For these situations there are various non-free-space models. A common one for cities and suburban areas (e.g., cellular) is the Okumura–Hata model:</p>
 <div class="math">
 <p><img src="../_images/math/14f2a692d9c7a9632a0334d816d150f76aae0695.svg" alt="L_{path} = 69.55 + 26.16 \log_{10} f - 13.82 \log_{10} h_B - C_H + \left[ 44.9 - 6.55 \log_{10} h_B \right] \log_{10} d"/></p>
-</div><p>where <img class="math" src="../_images/math/33400e0e3a8b767999d8b77eb40a0261e8fe9548.svg" alt="L_{path}"/> is the path loss in dB, <img class="math" src="../_images/math/df1bda24adad389d286c99c1a3f5a3aa122a91c8.svg" alt="h_B"/> is the height of the transmit antenna above ground level in meters, <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is the carrier frequency in MHz, <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> is the distance between Tx and Rx in km, and <img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> is called the “antenna high correction factor” and it’s defined based on the size of city and carrier frequency range:</p>
+</div><p>where <img class="math" src="../_images/math/33400e0e3a8b767999d8b77eb40a0261e8fe9548.svg" alt="L_{path}"/> is the path loss in dB, <img class="math" src="../_images/math/df1bda24adad389d286c99c1a3f5a3aa122a91c8.svg" alt="h_B"/> is the height of the transmit antenna above ground level in meters, <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is the carrier frequency in MHz, <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> is the distance between Tx and Rx in km, and <img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> is called the “antenna high correction factor” and is defined based on the size of city and carrier frequency range:</p>
 <p><img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> for small/medium cities:</p>
 <div class="math">
 <p><img src="../_images/math/e6274194defe270556e489484bdc9a0a90018fef.svg" alt="C_H = 0.8 + (1.1 \log_{10} f - 0.7 ) h_M - 1.56 \log_{10} f"/></p>
@@ -208,26 +204,27 @@
 </div><p><img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> for large cities when <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is above 200 MHz but less than 1.5 GHz:</p>
 <div class="math">
 <p><img src="../_images/math/dfa9f50bca1150aa6cf8dbe66c437d3e1135453c.svg" alt="C_H = 3.2 ( log_{10}(11.75 h_M))^2 - 4.97"/></p>
-</div><p>where <img class="math" src="../_images/math/7e9505a347821cebd9135bdf0d277f0425ac20ed.svg" alt="h_M"/> is the height of the receiving antenna above ground level in meters.  Don’t worry if the above Okumura–Hata model seemed confusing, it is mainly shown here to demonstrate how non-free-space path loss models are much more complicated than our simple FSPL equation.  The final result of any of these models is a single number we can use for the path loss portion of our link budget.  We’ll stick to using FSPL for the rest of this chapter.</p>
+</div><p>where <img class="math" src="../_images/math/7e9505a347821cebd9135bdf0d277f0425ac20ed.svg" alt="h_M"/> is the height of the receiving antenna above ground level in meters.</p>
+<p>Don’t worry if the above Okumura–Hata model seemed confusing; it is mainly shown here to demonstrate how non-free-space path loss models are much more complicated than our simple FSPL equation.  The final result of any of these models is a single number we can use for the path loss portion of our link budget.  We’ll stick to using FSPL for the rest of this chapter.</p>
 </div>
 <div class="section" id="miscellaneous-losses">
 <h3>Miscellaneous Losses<a class="headerlink" href="#miscellaneous-losses" title="Permalink to this headline">¶</a></h3>
-<p>In our link budget we also want to take into account miscellaneous losses.  We will just lump these together into one term, usually somewhere between 1 – 3 dB.  Examples of misc. losses:</p>
+<p>In our link budget we also want to take into account miscellaneous losses.  We will lump these together into one term, usually somewhere between 1 – 3 dB.  Examples of miscellaneous losses:</p>
 <ul class="simple">
 <li>Cable loss</li>
 <li>Atmospheric Loss</li>
 <li>Antenna pointing imperfections</li>
-<li>Rain</li>
+<li>Precipitation</li>
 </ul>
-<p>The plot below shows atmospheric loss in dB/km, over frequency (we will usually be &lt; 40 GHz).  If you take some time to understand the y-axis you’ll see that short range communications below 40 GHz, that are less than 1 km, have 1 dB or less of atmospheric loss, and thus we can usually ignore it.  When atmospheric loss really comes into play is with satellite communications, where the signal has to travel many km through the air.</p>
+<p>The plot below shows atmospheric loss in dB/km over frequency (we will usually be &lt; 40 GHz).  If you take some time to understand the y-axis, you’ll see that short range communications below 40 GHz <strong>and</strong> less than 1 km have 1 dB or less of atmospheric loss, and thus we generally ignore it.  When atmospheric loss really comes into play is with satellite communications, where the signal has to travel many km through the atmosphere.</p>
 <a class="reference internal image-reference" href="../_images/atmospheric_attenuation.png"><img alt="../_images/atmospheric_attenuation.png" class="align-center" src="../_images/atmospheric_attenuation.png" style="width: 576.8000000000001px; height: 397.6px;" /></a>
 </div>
 <div class="section" id="signal-power-equation">
 <h3>Signal Power Equation<a class="headerlink" href="#signal-power-equation" title="Permalink to this headline">¶</a></h3>
-<p>Now it’s time to put all of these gains and losses together, to calculate our signal power at the receiver, <img class="math" src="../_images/math/bc6ecef20020dde7203df6dc8f56c9e6326c2ed8.svg" alt="P_r"/>:</p>
+<p>Now it’s time to put all of these gains and losses together to calculate our signal power at the receiver, <img class="math" src="../_images/math/bc6ecef20020dde7203df6dc8f56c9e6326c2ed8.svg" alt="P_r"/>:</p>
 <div class="math">
 <p><img src="../_images/math/1d7facdb46a6709bc0a384b67e2da96929a5c7e8.svg" alt="P_r = P_t + G_t + G_r - L_p - L_{misc} \quad \mathrm{dBW}"/></p>
-</div><p>Overall it’s a pretty simple equation, we are just adding up gains/losses, some might not even consider it an equation at all.  We usually show it in a table, similar to accounting, like this:</p>
+</div><p>Overall it’s an easy equation. We add up the gains and losses. Some might not even consider it an equation at all.  We usually show the gains, losses, and total in a table, similar to accounting, like this:</p>
 <table border="1" class="colwidths-given docutils align-default">
 <colgroup>
 <col width="60%" />
@@ -258,27 +255,27 @@
 </div>
 <div class="section" id="noise-power-budget">
 <h2>Noise Power Budget<a class="headerlink" href="#noise-power-budget" title="Permalink to this headline">¶</a></h2>
-<p>Now that we know the received signal power, let’s switch to looking at the received noise, since we need both to calculate SNR after all.  We can find received noise with a similar style power budget.</p>
-<p>Now is a good time to talk about where noise enters our comms link.  Answer: <strong>At the receiver!</strong>  The signal is not corrupted with noise until we go to receive it.  This is <em>extremely</em> important to understand, many students don’t quite internalize it, and end up making a foolish error as a result.  There is not noise floating around us in the air, the noise comes from the fact that our receiver has an amplifier and other electronics that are not perfect and not at 0 degrees kelvin.</p>
+<p>Now that we know the received signal power, let’s change topic to received noise, since we need both to calculate SNR after all.  We can find received noise with a similar style power budget.</p>
+<p>Now is a good time to talk about where noise enters our comms link.  Answer: <strong>At the receiver!</strong>  The signal is not corrupted with noise until we go to receive it.  It is <em>extremely</em> important to understand this fact! Many students don’t quite internalize it, and they end up making a foolish error as a result.  There is not noise floating around us in the air. The noise comes from the fact that our receiver has an amplifier and other electronics that are not perfect and not at 0 degrees Kelvin (K).</p>
 <p>A popular and simple formulation for the noise budget uses the “kTB” approach:</p>
 <div class="math">
 <p><img src="../_images/math/2910804c9e37ce20bd06837b74c915adb9f7ed3a.svg" alt="P_{noise} = kTB"/></p>
 </div><ul class="simple">
 <li><img class="math" src="../_images/math/30d4f39194cc2ced00937a2642c0345222fed6cd.svg" alt="k"/> – Boltzmann’s constant = 1.38 x 10-23 J/K = <strong>-228.6 dBW/K/Hz</strong>.  For anyone curious, Boltzmann’s constant is a physical constant relating the average kinetic energy of particles in a gas with the temperature of the gas.</li>
 <li><img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/> – System noise temperature in K (cryocoolers anyone?), largely based on our amplifier.  This is the term that is most difficult to find, and is usually very approximate.  You might pay more for an amplifier with a lower noise temperature.</li>
-<li><img class="math" src="../_images/math/a04d3384fedfc300642f10c4207debb695a20fce.svg" alt="B"/> – Signal bandwidth in Hz, assuming you filter out the noise around your signal.  So an LTE downlink signal that is 10 MHz wide will have B set to 10 MHz, or 70 dBHz.</li>
+<li><img class="math" src="../_images/math/a04d3384fedfc300642f10c4207debb695a20fce.svg" alt="B"/> – Signal bandwidth in Hz, assuming you filter out the noise around your signal.  So an LTE downlink signal that is 10 MHz wide will have <img class="math" src="../_images/math/a04d3384fedfc300642f10c4207debb695a20fce.svg" alt="B"/> set to 10 MHz, or 70 dBHz.</li>
 </ul>
-<p>Multiplying out (or adding in dB) kTB gives our noise power, i.e. the bottom term of SNR</p>
+<p>Multiplying out (or adding in dB) kTB gives our noise power, i.e., the bottom term of of our SNR equation.</p>
 </div>
 <div class="section" id="snr">
 <h2>SNR<a class="headerlink" href="#snr" title="Permalink to this headline">¶</a></h2>
 <p>Now that we have both numbers, we can take the ratio to find SNR:</p>
 <a class="reference internal image-reference" href="../_images/SNR.png"><img alt="../_images/SNR.png" class="align-center" src="../_images/SNR.png" style="width: 319.5px; height: 120.5px;" /></a>
-<p>We typically shoot for an SNR &gt; 10 dB, although it really depends on the application.  In practice, SNR can be verified by looking at the FFT of the received signal, or just calculating the power with and without the signal present (recall variance = power).  The higher the SNR, the more bits per symbol you can manage without too many errors.</p>
+<p>We typically shoot for an SNR &gt; 10 dB, although it really depends on the application.  In practice, SNR can be verified by looking at the FFT of the received signal or by calculating the power with and without the signal present (recall variance = power).  The higher the SNR, the more bits per symbol you can manage without too many errors.</p>
 </div>
 <div class="section" id="example-link-budget-ads-b">
 <h2>Example Link Budget: ADS-B<a class="headerlink" href="#example-link-budget-ads-b" title="Permalink to this headline">¶</a></h2>
-<p>Automatic Dependent Surveillance-Broadcast (ADS-B) is a technology used by aircraft to broadcast signals that share their position and other status with air traffic control ground stations as well as other aircraft.  ADS–B is automatic in that it requires no pilot or external input; it depends on data from the aircraft’s navigation system and other computers.  The messages are not encrypted (yay!).  ADS–B equipment is currently mandatory in portions of Australian airspace, while the United States requires some aircraft to be equipped, depending on the size.</p>
+<p>Automatic Dependent Surveillance-Broadcast (ADS-B) is a technology used by aircraft to broadcast signals that share their position and other status with air traffic control ground stations and other aircraft.  ADS–B is automatic in that it requires no pilot or external input; it depends on data from the aircraft’s navigation system and other computers.  The messages are not encrypted (yay!).  ADS–B equipment is currently mandatory in portions of Australian airspace, while the United States requires some aircraft to be equipped, depending on the size.</p>
 <a class="reference internal image-reference" href="../_images/adsb.jpg"><img alt="../_images/adsb.jpg" class="align-center" src="../_images/adsb.jpg" style="width: 230.39999999999998px; height: 306.0px;" /></a>
 <p>The Physical (PHY) Layer of ADS-B has the following characteristics:</p>
 <ul class="simple">
@@ -292,7 +289,7 @@
 <li>Transmit antenna gain is omnidirectional but only pointed downward, so let’s say 3 dB</li>
 <li>ADS-B receivers also have an omnidirectional antenna gain, so let’s say 0 dB</li>
 </ul>
-<p>The path loss depends on how far away the aircraft is from our receiver.  As an example, it’s about 30 km between University of Maryland (where the course that this textbook’s content originated from was taught) and BWI airport.  Let’s calculate FSPL for that distance and our frequency of 1,090 MHz:</p>
+<p>The path loss depends on how far away the aircraft is from our receiver.  As an example, it’s about 30 km between the University of Maryland (where the course that this textbook’s content originated from was taught) and the BWI airport.  Let’s calculate FSPL for that distance and a frequency of 1,090 MHz:</p>
 <div class="math">
 <p><img src="../_images/math/87e4a970421b97c0beb6a25ce30e78b50c9f3b26.svg" alt="\mathrm{FSPL}_{dB} = 20 \log_{10} d + 20 \log_{10} f - 147.55  \left[ \mathrm{dB} \right]
 
@@ -300,7 +297,7 @@
 
 \mathrm{FSPL}_{dB} = 122.7 \left[ \mathrm{dB} \right]"/></p>
 </div><p>Another option is to leave <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> as a variable in the link budget and figure out how far away we can hear signals based on a required SNR.</p>
-<p>Now because we definitely won’t have free space, let’s add another 3 dB of miscellaneous loss.  We will make the miscellaneous loss 6 dB total, to take into account our antenna not being well matched, and cable/connector losses.  Given all of this criteria, our signal link budget looks like:</p>
+<p>Now because we definitely won’t have free space, let’s add another 3 dB of miscellaneous loss.  We will make the miscellaneous loss 6 dB total, to take into account our antenna not being well matched and cable/connector losses.  Given all of this criteria, our signal link budget looks like:</p>
 <table border="1" class="colwidths-given docutils align-default">
 <colgroup>
 <col width="60%" />
@@ -330,12 +327,12 @@
 <p>For our noise budget:</p>
 <ul class="simple">
 <li>B = 50 kHz = 50e3 = 47 dBHz</li>
-<li>T we have to approximate, lets say 300 K, which is 24.8 dBK.  It will vary based on quality of the receiver</li>
+<li>T we have to approximate, let’s say 300 K, which is 24.8 dBK.  It will vary based on quality of the receiver</li>
 <li>k is always -228.6 dBW/K/Hz</li>
 </ul>
 <div class="math">
 <p><img src="../_images/math/f7374fbb202051279103075b29e26a7798ec0c7f.svg" alt="P_{noise} = k + T + B = -156.8 \quad \mathrm{dBW}"/></p>
-</div><p>Therefore our SNR is -105.7 - (-156.8) = <strong>51.1 dB</strong>.  It’s not surprising this is a huge number, considering we are claiming to only be 30 km from the aircraft under free space.  If ADS-B signals couldn’t reach 30 km then ADS-B wouldn’t be a very effective system, no one would hear each other until they were very close.  Under this example we can easily decode the signals; PPM modulation is fairly robust and does not require that high an SNR.  What’s difficult is when you try to receive ADS-B while inside a classroom, with an antenna that is very poorly matched, and a strong FM radio station nearby causing interference.  Those factors could easily lead to 20-30 dB of losses.</p>
+</div><p>Therefore our SNR is -105.7 - (-156.8) = <strong>51.1 dB</strong>.  It’s not surprising it is a huge number, considering we are claiming to only be 30 km from the aircraft under free space.  If ADS-B signals couldn’t reach 30 km then ADS-B wouldn’t be a very effective system–no one would hear each other until they were very close.  Under this example we can easily decode the signals; pulse-position modulation (PPM) is fairly robust and does not require that high an SNR.  What’s difficult is when you try to receive ADS-B while inside a classroom, with an antenna that is very poorly matched, and a strong FM radio station nearby causing interference.  Those factors could easily lead to 20-30 dB of losses.</p>
 <p>This example was really just a back-of-the-envelope calculation, but it demonstrated the basics of creating a link budget and understanding the important parameters of a comms link.</p>
 </div>
 </div>
