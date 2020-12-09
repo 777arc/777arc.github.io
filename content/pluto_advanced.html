@@ -56,6 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">6. PlutoSDR Advanced Topics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#receive-gain">Receive Gain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transmitting">Transmitting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#transmitting-over-the-air-legally">Transmitting Over the Air Legally</a></li>
 </ul>
 </li>
@@ -142,6 +143,37 @@
 </pre></div>
 </div>
 <p>For more details about the Pluto’s AGC, such as how to change the advanced AGC settings, refer to <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-drivers/iio-transceiver/ad9361" rel="noopener noreferrer" target="_blank">the “RX Gain Control” section of this page</a>.</p>
+</div>
+<div class="section" id="transmitting">
+<h2>Transmitting<a class="headerlink" href="#transmitting" title="Permalink to this headline">¶</a></h2>
+<p>Before you transmit any signal with your Pluto, make sure to connect a SMA cable between the Pluto’s TX port, and whatever device will be acting as the receiver.  It’s important to always start by transmitting over a cable, especially while you are learning <em>how</em> to transmit, to make sure the SDR is behaving how you intend.  Always keep your transmit power extremely low, as to not overpower the receiver, since the cable does not attenuate the signal like the wireless channel does.  If you own an attenuator (e.g. 30 dB), now would be a good time to use it.  If you do not have another SDR or a spectrum analyzer to act as the receiver, in theory you can use the RX port on the same Pluto, but it can get complicated.  I would recommend picking up a $10 RTL-SDR to act as the receiving SDR.</p>
+<p>Transmitting is very similar to receiving, except instead of telling the SDR to receive a certain number of samples, we will give it a certain number of samples to transmit.  Instead of <code class="code docutils literal notranslate"><span class="pre">rx_lo</span></code> we will be setting <code class="code docutils literal notranslate"><span class="pre">tx_lo</span></code>, to specify what carrier frequency to transmit on.  The sample rate is shared between the RX and TX, so we will be setting it like normal.  A full example of transmitting is shown below, where we generate a sinusoid at +100 kHz, then transmit the complex signal at a carrier frequency of 915 MHz, causing the receiver to see a carrier at 915.1 MHz.  There is really no practical reason to do this, we could have just set the center_freq to 915.1e6 and transmitted an array of 1’s, but we wanted to generate complex samples for demonstration purposes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">adi</span>
+
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># Hz</span>
+<span class="n">center_freq</span> <span class="o">=</span> <span class="mf">915e6</span> <span class="c1"># Hz</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_rf_bandwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span> <span class="c1"># filter cutoff, just set it to the same as sample rate</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">center_freq</span><span class="p">)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># set the transmit gain to the lowest, for safety sake, you can slowly increase this if need be</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span> <span class="c1"># number of samples to transmit at once</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">/</span><span class="n">sample_rate</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">2.0j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">100e3</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="c1"># Simulate a sinusoid of 100 kHz, so it should show up at 915.1 MHz at the receiver</span>
+
+<span class="c1"># Transmit our batch of samples 100 times, so it should be 1 second worth of samples total, if USB can keep up</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">sdr</span><span class="o">.</span><span class="n">tx</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="c1"># transmit the batch of samples once</span>
+</pre></div>
+</div>
+<p>If you want to continuously transmit the same set of samples on repeat, instead of using a for/while loop within Python like we did above, you can tell the Pluto to do so using just one line:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdr</span><span class="o">.</span><span class="n">tx_cyclic_buffer</span> <span class="o">=</span> <span class="bp">True</span> <span class="c1"># Enable cyclic buffers</span>
+</pre></div>
+</div>
+<p>You would then transmit your samples like normal: <code class="code docutils literal notranslate"><span class="pre">sdr.tx(samples)</span></code> just one time, and the Pluto will keep transmitting the signal indefinitely, until the sdr object destructor is called.  To change the samples that are being continuously transmitted, you cannot simply call <code class="code docutils literal notranslate"><span class="pre">sdr.tx(samples)</span></code> again with a new set of samples, you have to first call <code class="code docutils literal notranslate"><span class="pre">sdr.tx_destroy_buffer()</span></code>, then call <code class="code docutils literal notranslate"><span class="pre">sdr.tx(samples)</span></code>.</p>
 </div>
 <div class="section" id="transmitting-over-the-air-legally">
 <h2>Transmitting Over the Air Legally<a class="headerlink" href="#transmitting-over-the-air-legally" title="Permalink to this headline">¶</a></h2>
