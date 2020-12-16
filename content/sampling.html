@@ -56,6 +56,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#nyquist-sampling">Nyquist Sampling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#quadrature-sampling">Quadrature Sampling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#complex-numbers">Complex Numbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#complex-numbers-in-ffts">Complex Numbers in FFTs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#receiver-side">Receiver Side</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#receiver-architectures">Receiver Architectures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#carrier-and-downconversion">Carrier and Downconversion</a></li>
@@ -197,6 +198,10 @@ Q \sin(2\pi ft)"/></p>
 
 \quad = 0.806 \cos(2\pi ft - 0.519)"/></p>
 </div><p>Even though we started with a complex number, what we are transmitting is real, which is good because you can’t actually transmit something imaginary with electromagnetic waves.  We just use imaginary/complex numbers to represent <em>what</em> we are transmitting.  We will talk about the <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> shortly.</p>
+</div>
+<div class="section" id="complex-numbers-in-ffts">
+<h2>Complex Numbers in FFTs<a class="headerlink" href="#complex-numbers-in-ffts" title="Permalink to this headline">¶</a></h2>
+<p>The above complex numbers were assumed to be time domain samples, but you will also run into complex numbers when you take an FFT.  When we covered Fourier series and FFTs last chapter, we had not dived into complex numbers yet.  When you take the FFT of a series of samples, it finds the frequency domain representation.  We talked about how the FFT figures out which frequencies exist in that set of samples (the magnitude of the FFT indicates the strength of each frequency).  But what the FFT also does is figure out the delay (time shift) needed to apply to each of those frequencies, so that the set of sinusoids can be added up to reconstruct the time-domain signal.  That delay is simply the phase of the FFT.  The output of an FFT is an array of complex numbers, and each complex number gives you the magnitude and phase, and the index of that number gives you the frequency.  If you generate sinusoids at those frequencies/magnitudes/phases and sum them together, you’ll get your original time domain signal (or something very close to it, and that’s where the Nyquist sampling theorem comes into play).</p>
 </div>
 <div class="section" id="receiver-side">
 <h2>Receiver Side<a class="headerlink" href="#receiver-side" title="Permalink to this headline">¶</a></h2>
