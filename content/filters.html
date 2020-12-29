@@ -302,7 +302,7 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 - h = [1 1 1 1 1 1 1 1 1 1] for a moving average filter with a window size of 10.  It also happens to be a low-pass type filter; why is that?  What’s the difference between using 1s and using taps that decay to zero?</p>
 <details>
 <summary><a>Answers</a></summary><p>A moving average filter is a low-pass filter because it smooths out “high frequency” changes, which is usually why people will use one.  The reason to use taps that decay to zero on both ends is to avoid a sudden change in the output, like if the signal being filtered was zero for a while and then suddenly jumped up.</p>
-</details><p>Now for an FIR example.  Have any of you ever done this:</p>
+</details><p>Now for an IIR example.  Have any of you ever done this:</p>
 <blockquote>
 <div>x = x*0.99 + new_value*0.01</div></blockquote>
 <p>where the 0.99 and 0.01 represent the speed the value updates (or rate of decay, same thing).  It’s a convenient way to slowly update some variable without having to remember the last several values.  This is actually a form of low-pass IIR Filter.  Hopefully you can see why IIR filters have less stability than FIR.  Values never fully go away!</p>
