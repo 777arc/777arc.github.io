@@ -171,7 +171,7 @@
 </ol>
 <a class="reference internal image-reference" href="../_images/db.png"><img alt="../_images/db.png" class="align-center" src="../_images/db.png" style="width: 640.8px; height: 166.2px;" /></a>
 <p>It is also important to understand that dB is not technically a “unit”.  A value in dB alone is unit-less, like if something is 2x larger, there are no units until I tell you the units.  dB is a relative thing.  In audio when they say dB, they really mean dBA which is units for sound level (the A is the units). In wireless we typically use watts to refer to an actual power level.  Therefore, you may see dBW as a unit, which is relative to 1 W. You may also see dBmW (often written dBm for short) which is relative to 1 mW.   For example, someone can say “our transmitter is set to 3 dBW” (so 2 watts).  Sometimes we use dB by itself, meaning it is relative and there are no units. One can say, “our signal was received 20 dB above the noise floor”.  Here’s a little tip: 0 dBm = -30 dBW.</p>
-<p>Finally, here are some common conversions that I recommend memorizing:</p>
+<p>Here are some common conversions that I recommend memorizing:</p>
 <table border="1" class="docutils align-default">
 <colgroup>
 <col width="50%" />
@@ -206,6 +206,48 @@
 </tr>
 <tr class="row-odd"><td>10000x</td>
 <td>40 dB</td>
+</tr>
+</tbody>
+</table>
+<p>Finally, to put these numbers into perspective, below are some example power levels, in dBm:</p>
+<table border="1" class="docutils align-default">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>80 dBm</td>
+<td>Tx power of rural FM radio station</td>
+</tr>
+<tr class="row-even"><td>62 dBm</td>
+<td>Max power of a ham radio transmitter</td>
+</tr>
+<tr class="row-odd"><td>60 dBm</td>
+<td>Power of typical home microwave</td>
+</tr>
+<tr class="row-even"><td>37 dBm</td>
+<td>Max power of typical handheld CB or ham radio</td>
+</tr>
+<tr class="row-odd"><td>27 dBm</td>
+<td>Typical cell phone transmit power</td>
+</tr>
+<tr class="row-even"><td>15 dBm</td>
+<td>Typical WiFi transmit power</td>
+</tr>
+<tr class="row-odd"><td>10 dBm</td>
+<td>Bluetooth (version 4) max transmit power</td>
+</tr>
+<tr class="row-even"><td>-10 dBm</td>
+<td>Max received power for WiFi</td>
+</tr>
+<tr class="row-odd"><td>-70 dBm</td>
+<td>Example received power for a ham signal</td>
+</tr>
+<tr class="row-even"><td>-100 dBm</td>
+<td>Minimum received power for WiFi</td>
+</tr>
+<tr class="row-odd"><td>-127 dBm</td>
+<td>Typical received power from GPS satellites</td>
 </tr>
 </tbody>
 </table>
