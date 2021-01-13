@@ -170,7 +170,7 @@
 <p>This one is also less intuitive, but we can see that the frequency domain has a strong spike at 10 Hz, which is the frequency of the square wave, but it also seems to keep going.  It is due to the quick change in time domain, just like in the previous example.  But it’s not flat in frequency. It has spikes at intervals, and the level slowly decays (although it will continue forever).  A square wave in time domain has a sin(x)/x pattern in the frequency domain (a.k.a. the sinc function).</p>
 <p>Now what if we have a constant signal in the time domain?  A constant signal has no “frequency”.   Let’s see:</p>
 <a class="reference internal image-reference" href="../_images/dc-signal.png"><img alt="../_images/dc-signal.png" class="align-center" src="../_images/dc-signal.png" style="width: 633.0px; height: 217.0px;" /></a>
-<p>Because there is no frequency, in the frequency domain we have a spike at 0 Hz. It makes sense if you think about it.  The frequency domain is not going to be “empty” because that only happens when there is no signal present (i.e., time domain of 0s).  We call 0 Hz in the frequency domain “DC”, because it’s caused by a DC signal in time (a constant signal that doesn’t change).  Note that if we increase the amplitude of our DC signal in the time domain, the spike at 0 Hz in the frequency domain will also increase.</p>
+<p>Because there is no frequency, in the frequency domain we have a spike at 0 Hz. It makes sense if you think about it.  The frequency domain is not going to be “empty” because that only happens when there is no signal present (i.e., time domain of 0’s).  We call 0 Hz in the frequency domain “DC”, because it’s caused by a DC signal in time (a constant signal that doesn’t change).  Note that if we increase the amplitude of our DC signal in the time domain, the spike at 0 Hz in the frequency domain will also increase.</p>
 <p>Later on we will learn about what exactly the y-axis in the frequency domain plot means, but for now you can think of it as a sort of amplitude that tells you how much of that frequency was present in the time domain signal.</p>
 </div>
 <div class="section" id="fourier-transform">
@@ -231,7 +231,7 @@
 <a class="reference external image-reference" href="../_static/masking.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/masking.svg" class="align-center" src="../_images/masking.svg" /></a>
 <p>We usually perform DSP operations in the time domain, so let’s utilize the convolution property to see how we can do this masking in the time domain.  Let’s say that x(t) is our received signal.  Let Y(f) be the mask we want to apply in the frequency domain.  Well that means y(t) is the time domain representation of our mask, and if we convolve it with x(t), we can “filter out” the signal we don’t want.</p>
 <a class="reference internal image-reference" href="../_images/masking-equation.png"><img alt="../_images/masking-equation.png" class="align-center" src="../_images/masking-equation.png" style="width: 327.0px; height: 134.0px;" /></a>
-<p>When we discuss filtering, the colvolution property will make more sense.</p>
+<p>When we discuss filtering, the convolution property will make more sense.</p>
 <p>Lastly, I want to point out that the convolution property works in reverse, although we won’t be using it as much as the time domain convolution:</p>
 <div class="math">
 <p><img src="../_images/math/4d0228bed6205664ca7c69fc28ff975676f0e932.svg" alt="x(t)y(t)  \leftrightarrow  \int X(g) Y(f-g) dg"/></p>
