@@ -283,7 +283,7 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 </div>
 <div class="section" id="filter-implementation">
 <h2>Filter Implementation<a class="headerlink" href="#filter-implementation" title="Permalink to this headline">¶</a></h2>
-<p>We aren’t going to dive too deeply into the implementation of filters. Rather, I focus on filter design (you can find read-to-use implementations in any programming language anyway).  For now, here is one take-away:  to filter a signal with an FIR filter, you simply convolve the impulse response (the array of taps) with the input signal.  (Don’t worry, a later section explains convolution.) In the discrete world we use a discrete convolution (example below).  The triangles labeled as b’s are the taps.  In the flowchart, the squares labeled <img class="math" src="../_images/math/4ab963b7331cae46b916c29afa4dc9f2831023fa.svg" alt="z^{-1}"/> above the triangles signify to delay by one time step.</p>
+<p>We aren’t going to dive too deeply into the implementation of filters. Rather, I focus on filter design (you can find ready-to-use implementations in any programming language anyway).  For now, here is one take-away:  to filter a signal with an FIR filter, you simply convolve the impulse response (the array of taps) with the input signal.  (Don’t worry, a later section explains convolution.) In the discrete world we use a discrete convolution (example below).  The triangles labeled as b’s are the taps.  In the flowchart, the squares labeled <img class="math" src="../_images/math/4ab963b7331cae46b916c29afa4dc9f2831023fa.svg" alt="z^{-1}"/> above the triangles signify to delay by one time step.</p>
 <a class="reference internal image-reference" href="../_images/discrete_convolution.png"><img alt="../_images/discrete_convolution.png" class="align-center" src="../_images/discrete_convolution.png" style="width: 385.6px; height: 152.8px;" /></a>
 <p>You might be able to see why we call them filter “taps” now, based on the way the filter itself is implemented.</p>
 <div class="section" id="fir-vs-iir">
@@ -301,7 +301,7 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 <p>If you perform a “moving average” across a list of numbers, that’s just an FIR filter with taps of 1’s:
 - h = [1 1 1 1 1 1 1 1 1 1] for a moving average filter with a window size of 10.  It also happens to be a low-pass type filter; why is that?  What’s the difference between using 1’s and using taps that decay to zero?</p>
 <details>
-<summary><a>Answers</a></summary><p>A moving average filter is a low-pass filter because it smooths out “high frequency” changes, which is usually why people will use one.  The reason to use taps that decay to zero on both ends is to avoid a sudden change in the output, like if the signal being filtered was zero for a while and then suddenly jumped up.</p>
+<summary>Answers</summary><p>A moving average filter is a low-pass filter because it smooths out “high frequency” changes, which is usually why people will use one.  The reason to use taps that decay to zero on both ends is to avoid a sudden change in the output, like if the signal being filtered was zero for a while and then suddenly jumped up.</p>
 </details><p>Now for an IIR example.  Have any of you ever done this:</p>
 <blockquote>
 <div>x = x*0.99 + new_value*0.01</div></blockquote>
@@ -335,7 +335,7 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 <p>The <span class="red">red</span> output is the filtered signal.</p>
 <p>Question: What type of filter was the triangle?</p>
 <details>
-<summary><a>Answers</a></summary><p>It smoothed out the high frequency components of the green signal (i.e., the sharp transitions of the square) so it acts as a low-pass filter.</p>
+<summary>Answers</summary><p>It smoothed out the high frequency components of the green signal (i.e., the sharp transitions of the square) so it acts as a low-pass filter.</p>
 </details><p>Now that we are starting to understand convolution, I will present the mathematical equation for it.  The asterisk (*) is typically used as the symbol for convolution:</p>
 <div class="math">
 <p><img src="../_images/math/ef8e9cf9b5e1ed3093ee71fd9b8d1d4c92726693.svg" alt="(f * g)(t) = \int f(\tau) g(t - \tau) d\tau"/></p>
@@ -357,7 +357,7 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 </div>
 <p><code class="code docutils literal notranslate"><span class="pre">hstack()</span></code> is one way to concatenate arrays in numpy.  We know it will lead to a filter with complex taps. Why?</p>
 <details>
-<summary><a>Answer</a></summary><p>It’s not symmetrical around 0 Hz.</p>
+<summary>Answer</summary><p>It’s not symmetrical around 0 Hz.</p>
 </details><p>Our end goal is to find the taps of this filter so we can actually use it.  How do we get the taps, given the frequency response?  Well, how do we convert from the frequency domain back to the time domain?  Inverse FFT (IFFT)!  Recall that the IFFT function is almost exactly the same as the FFT function.  We also need to IFFTshift our desired frequency response before the IFFT, and then we need yet another IFFshift after the IFFT (no, they don’t cancel themselves out, you can try).  This process might seem confusing. Just remember that you always should FFTshift after an FFT and IFFshift after an IFFT.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">H</span><span class="p">)))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
