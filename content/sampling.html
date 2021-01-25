@@ -172,7 +172,7 @@ Q \sin(2\pi ft)"/></p>
 </div><p>What happens when we add a sine and cosine?  Or rather, what happens when we add two sinusoids that are 90 degrees out of phase?  In the video below, there is a slider for adjusting I and another for adjusting Q.  What is plotted are the cosine, sine, and then the sum of the two.</p>
 <a class="reference internal image-reference" href="../_images/IQ2.gif"><img alt="../_images/IQ2.gif" class="align-center" src="../_images/IQ2.gif" style="width: 600.0px; height: 440.0px;" /></a>
 <p>(The code used for this pyqtgraph-based Python app can be found <a class="reference external" href="https://raw.githubusercontent.com/777arc/textbook/master/figure-generating-scripts/sin_plus_cos.py" rel="noopener noreferrer" target="_blank">here</a>)</p>
-<p>The important take-aways are that when we add the cos() and sin(), we get another pure sine wave with a different phase and amplitude. Also, the phase shifts as we slowly remove or add one of the two parts.  The amplitude also changes.  The “utility” of this behavior is that we can control the phase and amplitude of a resulting sine wave by adjusting the amplitudes I and Q (we don’t have to adjust the phase of the cosine or sine).  For example, we could adjust I and Q in a way that keeps the amplitude constant and makes the phase whatever we want.  As a transmitter this ability is extremely useful because we know that we need to transmit a sinusoidal signal in order for it to fly through the air as an electromagnetic wave (because physics).  And it’s much easier to adjust two amplitudes and perform an addition operation compared to adjusting an amplitude and a phase.  The result is that our transmitter will look something like this:</p>
+<p>The important take-aways are that when we add the cos() and sin(), we get another pure sine wave with a different phase and amplitude.   Also, the phase shifts as we slowly remove or add one of the two parts.  The amplitude also changes.  This is all a result of the trig identity: <img class="math" src="../_images/math/ab3695b42f9cb6efd2d838efca3dd84c82e2f586.svg" alt="a \cos(x) + b \sin(x) = A \cos(x-\phi)"/>, which we will come back to in a bit.  The “utility” of this behavior is that we can control the phase and amplitude of a resulting sine wave by adjusting the amplitudes I and Q (we don’t have to adjust the phase of the cosine or sine).  For example, we could adjust I and Q in a way that keeps the amplitude constant and makes the phase whatever we want.  As a transmitter this ability is extremely useful because we know that we need to transmit a sinusoidal signal in order for it to fly through the air as an electromagnetic wave.  And it’s much easier to adjust two amplitudes and perform an addition operation compared to adjusting an amplitude and a phase.  The result is that our transmitter will look something like this:</p>
 <a class="reference internal image-reference" href="../_images/IQ_diagram.png"><img alt="../_images/IQ_diagram.png" class="align-center" src="../_images/IQ_diagram.png" style="width: 434.40000000000003px; height: 256.8px;" /></a>
 <p>We only need to generate one sine wave and shift it by 90 degrees to get the Q portion.</p>
 </div>
@@ -192,11 +192,12 @@ Q \sin(2\pi ft)"/></p>
 <a class="reference internal image-reference" href="../_images/complex_plane_3.png"><img alt="../_images/complex_plane_3.png" class="align-center" src="../_images/complex_plane_3.png" style="width: 221.89999999999998px; height: 230.99999999999997px;" /></a>
 <p>Now let’s say we want to transmit our example point 0.7-0.4j.  We will be transmitting:</p>
 <div class="math">
-<p><img src="../_images/math/d82c2758f35376381f24c6438a3692813143870f.svg" alt="x(t) = I \cos(2\pi ft)  + Q \sin(2\pi ft)
+<p><img src="../_images/math/c01b0df5cd8a4203575a68a9140c0533158e2092.svg" alt="x(t) = I \cos(2\pi ft)  + Q \sin(2\pi ft)
 
-\quad \quad \quad = 0.7 \cos(2\pi ft) - 0.4 \sin(2\pi ft)
-
-\quad = 0.806 \cos(2\pi ft - 0.519)"/></p>
+\quad \quad \quad = 0.7 \cos(2\pi ft) - 0.4 \sin(2\pi ft)"/></p>
+</div><p>We can use trig identity <img class="math" src="../_images/math/ab3695b42f9cb6efd2d838efca3dd84c82e2f586.svg" alt="a \cos(x) + b \sin(x) = A \cos(x-\phi)"/> where <img class="math" src="../_images/math/ac179881032d4f94f75075513db7b13aba211803.svg" alt="A"/> is our magnitude found with <img class="math" src="../_images/math/293562bb226d0886091673a318188c3719f6b8f3.svg" alt="\sqrt{I^2 + Q^2}"/> and <img class="math" src="../_images/math/f41d2a61cd1827c3e57537176609abab588ccc27.svg" alt="\phi"/> is our phase, equal to <img class="math" src="../_images/math/df5e33a7622555c99bdbd841c05645a2204f49dc.svg" alt="\tan^{-1} \left( Q/I \right)"/>.  The above equation now becomes:</p>
+<div class="math">
+<p><img src="../_images/math/94756445d61a3e62aa78948913becd1a7245b5a7.svg" alt="x(t) = 0.806 \cos(2\pi ft + 0.519)"/></p>
 </div><p>Even though we started with a complex number, what we are transmitting is real, which is good because you can’t actually transmit something imaginary with electromagnetic waves.  We just use imaginary/complex numbers to represent <em>what</em> we are transmitting.  We will talk about the <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> shortly.</p>
 </div>
 <div class="section" id="complex-numbers-in-ffts">
@@ -240,6 +241,7 @@ Q \sin(2\pi ft)"/></p>
 <a class="reference internal image-reference" href="../_images/baseband_bandpass.png"><img alt="../_images/baseband_bandpass.png" class="align-center" src="../_images/baseband_bandpass.png" style="width: 712.0px; height: 186.5px;" /></a>
 <p>You may also hear the term intermediate frequency (abbreviated as IF); for now, think of IF as an intermediate conversion step within a radio between baseband and bandpass/RF.</p>
 <p>We tend to create, record, or analyze signals at baseband because we can work at a lower sample rate (for reasons discussed in the previous subsection).  It is important to note that baseband signals are often complex signals, while signals at bandpass (e.g., signals we actually transmit over RF) are real.  Think about it: because the signal fed through an antenna must be real, you cannot directly transmit a complex/imaginary signal.  You will know a signal is definitely a complex signal if the negative frequency and positive frequency portions of the signal are not exactly the same. Complex numbers are how we represent negative frequencies after all.  In reality there are no negative frequencies; it’s just the portion of the signal below the carrier frequency.</p>
+<p>In the earlier section where we played around with the complex point 0.7 - 0.4j, that was essentially one sample in a baseband signal.  Most of the time you see complex samples (IQ samples), you are at baseband.  Signals are rarely represented or stored digitally at RF, because of the amount of data it would take, and the fact we are usually only interested in a small portion of the RF spectrum.</p>
 </div>
 <div class="section" id="dc-spike-and-offset-tuning">
 <h2>DC Spike and Offset Tuning<a class="headerlink" href="#dc-spike-and-offset-tuning" title="Permalink to this headline">¶</a></h2>
@@ -309,7 +311,7 @@ We must do the following six operations to calculate PSD:</p>
 <ol class="arabic simple">
 <li>Take the FFT of our samples.  If we have x samples, the FFT size will be the length of x by default. Let’s use the first 1,024 samples as an example to create a 1,024-size FFT.  The output will be 1,024 complex floats.</li>
 <li>Take the magnitude of the FFT output, which provides us 1,024 real floats.</li>
-<li>Normalize: divide by our sample rate (<img class="math" src="../_images/math/b585a310928e16b1311b9409741740aa4dfc89b3.svg" alt="F_s"/>).</li>
+<li>Normalize: divide by the FFT size (<img class="math" src="../_images/math/24ca8296258e6d43d10327cf05e8d5b650662803.svg" alt="N"/>, or 1,024 in this case).</li>
 <li>Square the resulting magnitude to get power.</li>
 <li>Convert to dB using <img class="math" src="../_images/math/f4455b0aaee830c84338328975fa7b9956463d04.svg" alt="10 \log_{10}()"/>; we always view PSDs in log scale.</li>
 <li>Perform an FFT shift, covered in the previous chapter, to move “0 Hz” in the center and negative frequencies to the left of center.</li>
@@ -317,8 +319,9 @@ We must do the following six operations to calculate PSD:</p>
 <p>Those six steps in Python are:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Fs</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># lets say we sampled at 1 MHz</span>
 <span class="c1"># assume x contains your array of IQ samples</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">]</span> <span class="c1"># we will only take the FFT of the first 1024 samples, see text below</span>
-<span class="n">PSD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">Fs</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">N</span><span class="p">]</span> <span class="c1"># we will only take the FFT of the first 1024 samples, see text below</span>
+<span class="n">PSD</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
 <span class="n">PSD_log</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PSD</span><span class="p">)</span>
 <span class="n">PSD_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">PSD_log</span><span class="p">)</span>
 </pre></div>

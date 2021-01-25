@@ -220,7 +220,7 @@
 <p>Scaling in time essentially shrinks or expands the signal in the x-axis.  What this property tells us is that scaling in the time domain causes inverse scaling in the the frequency domain.  For example, when we transmit bits faster we have to use more frequencies.  The property helps to explain why higher data rate signals take up more bandwidth/spectrum.  If time-frequency scaling was proportional instead of inversely proportional, cellular carriers would be able to transmit all the bits per second they wanted without paying billions for spectrum!  Unfortunately that’s not the case.</p>
 <p>Those already familiar with this property may notice a scaling factor missing; it is left out for the sake of simplicity. For practical purposes it doesn’t make a difference.</p>
 <ol class="arabic simple" start="4">
-<li>Convolution Property:</li>
+<li>Convolution in Time Property:</li>
 </ol>
 <div class="math">
 <p><img src="../_images/math/866b024f252bc95ed034ab893af1cb799453d7d0.svg" alt="\int x(\tau) y(t-\tau) d\tau  \leftrightarrow X(f)Y(f)"/></p>
@@ -232,10 +232,13 @@
 <p>We usually perform DSP operations in the time domain, so let’s utilize the convolution property to see how we can do this masking in the time domain.  Let’s say that x(t) is our received signal.  Let Y(f) be the mask we want to apply in the frequency domain.  Well that means y(t) is the time domain representation of our mask, and if we convolve it with x(t), we can “filter out” the signal we don’t want.</p>
 <a class="reference internal image-reference" href="../_images/masking-equation.png"><img alt="../_images/masking-equation.png" class="align-center" src="../_images/masking-equation.png" style="width: 327.0px; height: 134.0px;" /></a>
 <p>When we discuss filtering, the convolution property will make more sense.</p>
+<ol class="arabic simple" start="5">
+<li>Convolution in Frequency Property:</li>
+</ol>
 <p>Lastly, I want to point out that the convolution property works in reverse, although we won’t be using it as much as the time domain convolution:</p>
 <div class="math">
 <p><img src="../_images/math/4d0228bed6205664ca7c69fc28ff975676f0e932.svg" alt="x(t)y(t)  \leftrightarrow  \int X(g) Y(f-g) dg"/></p>
-</div><p>There are other properties, but the above four are the most crucial to understand in my opinion.  Even though we didn’t step through the proof for each property, the point is we use the mathematical properties to gain insight into what happens to real signals when we do analysis and processing.  Don’t get caught up on the equations. Make sure you understand the description of each property.</p>
+</div><p>There are other properties, but the above five are the most crucial to understand in my opinion.  Even though we didn’t step through the proof for each property, the point is we use the mathematical properties to gain insight into what happens to real signals when we do analysis and processing.  Don’t get caught up on the equations. Make sure you understand the description of each property.</p>
 </div>
 <div class="section" id="fast-fourier-transform-fft">
 <h2>Fast Fourier Transform (FFT)<a class="headerlink" href="#fast-fourier-transform-fft" title="Permalink to this headline">¶</a></h2>
@@ -245,9 +248,9 @@
 <p>We will only be dealing with 1 dimension FFTs in this textbook (2D is used for image processing and other applications). For our purposes, think of the FFT function as having one input: a vector of samples, and one output: the frequency domain version of that vector of samples.  The size of the output is always the same as the size of the input. If I feed 1,024 samples into the FFT, I will get 1,024 out.  The confusing part is that the output will always be in the frequency domain, and thus the “span” of the x-axis if we were to plot it doesn’t change based on the number of samples in the time domain input.  Let’s visualize that by looking at the input and output arrays, along with the units of their indices:</p>
 <a class="reference external image-reference" href="../_static/fft-io.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fft-io.svg" class="align-center" src="../_images/fft-io.svg" /></a>
 <p>Because the output is in the frequency domain, the span of the x-axis is based on the sample rate, which we will cover next chapter.  When we use more samples for the input vector, we get a better resolution in the frequency domain (in addition to processing more samples at once).  We don’t actually “see” more frequencies by having a larger input. The only way would be to increase the sample rate (decrease the sample period <img class="math" src="../_images/math/39bb0cf165301516f1e7396af7393a5b3f6c733e.svg" alt="\Delta t"/>).</p>
-<p>How do we actually plot this output?  As an example let’s say that our sample rate was 1 million samples per second (1 MHz).  As we will learn next chapter, that means we can only see signals up to 0.5 MHz, regardless of how many samples we feed into the FFT.  The way the output of the FFT gets plotted is as follows:</p>
+<p>How do we actually plot this output?  As an example let’s say that our sample rate was 1 million samples per second (1 MHz).  As we will learn next chapter, that means we can only see signals up to 0.5 MHz, regardless of how many samples we feed into the FFT.  The way the output of the FFT gets represented is as follows:</p>
 <a class="reference external image-reference" href="../_static/negative-frequencies.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/negative-frequencies.svg" class="align-center" src="../_images/negative-frequencies.svg" /></a>
-<p>It is always the case; the output of the FFT will always show <img class="math" src="../_images/math/cb05020c98608fb3c62ed9132b03cb70bfeac2d4.svg" alt="\text{-} f_s/2"/> to <img class="math" src="../_images/math/afde4de8938387b8c8e7277067b0eb0ab90ab483.svg" alt="f_s/2"/> where <img class="math" src="../_images/math/7daaccc7c28018a253e53d5cde99a13764df9a8d.svg" alt="f_s"/> is the sample rate.  The output will always have a negative portion and positive portion, assuming the input was a complex number (which tends to be the case in DSP).</p>
+<p>It is always the case; the output of the FFT will always show <img class="math" src="../_images/math/cb05020c98608fb3c62ed9132b03cb70bfeac2d4.svg" alt="\text{-} f_s/2"/> to <img class="math" src="../_images/math/afde4de8938387b8c8e7277067b0eb0ab90ab483.svg" alt="f_s/2"/> where <img class="math" src="../_images/math/7daaccc7c28018a253e53d5cde99a13764df9a8d.svg" alt="f_s"/> is the sample rate.  I.e., the output will always have a negative portion and positive portion.  If the input is complex, the negative and positive portions will be different, but if it real then they will be identical.</p>
 </div>
 <div class="section" id="negative-frequencies">
 <h2>Negative Frequencies<a class="headerlink" href="#negative-frequencies" title="Permalink to this headline">¶</a></h2>
