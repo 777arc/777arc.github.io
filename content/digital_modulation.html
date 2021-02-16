@@ -221,7 +221,7 @@
 <a class="reference internal image-reference" href="../_images/qam.png"><img alt="../_images/qam.png" class="align-center" src="../_images/qam.png" style="width: 695.5px; height: 236.5px;" /></a>
 <p>For a QAM modulation scheme, we can technically put points wherever we want to on the IQ plot since the phase <em>and</em> amplitude are modulated.  The “parameters” of a given QAM scheme are best defined by showing the QAM constellation. Alternatively, you may list the I and Q values for each point, like below for QPSK:</p>
 <a class="reference internal image-reference" href="../_images/qpsk_list.png"><img alt="../_images/qpsk_list.png" class="align-center" src="../_images/qpsk_list.png" style="width: 308.8px; height: 215.20000000000002px;" /></a>
-<p>Note that most modulation schemes, except the various ASKs and BPSK, are pretty hard to “see” in the time domain.  To prove my point, here is an example of QAM in time domain. Can you distinguish between the phase of each symbole in the below image? It’s tough.</p>
+<p>Note that most modulation schemes, except the various ASKs and BPSK, are pretty hard to “see” in the time domain.  To prove my point, here is an example of QAM in time domain. Can you distinguish between the phase of each symbol in the below image? It’s tough.</p>
 <a class="reference internal image-reference" href="../_images/qam_time_domain.png"><img alt="../_images/qam_time_domain.png" class="align-center" src="../_images/qam_time_domain.png" style="width: 658.0px; height: 148.0px;" /></a>
 <p>Given the difficulty discerning modulation schemes in the time domain, we prefer to use IQ plots over displaying the time domain signal.  We might, nonetheless, show the time domain signal if there’s a certain packet structure or the sequence of symbols matters.</p>
 </div>
@@ -261,7 +261,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/qpsk_python.png"><img alt="../_images/qpsk_python.png" class="align-center" src="../_images/qpsk_python.png" style="width: 383.0px; height: 252.0px;" /></a>
+<a class="reference external image-reference" href="../_static/qpsk_python.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/qpsk_python.svg" class="align-center" src="../_images/qpsk_python.svg" /></a>
 <p>Observe how all the symbols we generated overlap. There’s no noise so the symbols all have the same value.  Let’s add some noise:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_symbols</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_symbols</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># AWGN with unity power</span>
 <span class="n">noise_power</span> <span class="o">=</span> <span class="mf">0.01</span>
@@ -271,8 +271,16 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/qpsk_python2.png"><img alt="../_images/qpsk_python2.png" class="align-center" src="../_images/qpsk_python2.png" style="width: 390.0px; height: 252.0px;" /></a>
+<a class="reference external image-reference" href="../_static/qpsk_python2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/qpsk_python2.svg" class="align-center" src="../_images/qpsk_python2.svg" /></a>
 <p>Consider how additive white Gaussian noise (AGWN) produces a uniform spread around each point in the constellation.  If there’s too much noise then symbols start passing the boundary (the four quadrants) and will be interpreted by the receiver as an incorrect symbol.  Try increasing <code class="code docutils literal notranslate"><span class="pre">noise_power</span></code> until that happens.</p>
+<p>For those interested in simulating phase noise, which could result from phase jitter within the local oscillator (LO), replace the <code class="code docutils literal notranslate"><span class="pre">r</span></code> with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">phase_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_symbols</span><span class="p">))</span> <span class="o">*</span> <span class="mf">0.1</span> <span class="c1"># adjust multiplier for &quot;strength&quot; of phase noise</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">x_symbols</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1j</span><span class="o">*</span><span class="n">phase_noise</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference external image-reference" href="../_static/phase_jitter.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/phase_jitter.svg" class="align-center" src="../_images/phase_jitter.svg" /></a>
+<p>You could even combine phase noise with AWGN to get the full experience:</p>
+<a class="reference external image-reference" href="../_static/phase_jitter_awgn.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/phase_jitter_awgn.svg" class="align-center" src="../_images/phase_jitter_awgn.svg" /></a>
 <p>We’re going to stop at this point.  If we wanted to see what the QPSK signal looked like in the time domain, we would need to generate multiple samples per symbol (in this exercise we just did 1 sample per symbol). You will learn why you need to generate multiple samples per symbol once we discuss pulse shaping.  The Python exercise in the <a class="reference internal" href="pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Pulse Shaping</span></a> chapter will continue where we left off here.</p>
 </div>
 </div>
