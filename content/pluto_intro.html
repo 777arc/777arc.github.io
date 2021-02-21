@@ -217,9 +217,14 @@ sdr.rx<span class="o">()</span>
 </div>
 <p>The default password is analog.</p>
 <p>You should see the PlutoSDR welcome screen. You have now SSHed into the ARM CPU on the Pluto itself!
-Type the following commands in:</p>
+If you have a Pluto with firmware version 0.31 or lower, type the following commands in:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fw_setenv attr_name compatible
 fw_setenv attr_val ad9364
+reboot
+</pre></div>
+</div>
+<p>And for 0.32 and higher use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fw_setenv compatible ad9364
 reboot
 </pre></div>
 </div>

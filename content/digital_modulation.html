@@ -134,7 +134,7 @@
 <p>As a simplified example, let’s say we have a wire and are sending 1’s and 0’s using high and low voltage levels.  A symbol is one of those 1’s or 0’s:</p>
 <a class="reference internal image-reference" href="../_images/symbols.png"><img alt="../_images/symbols.png" class="align-center" src="../_images/symbols.png" style="width: 602.4px; height: 102.0px;" /></a>
 <p>In the above example each symbol represents one bit.  How can we convey more than one bit per symbol?  Let’s study the signals that travel down Ethernet cables, which is defined in an IEEE standard called IEEE 802.3 1000BASE-T.  The common operating mode of ethernet uses a 4-level amplitude modulation (2 bits per symbol) with 8 ns symbols.</p>
-<a class="reference external image-reference" href="../_static/ethernet.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ethernet.svg" class="align-center" src="../_images/ethernet.svg" /></a>
+<a class="reference external image-reference" href="../images/ethernet.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ethernet.svg" class="align-center" src="../_images/ethernet.svg" /></a>
 <p>Take a moment to try to answer these questions:</p>
 <ol class="arabic simple">
 <li>How many bits per second are transmitted in the example shown above?</li>
@@ -157,7 +157,7 @@
 <li>Low frequencies require <em>huge</em> antennas</li>
 <li>Square waves take an excessive amount of spectrum for the bits per second–recall from the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> chapter that sharp changes in time domain use a large amount of bandwidth/spectrum:</li>
 </ol>
-<a class="reference external image-reference" href="../_static/square-wave.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/square-wave.svg" class="align-center" src="../_images/square-wave.svg" /></a>
+<a class="reference external image-reference" href="../images/square-wave.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/square-wave.svg" class="align-center" src="../_images/square-wave.svg" /></a>
 <p>What we do for wireless signals is start with a carrier, which is just a sinusoid.  E.g., FM radio uses a carrier like 101.1 MHz or 100.3 MHz.  We modulate that carrier in some way (there are many).  For FM radio it’s an analog modulation, not digital, but it’s the same concept as digital modulation.</p>
 <p>In what ways can we modulate the carrier?  Another way to ask the same question: what are the different properties of a sinusoid?</p>
 <ol class="arabic simple">
@@ -170,15 +170,15 @@
 <div class="section" id="amplitude-shift-keying-ask">
 <h2>Amplitude Shift Keying (ASK)<a class="headerlink" href="#amplitude-shift-keying-ask" title="Permalink to this headline">¶</a></h2>
 <p>Amplitude Shift Keying (ASK) is the first digital modulation scheme we will discuss because amplitude modulation is the simplest to visualize of the three sinusoid properties.  We literally modulate the <strong>amplitude</strong> of the carrier.  Here is an example of 2-level ASK, called 2-ASK:</p>
-<a class="reference external image-reference" href="../_static/ASK.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ASK.svg" class="align-center" src="../_images/ASK.svg" /></a>
+<a class="reference external image-reference" href="../images/ASK.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ASK.svg" class="align-center" src="../_images/ASK.svg" /></a>
 <p>Note how the average value is zero; we always prefer this whenever possible.</p>
 <p>We can use more than two levels, allowing for more bits per symbol.  Below shows an example of 4-ASK.  In this case each symbol carries 2 bits of information.</p>
-<a class="reference external image-reference" href="../_static/ask2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ask2.svg" class="align-center" src="../_images/ask2.svg" /></a>
+<a class="reference external image-reference" href="../images/ask2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ask2.svg" class="align-center" src="../_images/ask2.svg" /></a>
 <p>Question: How many symbols are shown in the signal snippet above?  How many bits are represented total?</p>
 <details>
 <summary>Answers</summary><p>20 symbols, so 40 bits of information</p>
 </details><p>How do we actually create this signal digitally, through code?  All we have to do is create a vector with N samples per symbol, then multiply that vector by a sinusoid.  This modulates the signal onto a carrier (the sinusoid acts as that carrier).  The example below shows 2-ASK with 10 samples per symbol.</p>
-<a class="reference external image-reference" href="../_static/ask3.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ask3.svg" class="align-center" src="../_images/ask3.svg" /></a>
+<a class="reference external image-reference" href="../images/ask3.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ask3.svg" class="align-center" src="../_images/ask3.svg" /></a>
 <p>The top plot shows the discrete samples represented by red dots, i.e., our digital signal.  The bottom plot shows what the resulting modulated signal looks like, which could be transmitted over the air.  In real systems, the frequency of the carrier is usually much much higher than the rate the symbols are changing.  In this example there are only three cycles of the sinusoid in each symbol, but in practice there may be thousands, depending on how high in the spectrum the signal is being transmitted.</p>
 </div>
 <div class="section" id="phase-shift-keying-psk">
@@ -189,9 +189,9 @@
 <li>180 degree phase change</li>
 </ol>
 <p>Example of BPSK (note the phase changes):</p>
-<a class="reference external image-reference" href="../_static/bpsk.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/bpsk.svg" class="align-center" src="../_images/bpsk.svg" /></a>
+<a class="reference external image-reference" href="../images/bpsk.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/bpsk.svg" class="align-center" src="../_images/bpsk.svg" /></a>
 <p>It’s not very fun to look at plots like this:</p>
-<a class="reference external image-reference" href="../_static/bpsk2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/bpsk2.svg" class="align-center" src="../_images/bpsk2.svg" /></a>
+<a class="reference external image-reference" href="../images/bpsk2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/bpsk2.svg" class="align-center" src="../_images/bpsk2.svg" /></a>
 <p>Instead we usually represent the phase in the complex plane.</p>
 </div>
 <div class="section" id="iq-plots-constellations">
@@ -235,10 +235,10 @@
 <li>1.1990 GHz</li>
 </ol>
 <p>The example above would be 4-FSK, and there would be two bits per symbol.  A 4-FSK signal in the frequency domain might look something like this:</p>
-<a class="reference external image-reference" href="../_static/fsk.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fsk.svg" class="align-center" src="../_images/fsk.svg" /></a>
+<a class="reference external image-reference" href="../images/fsk.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fsk.svg" class="align-center" src="../_images/fsk.svg" /></a>
 <p>If you use FSK, you must ask a critical question: What should the spacing between frequencies be?  We often denote this spacing as <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/> in Hz. We want to avoid overlap in the frequency domain, so <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/> must be large enough.  The width of each carrier in frequency is a function of our symbol rate.  More symbols per second means shorter symbols, which means wider bandwidth (recall the inverse relationship between time and frequency scaling).  The faster we transmit symbols, the wider each carrier will get, and consequently the larger we have to make <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/> to avoid overlapping carriers.  We won’t go into any more details about the design of FSK in this textbook.</p>
 <p>IQ plots can’t be used to show different frequencies. They show magnitude and phase.  While it is possible to show FSK in the time domain, any more than 2 frequencies makes it difficult to distinguish between symbols:</p>
-<a class="reference external image-reference" href="../_static/fsk2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fsk2.svg" class="align-center" src="../_images/fsk2.svg" /></a>
+<a class="reference external image-reference" href="../images/fsk2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fsk2.svg" class="align-center" src="../_images/fsk2.svg" /></a>
 <p>As an aside, note that FM radio uses Frequency Modulation (FM) which is like an analog version of FSK.  Instead of having discrete frequencies we jump between, FM radio uses a continuous audio signal to modulate the frequency of the carrier.  Below is an example of FM and AM modulation where the “signal” at the top is the audio signal being modulated onto to the carrier.</p>
 <a class="reference internal image-reference" href="https://www.thenakedscientists.com/sites/default/files/media/Amfm3-en-de.gif.pagespeed.ce.0o6A-u33nd.gif"><img alt="https://www.thenakedscientists.com/sites/default/files/media/Amfm3-en-de.gif.pagespeed.ce.0o6A-u33nd.gif" class="align-center" src="https://www.thenakedscientists.com/sites/default/files/media/Amfm3-en-de.gif.pagespeed.ce.0o6A-u33nd.gif" style="width: 400px;" /></a>
 <p>In this textbook we are mainly concerned about digital forms of modulation.</p>
@@ -261,7 +261,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference external image-reference" href="../_static/qpsk_python.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/qpsk_python.svg" class="align-center" src="../_images/qpsk_python.svg" /></a>
+<a class="reference external image-reference" href="../images/qpsk_python.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/qpsk_python.svg" class="align-center" src="../_images/qpsk_python.svg" /></a>
 <p>Observe how all the symbols we generated overlap. There’s no noise so the symbols all have the same value.  Let’s add some noise:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_symbols</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_symbols</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># AWGN with unity power</span>
 <span class="n">noise_power</span> <span class="o">=</span> <span class="mf">0.01</span>
@@ -271,16 +271,16 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference external image-reference" href="../_static/qpsk_python2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/qpsk_python2.svg" class="align-center" src="../_images/qpsk_python2.svg" /></a>
+<a class="reference external image-reference" href="../images/qpsk_python2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/qpsk_python2.svg" class="align-center" src="../_images/qpsk_python2.svg" /></a>
 <p>Consider how additive white Gaussian noise (AGWN) produces a uniform spread around each point in the constellation.  If there’s too much noise then symbols start passing the boundary (the four quadrants) and will be interpreted by the receiver as an incorrect symbol.  Try increasing <code class="code docutils literal notranslate"><span class="pre">noise_power</span></code> until that happens.</p>
 <p>For those interested in simulating phase noise, which could result from phase jitter within the local oscillator (LO), replace the <code class="code docutils literal notranslate"><span class="pre">r</span></code> with:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">phase_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_symbols</span><span class="p">))</span> <span class="o">*</span> <span class="mf">0.1</span> <span class="c1"># adjust multiplier for &quot;strength&quot; of phase noise</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">x_symbols</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1j</span><span class="o">*</span><span class="n">phase_noise</span><span class="p">)</span>
 </pre></div>
 </div>
-<a class="reference external image-reference" href="../_static/phase_jitter.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/phase_jitter.svg" class="align-center" src="../_images/phase_jitter.svg" /></a>
+<a class="reference external image-reference" href="../images/phase_jitter.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/phase_jitter.svg" class="align-center" src="../_images/phase_jitter.svg" /></a>
 <p>You could even combine phase noise with AWGN to get the full experience:</p>
-<a class="reference external image-reference" href="../_static/phase_jitter_awgn.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/phase_jitter_awgn.svg" class="align-center" src="../_images/phase_jitter_awgn.svg" /></a>
+<a class="reference external image-reference" href="../images/phase_jitter_awgn.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/phase_jitter_awgn.svg" class="align-center" src="../_images/phase_jitter_awgn.svg" /></a>
 <p>We’re going to stop at this point.  If we wanted to see what the QPSK signal looked like in the time domain, we would need to generate multiple samples per symbol (in this exercise we just did 1 sample per symbol). You will learn why you need to generate multiple samples per symbol once we discuss pulse shaping.  The Python exercise in the <a class="reference internal" href="pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Pulse Shaping</span></a> chapter will continue where we left off here.</p>
 </div>
 </div>
