@@ -57,6 +57,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">6. PlutoSDR Advanced Topics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#receive-gain">Receive Gain</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#transmitting">Transmitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transmitting-and-receiving-simultaneously">Transmitting and Receiving Simultaneously</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#transmitting-over-the-air-legally">Transmitting Over the Air Legally</a></li>
 </ul>
 </li>
@@ -158,7 +159,7 @@
 <span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_rf_bandwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span> <span class="c1"># filter cutoff, just set it to the same as sample rate</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">center_freq</span><span class="p">)</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># set the transmit gain to the lowest transmit power.  LOWER this value to make it transmitter higher, yes it&#39;s backwards for some reason, -90 is the lowest you can go</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain_chan0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">30</span> <span class="c1"># Increase to increase tx power, valid range is -90 to 0 dB</span>
 
 <span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span> <span class="c1"># number of samples to transmit at once</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">/</span><span class="n">sample_rate</span>
@@ -177,6 +178,78 @@
 </div>
 <p>You would then transmit your samples like normal: <code class="code docutils literal notranslate"><span class="pre">sdr.tx(samples)</span></code> just one time, and the Pluto will keep transmitting the signal indefinitely, until the sdr object destructor is called.  To change the samples that are being continuously transmitted, you cannot simply call <code class="code docutils literal notranslate"><span class="pre">sdr.tx(samples)</span></code> again with a new set of samples, you have to first call <code class="code docutils literal notranslate"><span class="pre">sdr.tx_destroy_buffer()</span></code>, then call <code class="code docutils literal notranslate"><span class="pre">sdr.tx(samples)</span></code>.</p>
 </div>
+<div class="section" id="transmitting-and-receiving-simultaneously">
+<h2>Transmitting and Receiving Simultaneously<a class="headerlink" href="#transmitting-and-receiving-simultaneously" title="Permalink to this headline">¶</a></h2>
+<p>Using the tx_cyclic_buffer trick you can easily receive and transmit at the same time, by kicking off the transmitter, then receiving.
+The following code shows a working example of transmitting a QPSK signal in the 915 MHz band, receiving it, and plotting the PSD.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">adi</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># Hz</span>
+<span class="n">center_freq</span> <span class="o">=</span> <span class="mf">915e6</span> <span class="c1"># Hz</span>
+<span class="n">num_samps</span> <span class="o">=</span> <span class="mi">100000</span> <span class="c1"># number of samples per call to rx()</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
+
+<span class="c1"># Config Rx</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_rf_bandwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span> <span class="c1"># filter cutoff, just set it to the same as sample rate</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">center_freq</span><span class="p">)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain_chan0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">30</span> <span class="c1"># Increase to increase tx power, valid range is -90 to 0 dB</span>
+
+<span class="c1"># Config Rx</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">center_freq</span><span class="p">)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_rf_bandwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_buffer_size</span> <span class="o">=</span> <span class="n">num_samps</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode_chan0</span> <span class="o">=</span> <span class="s1">&#39;manual&#39;</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain_chan0</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># dB, increase for a stronger signal, but be careful not to saturate</span>
+
+<span class="c1"># Create transmit waveform (QPSK, 16 samples per symbol)</span>
+<span class="n">num_symbols</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">x_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">num_symbols</span><span class="p">)</span> <span class="c1"># 0 to 3</span>
+<span class="n">x_degrees</span> <span class="o">=</span> <span class="n">x_int</span><span class="o">*</span><span class="mi">360</span><span class="o">/</span><span class="mf">4.0</span> <span class="o">+</span> <span class="mi">45</span> <span class="c1"># 45, 135, 225, 315 degrees</span>
+<span class="n">x_radians</span> <span class="o">=</span> <span class="n">x_degrees</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span> <span class="c1"># sin() and cos() takes in radians</span>
+<span class="n">x_symbols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x_radians</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x_radians</span><span class="p">)</span> <span class="c1"># this produces our QPSK complex symbols</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">x_symbols</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="c1"># 16 samples per symbol (rectangular pulses)</span>
+<span class="n">samples</span> <span class="o">*=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">14</span> <span class="c1"># The PlutoSDR expects samples to be between -2^14 and +2^14, not -1 and +1 like some SDRs</span>
+
+<span class="c1"># Start the transmitter</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_cyclic_buffer</span> <span class="o">=</span> <span class="bp">True</span> <span class="c1"># Enable cyclic buffers</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="c1"># start transmitting</span>
+
+<span class="c1"># Clear buffer just to be safe</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="n">raw_data</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
+
+<span class="c1"># Receive samples</span>
+<span class="n">rx_samples</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">rx_samples</span><span class="p">)</span>
+
+<span class="c1"># Stop transmitting</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_destroy_buffer</span><span class="p">()</span>
+
+<span class="c1"># Calculate power spectral density (frequency domain version of signal)</span>
+<span class="n">psd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">rx_samples</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">psd_dB</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">psd</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sample_rate</span><span class="o">/-</span><span class="mi">2</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">psd</span><span class="p">))</span>
+
+<span class="c1"># Plot time domain</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">rx_samples</span><span class="p">[::</span><span class="mi">100</span><span class="p">]))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">rx_samples</span><span class="p">[::</span><span class="mi">100</span><span class="p">]))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot freq domain</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="o">/</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">psd_dB</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Frequency [MHz]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;PSD&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You should see something that looks like this, assuming you have proper antennas or a cable connected:</p>
+<img alt="../_images/pluto_tx_rx.svg" class="align-center" src="../_images/pluto_tx_rx.svg" /></div>
 <div class="section" id="transmitting-over-the-air-legally">
 <h2>Transmitting Over the Air Legally<a class="headerlink" href="#transmitting-over-the-air-legally" title="Permalink to this headline">¶</a></h2>
 <p>Countless times I have been asked by students what frequencies they are allowed to transmit on with an antenna (in the United States).  The short answer is none, as far as I am aware.  Usually when people point to specific regulations that talk about transmit power limits, they are referring to <a class="reference external" href="https://www.ecfr.gov/cgi-bin/text-idx?SID=7ce538354be86061c7705af3a5e17f26&amp;mc=true&amp;node=pt47.1.15&amp;rgn=div5" rel="noopener noreferrer" target="_blank">the FCC’s “Title 47, Part 15” (47 CFR 15) regulations</a>.  But those are regulations for manufacturers building and selling devices that operate in the ISM bands, and the regulations discuss how they should be tested.  A Part 15 device is one where an individual does not need a license to operate the device in whatever spectrum it’s using, but the device itself must be authorized/certified to show they are operating following FCC regulations before they are marketed and sold.  The Part 15 regulations do specify maximum transmit and received power levels for the different pieces of spectrum, but none of it actually applies to a person transmitting a signal with an SDR or their home-built radio.  The only regulations I could find related to radios that aren’t actually products being sold were specific to operating a low-power AM or FM radio station in the AM/FM bands.  There is also a section on “home-built devices”, but it specifically says it doesn’t apply to anything constructed from a kit, and it would be a stretch to say a transmit rig using an SDR is a home-built device.  In summary, the FCC regulations aren’t as simple as “you can transmit at these frequencies only below these power levels”, but rather they are a huge set of rules meant for testing and compliance.</p>
