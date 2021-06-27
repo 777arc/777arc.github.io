@@ -79,7 +79,7 @@
 <hr />
 <ul>
     
-    <li class="toctree-l1"><a href="https://repl.it/languages/python3">Online Python Console</a></li>
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
     
 </ul>
 <div class="relations">
@@ -169,7 +169,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create and apply fractional delay filter</span>
 <span class="n">delay</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="c1"># fractional delay, in samples</span>
 <span class="n">N</span> <span class="o">=</span> <span class="mi">21</span> <span class="c1"># number of taps</span>
-<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="c1"># 0,1,2,3...</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># ...-3,-2,-1,0,1,2,3...</span>
 <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sinc</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">delay</span><span class="p">)</span> <span class="c1"># calc filter taps</span>
 <span class="n">h</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">hamming</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="c1"># window the filter to make sure it decays to 0 on both sides</span>
 <span class="n">h</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="c1"># normalize to get unity gain, we don&#39;t want to change the amplitude/power</span>

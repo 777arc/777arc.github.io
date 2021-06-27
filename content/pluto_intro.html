@@ -74,7 +74,7 @@
 <hr />
 <ul>
     
-    <li class="toctree-l1"><a href="https://repl.it/languages/python3">Online Python Console</a></li>
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
     
 </ul>
 <div class="relations">
@@ -149,8 +149,8 @@
 <li>Plug Pluto into the host machine over USB. Make sure to use the middle USB port on Pluto because the other is for power only.  Plugging in Pluto should create a virtual network adapter, i.e., the Pluto appears like a USB ethernet adapter.</li>
 <li>On the host machine (not VM), open a terminal or your preferred ping tool and ping 192.168.2.1.  If that doesn’t work, stop and debug the network interface.</li>
 <li>Within the VM, open a new terminal</li>
-<li>Ping 192.168.2.1.  If that doesn’t work stop here and debug.  If the ping works then you should be good to go, assuming 192.168.2.1 is actually the Pluto and not some random computer on the network (unlikely but possible).  If you want to be 100% sure 192.168.2.1 is your Pluto, try doing “ssh <a class="reference external" href="mailto:root&#37;&#52;&#48;192&#46;168&#46;2&#46;1" rel="noopener noreferrer" target="_blank">root<span>&#64;</span>192<span>&#46;</span>168<span>&#46;</span>2<span>&#46;</span>1</a>” pass: analog, and it should log into it.</li>
-<li>Write down the IP address because you’ll need it when we start using the Pluto in Python.</li>
+<li>Ping 192.168.2.1.  If that doesn’t work stop here and debug.  While pinging, unplug your Pluto and make sure the pinging stalls out, if it keeps pinging then something else at that IP address is on the network, and you’ll have to change the IP of the Pluto (or other device) before moving on.</li>
+<li>Write down the IP address of the Pluto because you’ll need it when we start using the Pluto in Python.</li>
 </ol>
 </div>
 <div class="section" id="installing-plutosdr-driver">
@@ -163,7 +163,7 @@
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git libxml2 libxml2-dev bison flex libcdk5-dev cmake python3-pip
 <span class="nb">cd</span> ~
-git clone https://github.com/analogdevicesinc/libiio.git
+git clone --branch v0.19 https://github.com/analogdevicesinc/libiio.git
 <span class="nb">cd</span> libiio
 cmake ./
 make all -j4

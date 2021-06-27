@@ -76,7 +76,7 @@
 <hr />
 <ul>
     
-    <li class="toctree-l1"><a href="https://repl.it/languages/python3">Online Python Console</a></li>
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
     
 </ul>
 <div class="relations">
@@ -159,7 +159,7 @@
 <span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_rf_bandwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span> <span class="c1"># filter cutoff, just set it to the same as sample rate</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">center_freq</span><span class="p">)</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain_chan0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">30</span> <span class="c1"># Increase to increase tx power, valid range is -90 to 0 dB</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain_chan0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span> <span class="c1"># Increase to increase tx power, valid range is -90 to 0 dB</span>
 
 <span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span> <span class="c1"># number of samples to transmit at once</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">/</span><span class="n">sample_rate</span>
@@ -171,7 +171,7 @@
     <span class="n">sdr</span><span class="o">.</span><span class="n">tx</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="c1"># transmit the batch of samples once</span>
 </pre></div>
 </div>
-<p>Here are some notes about this code.  First, you want to simulate your IQ samples so that they are between -1 and 1, but then before transmitting them we have to scale by 2^14 due to how Analog Devices implemented the <code class="code docutils literal notranslate"><span class="pre">tx()</span></code> function.  If you are not sure what your min/max values are, simply print them out with <code class="code docutils literal notranslate"><span class="pre">print(np.min(samples),</span> <span class="pre">np.max(samples))</span></code> or write an if statement to make sure they never go above 1 or below -1 (assuming that code comes before the 2^14 scaling).  As far as gain, it’s very confusing because Analog Devices calls it a transmit <em>gain</em>, but it’s really a transmit <em>attenuation</em>, both in code and in hardware.  In hardware, adjustable gains are implemented using an adjustable attenuator, but that doesn’t explain why Analog Devices is calling it a gain in their API; i.e. they should have applied a negative signal if they wanted to call it a gain.  So that means a higher value is actually less transmit power, and the range is -90 to 0 dB.  We always want to start at the lowest transmit power, and then work our way up if needed, so we have the gain set to 0.  Don’t simply set it to -90 just because your signal is not showing up; there might be something else wrong, and you don’t want to fry your receiver.</p>
+<p>Here are some notes about this code.  First, you want to simulate your IQ samples so that they are between -1 and 1, but then before transmitting them we have to scale by 2^14 due to how Analog Devices implemented the <code class="code docutils literal notranslate"><span class="pre">tx()</span></code> function.  If you are not sure what your min/max values are, simply print them out with <code class="code docutils literal notranslate"><span class="pre">print(np.min(samples),</span> <span class="pre">np.max(samples))</span></code> or write an if statement to make sure they never go above 1 or below -1 (assuming that code comes before the 2^14 scaling).  As far as transmit gain, the range is -90 to 0 dB, so 0 dB is the highest transmit power.  We always want to start at a low transmit power, and then work our way up if needed, so we have the gain set to -50 dB by default which is towards the low end.  Don’t simply set it to 0 dB just because your signal is not showing up; there might be something else wrong, and you don’t want to fry your receiver.</p>
 <p>If you want to continuously transmit the same set of samples on repeat, instead of using a for/while loop within Python like we did above, you can tell the Pluto to do so using just one line:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdr</span><span class="o">.</span><span class="n">tx_cyclic_buffer</span> <span class="o">=</span> <span class="bp">True</span> <span class="c1"># Enable cyclic buffers</span>
 </pre></div>
@@ -193,17 +193,17 @@ The following code shows a working example of transmitting a QPSK signal in the 
 <span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
 
-<span class="c1"># Config Rx</span>
+<span class="c1"># Config Tx</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_rf_bandwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span> <span class="c1"># filter cutoff, just set it to the same as sample rate</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">center_freq</span><span class="p">)</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain_chan0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">30</span> <span class="c1"># Increase to increase tx power, valid range is -90 to 0 dB</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain_chan0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span> <span class="c1"># Increase to increase tx power, valid range is -90 to 0 dB</span>
 
 <span class="c1"># Config Rx</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">rx_lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">center_freq</span><span class="p">)</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">rx_rf_bandwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">rx_buffer_size</span> <span class="o">=</span> <span class="n">num_samps</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode_chan0</span> <span class="o">=</span> <span class="s1">&#39;manual&#39;</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain_chan0</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># dB, increase for a stronger signal, but be careful not to saturate</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain_chan0</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># dB, increase to increase the receive gain, but be careful not to saturate the ADC</span>
 
 <span class="c1"># Create transmit waveform (QPSK, 16 samples per symbol)</span>
 <span class="n">num_symbols</span> <span class="o">=</span> <span class="mi">1000</span>
@@ -249,7 +249,8 @@ The following code shows a working example of transmitting a QPSK signal in the 
 </pre></div>
 </div>
 <p>You should see something that looks like this, assuming you have proper antennas or a cable connected:</p>
-<img alt="../_images/pluto_tx_rx.svg" class="align-center" src="../_images/pluto_tx_rx.svg" /></div>
+<img alt="../_images/pluto_tx_rx.svg" class="align-center" src="../_images/pluto_tx_rx.svg" /><p>It is a good exercise to slowly adjust <code class="code docutils literal notranslate"><span class="pre">sdr.tx_hardwaregain_chan0</span></code> and <code class="code docutils literal notranslate"><span class="pre">sdr.rx_hardwaregain_chan0</span></code> to make sure the received signal is getting weaker/stronger as expected.</p>
+</div>
 <div class="section" id="transmitting-over-the-air-legally">
 <h2>Transmitting Over the Air Legally<a class="headerlink" href="#transmitting-over-the-air-legally" title="Permalink to this headline">¶</a></h2>
 <p>Countless times I have been asked by students what frequencies they are allowed to transmit on with an antenna (in the United States).  The short answer is none, as far as I am aware.  Usually when people point to specific regulations that talk about transmit power limits, they are referring to <a class="reference external" href="https://www.ecfr.gov/cgi-bin/text-idx?SID=7ce538354be86061c7705af3a5e17f26&amp;mc=true&amp;node=pt47.1.15&amp;rgn=div5" rel="noopener noreferrer" target="_blank">the FCC’s “Title 47, Part 15” (47 CFR 15) regulations</a>.  But those are regulations for manufacturers building and selling devices that operate in the ISM bands, and the regulations discuss how they should be tested.  A Part 15 device is one where an individual does not need a license to operate the device in whatever spectrum it’s using, but the device itself must be authorized/certified to show they are operating following FCC regulations before they are marketed and sold.  The Part 15 regulations do specify maximum transmit and received power levels for the different pieces of spectrum, but none of it actually applies to a person transmitting a signal with an SDR or their home-built radio.  The only regulations I could find related to radios that aren’t actually products being sold were specific to operating a low-power AM or FM radio station in the AM/FM bands.  There is also a section on “home-built devices”, but it specifically says it doesn’t apply to anything constructed from a kit, and it would be a stretch to say a transmit rig using an SDR is a home-built device.  In summary, the FCC regulations aren’t as simple as “you can transmit at these frequencies only below these power levels”, but rather they are a huge set of rules meant for testing and compliance.</p>
