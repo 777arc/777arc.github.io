@@ -62,6 +62,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">11. IQ Files</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#binary-files">Binary Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#python-examples">Python Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visually-analyzing-an-rf-file">Visually Analyzing an RF File</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#max-values-and-saturation">Max Values and Saturation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#annotating-iq-files">Annotating IQ Files</a></li>
 </ul>
@@ -172,7 +173,7 @@
 </pre></div>
 </div>
 <p>A big mistake is to forget to tell np.fromfile() the file format. Binary files don’t include any information about their format.  By default, np.fromfile() assumes it is reading in an array of float64s.</p>
-<p>Most other languages have methods to read in binary files, e.g., in MATLAB you can use fread().</p>
+<p>Most other languages have methods to read in binary files, e.g., in MATLAB you can use fread().  For visually analyzing an RF file see the section below.</p>
 <p>For those who have a PlutoSDR, the below code will grab a set of samples from the Pluto and save them to a file.  It tunes the Pluto to 751 MHz, an LTE signal in the US, and it uses a sample rate of 5 MHz.  For a longer collect you will want to call <code class="code docutils literal notranslate"><span class="pre">sdr.rx()</span></code> multiple times and concatenate all the sample batches together.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -186,6 +187,22 @@
 <span class="n">samples</span><span class="o">.</span><span class="n">tofile</span><span class="p">(</span><span class="s1">&#39;collect_751MHz.iq&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="visually-analyzing-an-rf-file">
+<h2>Visually Analyzing an RF File<a class="headerlink" href="#visually-analyzing-an-rf-file" title="Permalink to this headline">¶</a></h2>
+<p>Although we learned how to create our own spectrogram plot in the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> Chapter, nothing beats using an already created piece of software, and when it comes to analyzing a long RF recording, I recommend using <a class="reference external" href="https://github.com/miek/inspectrum" rel="noopener noreferrer" target="_blank">inspectrum</a>.  Inspectrum is a fairly simple but powerful graphical tool for scanning through an RF file visually, with fine control over the colormap range and FFT size (zoom amount).  You can hold alt and use the scrollwheel to shift through time.  It has optional cursors to measure the delta-time between two bursts of energy, and the ability to export a slice of the RF file into a new file.  For installation on Debian-based platforms such as Ubuntu, use the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install qt5-default libfftw3-dev cmake pkg-config libliquid-dev
+git clone https://github.com/miek/inspectrum.git
+<span class="nb">cd</span> inspectrum
+mkdir build
+<span class="nb">cd</span> build
+cmake ..
+make
+sudo make install
+inspectrum
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/inspectrum.png"><img alt="../_images/inspectrum.png" class="align-center" src="../_images/inspectrum.png" style="width: 671.4px; height: 321.9px;" /></a>
 </div>
 <div class="section" id="max-values-and-saturation">
 <h2>Max Values and Saturation<a class="headerlink" href="#max-values-and-saturation" title="Permalink to this headline">¶</a></h2>
