@@ -53,8 +53,8 @@
 <li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pluto_advanced.html">6. PlutoSDR Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usrp.html">6. USRP in Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
@@ -174,19 +174,6 @@
 </div>
 <p>A big mistake is to forget to tell np.fromfile() the file format. Binary files don’t include any information about their format.  By default, np.fromfile() assumes it is reading in an array of float64s.</p>
 <p>Most other languages have methods to read in binary files, e.g., in MATLAB you can use fread().  For visually analyzing an RF file see the section below.</p>
-<p>For those who have a PlutoSDR, the below code will grab a set of samples from the Pluto and save them to a file.  It tunes the Pluto to 751 MHz, an LTE signal in the US, and it uses a sample rate of 5 MHz.  For a longer collect you will want to call <code class="code docutils literal notranslate"><span class="pre">sdr.rx()</span></code> multiple times and concatenate all the sample batches together.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">adi</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">(</span><span class="s1">&#39;ip:192.168.2.1&#39;</span><span class="p">)</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">5e6</span><span class="p">)</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">rx_rf_bandwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">5e6</span><span class="p">)</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">rx_lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">751e6</span><span class="p">)</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode</span> <span class="o">=</span> <span class="s2">&quot;slow_attack&quot;</span> <span class="c1"># automatic gain control</span>
-<span class="n">samples</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
-<span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span> <span class="c1"># by default numpy uses complex128</span>
-<span class="n">samples</span><span class="o">.</span><span class="n">tofile</span><span class="p">(</span><span class="s1">&#39;collect_751MHz.iq&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="visually-analyzing-an-rf-file">
 <h2>Visually Analyzing an RF File<a class="headerlink" href="#visually-analyzing-an-rf-file" title="Permalink to this headline">¶</a></h2>
@@ -202,7 +189,7 @@ sudo make install
 inspectrum
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/inspectrum.png"><img alt="../_images/inspectrum.png" class="align-center" src="../_images/inspectrum.png" style="width: 671.4px; height: 321.9px;" /></a>
+<a class="reference internal image-reference" href="../_images/inspectrum.jpg"><img alt="../_images/inspectrum.jpg" class="align-center" src="../_images/inspectrum.jpg" style="width: 671.4px; height: 321.9px;" /></a>
 </div>
 <div class="section" id="max-values-and-saturation">
 <h2>Max Values and Saturation<a class="headerlink" href="#max-values-and-saturation" title="Permalink to this headline">¶</a></h2>

@@ -62,14 +62,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#carrier-and-downconversion">Carrier and Downconversion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#baseband-and-bandpass-signals">Baseband and Bandpass Signals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dc-spike-and-offset-tuning">DC Spike and Offset Tuning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sampling-using-the-plutosdr">Sampling Using the PlutoSDR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sampling-using-our-sdr">Sampling Using our SDR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#calculating-average-power">Calculating Average Power</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#calculating-power-spectral-density">Calculating Power Spectral Density</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pluto_advanced.html">6. PlutoSDR Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usrp.html">6. USRP in Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
@@ -232,7 +232,7 @@ Q \sin(2\pi ft)"/></p>
 </div><p>to just I and Q.</p>
 <p>Let’s visualize downconversion in the frequency domain:</p>
 <a class="reference internal image-reference" href="../_images/downconversion.png"><img alt="../_images/downconversion.png" class="align-center" src="../_images/downconversion.png" style="width: 703.1999999999999px; height: 116.39999999999999px;" /></a>
-<p>When we are centered around 0 Hz, the maximum frequency is no longer 2.4 GHz but is based on the signal’s characteristics since we removed the carrier.  Most signals are around 100 kHz to 40 MHz wide in bandwidth, so through downconversion we can sample at a <em>much</em> lower rate. The PlutoSDR contains an RF integrated circuit (RFIC) that can sample up to 56 MHz, which is high enough for most signals we will encounter.</p>
+<p>When we are centered around 0 Hz, the maximum frequency is no longer 2.4 GHz but is based on the signal’s characteristics since we removed the carrier.  Most signals are around 100 kHz to 40 MHz wide in bandwidth, so through downconversion we can sample at a <em>much</em> lower rate. Both the B2X0 USRPs and PlutoSDR contain an RF integrated circuit (RFIC) that can sample up to 56 MHz, which is high enough for most signals we will encounter.</p>
 <p>Just to reiterate, the downconversion process is performed by our SDR; as a user of the SDR we don’t have to do anything other than tell it which frequency to tune to.</p>
 </div>
 <div class="section" id="baseband-and-bandpass-signals">
@@ -261,30 +261,13 @@ Instead what we can do is sample at 20 MHz at a center frequency of 95 MHz.</p>
 <p>There is one problem: if we want our signal to be centered at 100 MHz and only contain 5 MHz, we will have to perform a frequency shift, filter, and downsample the signal ourselves (something we will learn how to do later). Fortunately, this process of offtuning, a.k.a applying an LO offset, is often built into the SDRs, where they will automatically perform offtuning and then shift the frequency to your desired center frequency.  We benefit when the SDR can do it internally: we don’t have to send a higher sample rate over our USB or ethernet connection, which bottleneck how high a sample rate we can use.</p>
 <p>This subsection regarding DC offsets is a good example of where this textbook differs from others. Your average DSP textbook will discuss sampling, but it tends not to include implementation hurdles such as DC offsets despite their prevalence in practice.</p>
 </div>
-<div class="section" id="sampling-using-the-plutosdr">
-<h2>Sampling Using the PlutoSDR<a class="headerlink" href="#sampling-using-the-plutosdr" title="Permalink to this headline">¶</a></h2>
-<p>Sampling using the PlutoSDR’s Python API is straightforward.  With any SDR app we know we must tell it the center frequency, sample rate, and gain (or whether to use automatic gain control).  There might be other details, but those three parameters are necessary for the SDR to have enough information to receive samples.  Some SDRs have a command to tell it to start sampling, while others like the Pluto will start to sample as soon as you initialize it. Once the SDR’s internal buffer fills up, the oldest samples are dropped.  All SDR APIs have some sort of “receive samples” function, and for the Pluto it’s rx(), which returns a batch of samples.  The specific number of samples per batch is defined by the buffer size set beforehand.</p>
-<p>Refer to the <a class="reference internal" href="pluto_intro.html#pluto-chapter"><span class="std std-ref">PlutoSDR Basics</span></a> chapter for installing the PlutoSDR software.  The code below assumes you have the Pluto’s Python API installed.  This code initializes the Pluto, sets the sample rate to 1 MHz, sets the center frequency to 100 MHz, and sets the gain to 70 dB with automatic gain control turned off.  Note it usually doesn’t matter the order in which you set the center frequency, gain, and sample rate.  In the code snippet below, we tell the Pluto that we want it to give us 10,000 samples per call to rx().</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">adi</span>
-
-<span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># Hz</span>
-<span class="n">center_freq</span> <span class="o">=</span> <span class="mf">100e6</span> <span class="c1"># Hz</span>
-<span class="n">num_samps</span> <span class="o">=</span> <span class="mi">10000</span> <span class="c1"># per call to rx()</span>
-
-<span class="n">sdr</span> <span class="o">=</span> <span class="n">adi</span><span class="o">.</span><span class="n">Pluto</span><span class="p">()</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode</span> <span class="o">=</span> <span class="s1">&#39;manual&#39;</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain</span> <span class="o">=</span> <span class="mf">70.0</span> <span class="c1"># dB</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">rx_lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">center_freq</span><span class="p">)</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">rx_rf_bandwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span> <span class="c1"># filter width, just set it to the same as sample rate for now</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">rx_buffer_size</span> <span class="o">=</span> <span class="n">num_samps</span>
-
-<span class="n">samples</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span> <span class="c1"># receive samples off Pluto</span>
-<span class="k">print</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>For now we aren’t going to do anything interesting with these samples.  Throughout this textbook we will swap between pure-Python examples and Python examples that include PlutoSDR code.  The PlutoSDR examples are written such that it should be straightforward to substitute in a different SDR’s Python API. In other words, the code examples are meant to reinforce principles rather than specific techniques.</p>
+<div class="section" id="sampling-using-our-sdr">
+<h2>Sampling Using our SDR<a class="headerlink" href="#sampling-using-our-sdr" title="Permalink to this headline">¶</a></h2>
+<p>For SDR-specific information about performing sampling, see one of the following chapters:</p>
+<ul class="simple">
+<li><a class="reference internal" href="pluto.html#pluto-chapter"><span class="std std-ref">PlutoSDR in Python</span></a> Chapter</li>
+<li><a class="reference internal" href="usrp.html#usrp-chapter"><span class="std std-ref">USRP in Python</span></a> Chapter</li>
+</ul>
 </div>
 <div class="section" id="calculating-average-power">
 <h2>Calculating Average Power<a class="headerlink" href="#calculating-average-power" title="Permalink to this headline">¶</a></h2>

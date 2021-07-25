@@ -53,8 +53,8 @@
 <li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pluto_intro.html">5. PlutoSDR Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pluto_advanced.html">6. PlutoSDR Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usrp.html">6. USRP in Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
@@ -149,7 +149,7 @@
 <p>In the figure below, the <span class="red">red</span> shape shows our signal in the frequency domain, and the black curvy line shows the current channel condition over frequency.  Because the narrower signal is experiencing the same channel conditions throughout the whole signal, it’s experiencing flat fading.  The wider signal is very much experiencing frequency selective fading.</p>
 <a class="reference internal image-reference" href="../_images/flat_vs_freq_selective.png"><img alt="../_images/flat_vs_freq_selective.png" class="align-center" src="../_images/flat_vs_freq_selective.png" style="width: 709.0999999999999px; height: 172.2px;" /></a>
 <p>Here is an example of a 16 MHz wide signal that is continuously transmitting.  There are several moments in the middle where there’s a period of time a piece of signal is missing.  This example depicts frequency selective fading, which causes holes in the signal that wipe out some frequencies but not others.</p>
-<a class="reference internal image-reference" href="../_images/fading_example.png"><img alt="../_images/fading_example.png" class="align-center" src="../_images/fading_example.png" style="width: 661.1999999999999px; height: 404.4px;" /></a>
+<a class="reference internal image-reference" href="../_images/fading_example.jpg"><img alt="../_images/fading_example.jpg" class="align-center" src="../_images/fading_example.jpg" style="width: 661.1999999999999px; height: 404.4px;" /></a>
 </div>
 <div class="section" id="simulating-rayleigh-fading">
 <h2>Simulating Rayleigh Fading<a class="headerlink" href="#simulating-rayleigh-fading" title="Permalink to this headline">¶</a></h2>
