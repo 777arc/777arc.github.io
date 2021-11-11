@@ -182,8 +182,7 @@
 <p>Algorithmically, the coding process can be done using a simple matrix multiply, using what is called the “generator matrix”.  In the example below, the vector 1011 is the data to be encoded, i.e., the information we want to send to the receiver.  The 2D matrix is the generator matrix, and it defines the code scheme.  The result of the multiply provides the code word to transmit.</p>
 <a class="reference internal image-reference" href="../_images/hamming3.png"><img alt="../_images/hamming3.png" class="align-center" src="../_images/hamming3.png" style="width: 720.0px; height: 108.0px;" /></a>
 <p>The point of diving into Hamming codes was to give a taste of how error coding works.  Block codes tend to follow this type of pattern.  Convolutional codes work differently, but we won’t get into it here; they often use Trellis-style decoding, which can be displayed in a diagram that looks like this:</p>
-<a class="reference internal image-reference" href="../_images/trellis.png"><img alt="../_images/trellis.png" class="align-center" src="../_images/trellis.png" style="width: 472.0px; height: 207.0px;" /></a>
-</div>
+<img alt="../_images/trellis.svg" class="align-center" src="../_images/trellis.svg" /></div>
 <div class="section" id="soft-vs-hard-decoding">
 <h2>Soft vs Hard Decoding<a class="headerlink" href="#soft-vs-hard-decoding" title="Permalink to this headline">¶</a></h2>
 <p>Recall that at the receiver demodulation occurs before decoding.  The demodulator can tell us its best guess as to which symbol was sent, or it can output the “soft” value.  For BPSK, instead of telling us 1 or 0, the demodulator can say 0.3423 or -1.1234, whatever the “soft” value of the symbol was.  Typically the decoding is designed to use hard or soft values.</p>
