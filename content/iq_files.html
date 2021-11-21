@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>11. IQ Files &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <title>11. IQ Files and SigMF &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
@@ -59,12 +59,12 @@
 <li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">11. IQ Files</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">11. IQ Files and SigMF</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#binary-files">Binary Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#python-examples">Python Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#visually-analyzing-an-rf-file">Visually Analyzing an RF File</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#max-values-and-saturation">Max Values and Saturation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#annotating-iq-files">Annotating IQ Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sigmf-and-annotating-iq-files">SigMF and Annotating IQ Files</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
@@ -122,8 +122,8 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="iq-files">
-<span id="iq-files-chapter"></span><h1><span class="section-number">11. </span>IQ Files<a class="headerlink" href="#iq-files" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="iq-files-and-sigmf">
+<span id="iq-files-chapter"></span><h1><span class="section-number">11. </span>IQ Files and SigMF<a class="headerlink" href="#iq-files-and-sigmf" title="Permalink to this headline">¶</a></h1>
 <p>In our Python examples we have stored signals as 1d numpy arrays of type “complex float”.  In this chapter we learn how signals can be stored to a file and then read back into Python.  Storing signal data in a file is useful.  You may want to record a signal to a file in order to manually analyze it offline or share it with a colleague.</p>
 <div class="section" id="binary-files">
 <h2>Binary Files<a class="headerlink" href="#binary-files" title="Permalink to this headline">¶</a></h2>
@@ -174,6 +174,16 @@
 </div>
 <p>A big mistake is to forget to tell np.fromfile() the file format. Binary files don’t include any information about their format.  By default, np.fromfile() assumes it is reading in an array of float64s.</p>
 <p>Most other languages have methods to read in binary files, e.g., in MATLAB you can use fread().  For visually analyzing an RF file see the section below.</p>
+<p>If you ever find yourself dealing with int16’s (a.k.a. short ints), or any other datatype that numpy doesn’t have a complex equivalent for, you will be forced to read the samples in as real, even if they are actually complex.  The trick is to read them as real, but then interleave them back into the IQIQIQ… format yourself, a couple different ways of doing this are shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="s1">&#39;iq_samples_as_int16.iq&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="s1">&#39;iq_samples_as_int16.iq&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+<span class="n">samples</span> <span class="o">/=</span> <span class="mi">32768</span> <span class="c1"># convert to -1 to +1 (optional)</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">samples</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># convert to IQIQIQ...</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="visually-analyzing-an-rf-file">
 <h2>Visually Analyzing an RF File<a class="headerlink" href="#visually-analyzing-an-rf-file" title="Permalink to this headline">¶</a></h2>
@@ -198,9 +208,130 @@ inspectrum
 <a class="reference internal image-reference" href="../_images/saturated_time.png"><img alt="../_images/saturated_time.png" class="align-center" src="../_images/saturated_time.png" style="width: 715.1999999999999px; height: 505.2px;" /></a>
 <p>Because of the sudden changes in time domain, due to the truncation, the frequency domain might look smeared.  In other words, the frequency domain will include false features; features that resulted from the saturation and are not actually part of the signal, which can throw people off when analyzing a signal.</p>
 </div>
-<div class="section" id="annotating-iq-files">
-<h2>Annotating IQ Files<a class="headerlink" href="#annotating-iq-files" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sigmf-and-annotating-iq-files">
+<h2>SigMF and Annotating IQ Files<a class="headerlink" href="#sigmf-and-annotating-iq-files" title="Permalink to this headline">¶</a></h2>
 <p>Since the IQ file itself doesn’t have any metadata associated with it, it’s common to have a 2nd file, containing information about the signal, with the same filename but a .txt or other file extension.  This should at a minimum include the sample rate used to collect the signal, and the frequency to which the SDR was tuned.  After analyzing the signal, the metadata file could include information about sample ranges of interesting features, such as bursts of energy.  The sample index is simply an integer that starts at 0 and increments every complex sample.  If you knew that there was energy from sample 492342 to 528492, then you could read in the file and pull out that portion of the array: <code class="code docutils literal notranslate"><span class="pre">samples[492342:528493]</span></code>.</p>
+<p>Luckily, there is now an open standard that specifies a metadata format used to describe signal recordings, known as <a class="reference external" href="https://github.com/gnuradio/SigMF" rel="noopener noreferrer" target="_blank">SigMF</a>.  By using an open standard like SigMF, multiple parties can share RF recordings more easily, and use different tools to operate on the same datasets.  It also prevents “bitrot” of RF datasets where details of the capture are lost over time due to details of the recording not being collocated with the recording itself.</p>
+<p>The most simple (and minimal) way to use the SigMF standard to describe an IQ file you have created is to rename the .iq file to .sigmf-data and create a new file with the same name but .sigmf-meta extension.  This meta file is a plaintext file filled with json, so you can simply open it with a text editor and fill it out manually (later we will discuss doing this programmatically).  Here is an example .sigmf-meta file you can use as a template:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;global&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;core:datatype&quot;</span><span class="p">:</span> <span class="s2">&quot;cf32_le&quot;</span>
+        <span class="s2">&quot;core:sample_rate&quot;</span><span class="p">:</span> <span class="mi">8000000</span><span class="p">,</span>
+        <span class="s2">&quot;core:hw&quot;</span><span class="p">:</span> <span class="s2">&quot;PlutoSDR with 915 MHz whip antenna&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;core:author&quot;</span><span class="p">:</span> <span class="s2">&quot;Your name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;core:description&quot;</span><span class="p">:</span> <span class="s2">&quot;Enter info about your signal recording here&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;core:version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.2&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;captures&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;core:sample_start&quot;</span><span class="p">:</span> <span class="mi">0</span>
+            <span class="s2">&quot;core:frequency&quot;</span><span class="p">:</span> <span class="mi">915000000</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;annotations&quot;</span><span class="p">:</span> <span class="p">[]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note the <code class="code docutils literal notranslate"><span class="pre">core:cf32_le</span></code> indicates your .sigmf-data is of type IQIQIQIQ… with 32-bit floats, i.e., np.complex64 like we used previously.  Reference the specifications for other available datatypes, such as if you have real data instead of complex, or are using 16-bit integers instead of floats to save space.</p>
+<p>Aside from datatype, the most important lines to fill out are <code class="code docutils literal notranslate"><span class="pre">core:sample_rate</span></code> and <code class="code docutils literal notranslate"><span class="pre">core:frequency</span></code>.  It is good practice to also enter information about the hardware (<code class="code docutils literal notranslate"><span class="pre">core:hw</span></code>) used to capture the recording, such as the SDR type and antenna, as well as a description of what is known about the signal(s) in the recording in <code class="code docutils literal notranslate"><span class="pre">core:description</span></code>.  The <code class="code docutils literal notranslate"><span class="pre">core:version</span></code> is simply the version of the SigMF standard being used at the time the metadata file was created.</p>
+<p>If you are capturing your RF recording from within Python, e.g., using the Python API for your SDR, then you can avoid having to manually create these metadata files by using the SigMF Python package.  This can be installed on an Ubuntu/Debian based OS as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~
+git clone https://github.com/gnuradio/SigMF.git
+<span class="nb">cd</span> SigMF
+sudo pip install .
+</pre></div>
+</div>
+<p>The Python code to write the .sigmf-meta file for the example towards the beginning of this chapter, where we saved bpsk_in_noise.iq, is shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="kn">as</span> <span class="nn">dt</span>
+<span class="kn">from</span> <span class="nn">sigmf</span> <span class="kn">import</span> <span class="n">SigMFFile</span>
+
+<span class="c1"># &lt;code from example&gt;</span>
+
+<span class="c1"># r.tofile(&#39;bpsk_in_noise.iq&#39;)</span>
+<span class="n">r</span><span class="o">.</span><span class="n">tofile</span><span class="p">(</span><span class="s1">&#39;bpsk_in_noise.sigmf-data&#39;</span><span class="p">)</span> <span class="c1"># replace line above with this one</span>
+
+<span class="c1"># create the metadata</span>
+<span class="n">meta</span> <span class="o">=</span> <span class="n">SigMFFile</span><span class="p">(</span>
+    <span class="n">data_file</span><span class="o">=</span><span class="s1">&#39;example.sigmf-data&#39;</span><span class="p">,</span> <span class="c1"># extension is optional</span>
+    <span class="n">global_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">SigMFFile</span><span class="o">.</span><span class="n">DATATYPE_KEY</span><span class="p">:</span> <span class="s1">&#39;cf32_le&#39;</span><span class="p">,</span>
+        <span class="n">SigMFFile</span><span class="o">.</span><span class="n">SAMPLE_RATE_KEY</span><span class="p">:</span> <span class="mi">8000000</span><span class="p">,</span>
+        <span class="n">SigMFFile</span><span class="o">.</span><span class="n">AUTHOR_KEY</span><span class="p">:</span> <span class="s1">&#39;Your name and/or email&#39;</span><span class="p">,</span>
+        <span class="n">SigMFFile</span><span class="o">.</span><span class="n">DESCRIPTION_KEY</span><span class="p">:</span> <span class="s1">&#39;Simulation of BPSK with noise&#39;</span><span class="p">,</span>
+        <span class="n">SigMFFile</span><span class="o">.</span><span class="n">VERSION_KEY</span><span class="p">:</span> <span class="n">sigmf</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># create a capture key at time index 0</span>
+<span class="n">meta</span><span class="o">.</span><span class="n">add_capture</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+    <span class="n">SigMFFile</span><span class="o">.</span><span class="n">FREQUENCY_KEY</span><span class="p">:</span> <span class="mi">915000000</span><span class="p">,</span>
+    <span class="n">SigMFFile</span><span class="o">.</span><span class="n">DATETIME_KEY</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="o">+</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span>
+<span class="p">})</span>
+
+<span class="c1"># check for mistakes and write to disk</span>
+<span class="k">assert</span> <span class="n">meta</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+<span class="n">meta</span><span class="o">.</span><span class="n">tofile</span><span class="p">(</span><span class="s1">&#39;bpsk_in_noise.sigmf-meta&#39;</span><span class="p">)</span> <span class="c1"># extension is optional</span>
+</pre></div>
+</div>
+<p>Simply replace <code class="code docutils literal notranslate"><span class="pre">8000000</span></code> and <code class="code docutils literal notranslate"><span class="pre">915000000</span></code> with the variables you used to store sample rate and center frequency respectively.</p>
+<p>To read in a SigMF recording into Python, use the following code.  In this example the two SigMF files should be named <code class="code docutils literal notranslate"><span class="pre">bpsk_in_noise.sigmf-meta</span></code> and <code class="code docutils literal notranslate"><span class="pre">bpsk_in_noise.sigmf-data</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sigmf</span> <span class="kn">import</span> <span class="n">SigMFFile</span><span class="p">,</span> <span class="n">sigmffile</span>
+
+<span class="c1"># Load a dataset</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;bpsk_in_noise&#39;</span>
+<span class="n">signal</span> <span class="o">=</span> <span class="n">sigmffile</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">read_samples</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span> <span class="c1"># lets look at the first 10 samples</span>
+
+<span class="c1"># Get some metadata and all annotations</span>
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">get_global_field</span><span class="p">(</span><span class="n">SigMFFile</span><span class="o">.</span><span class="n">SAMPLE_RATE_KEY</span><span class="p">)</span>
+<span class="n">sample_count</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">sample_count</span>
+<span class="n">signal_duration</span> <span class="o">=</span> <span class="n">sample_count</span> <span class="o">/</span> <span class="n">sample_rate</span>
+</pre></div>
+</div>
+<p>For more details reference <a class="reference external" href="https://github.com/gnuradio/SigMF" rel="noopener noreferrer" target="_blank">the SigMF documentation</a>.</p>
+<p>A little bonus for those who read this far; the SigMF logo is actually stored as a SigMF recording itself, and when the signal is plotted as a constellation (IQ plot) over time, it produces the following animation:</p>
+<a class="reference internal image-reference" href="../_images/sigmf_logo.gif"><img alt="../_images/sigmf_logo.gif" class="align-center" src="../_images/sigmf_logo.gif" style="width: 450.0px; height: 428.0px;" /></a>
+<p>The Python code used to read in the logo file (located <a class="reference external" href="https://github.com/gnuradio/SigMF/tree/master/logo" rel="noopener noreferrer" target="_blank">here</a>) and produce the animated gif above is shown below, for those curious:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">imageio</span>
+<span class="kn">from</span> <span class="nn">sigmf</span> <span class="kn">import</span> <span class="n">SigMFFile</span><span class="p">,</span> <span class="n">sigmffile</span>
+
+<span class="c1"># Load a dataset</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;sigmf_logo&#39;</span> <span class="c1"># assume its in the same directory as this script</span>
+<span class="n">signal</span> <span class="o">=</span> <span class="n">sigmffile</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">read_samples</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="c1"># Add zeros to the end so its clear when the animation repeats</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">samples</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">50000</span><span class="p">)))</span>
+
+<span class="n">sample_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+<span class="n">samples_per_frame</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="n">num_frames</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_count</span><span class="o">/</span><span class="n">samples_per_frame</span><span class="p">)</span>
+<span class="n">filenames</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_frames</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;frame&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;out of&quot;</span><span class="p">,</span> <span class="n">num_frames</span><span class="p">)</span>
+    <span class="c1"># Plot the frame</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">samples_frame</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">samples_per_frame</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">samples_per_frame</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">samples_frame</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">samples_frame</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;cyan&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">0.35</span><span class="p">,</span><span class="o">-</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">0.35</span><span class="p">])</span> <span class="c1"># keep axis constant</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span> <span class="c1"># background color</span>
+
+    <span class="c1"># Save the plot to a file</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;/tmp/sigmf_logo_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+    <span class="n">filenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="c1"># Create animated gif</span>
+<span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+    <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">imageio</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+<span class="n">imageio</span><span class="o">.</span><span class="n">mimsave</span><span class="p">(</span><span class="s1">&#39;/tmp/sigmf_logo.gif&#39;</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 
