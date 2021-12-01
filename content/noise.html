@@ -61,7 +61,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#noise-in-frequency-domain">Noise in Frequency Domain</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#complex-noise">Complex Noise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#awgn">AWGN</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#snr">SNR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#snr-and-sinr">SNR and SINR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#external-resources">External Resources</a></li>
 </ul>
 </li>
@@ -126,7 +126,7 @@
             
   <div class="section" id="noise-and-db">
 <span id="noise-chapter"></span><h1><span class="section-number">7. </span>Noise and dB<a class="headerlink" href="#noise-and-db" title="Permalink to this headline">¶</a></h1>
-<p>In this chapter we will discuss noise, including how it is modeled and handled in a communications system. We will also introduce decibels (dB) along the way.</p>
+<p>In this chapter we will discuss noise, including how it is modeled and handled in a wireless communications system.  Concepts include AWGN, complex noise, and SNR/SINR.  We will also introduce decibels (dB) along the way, as it is widely within wireless comms and SDR.</p>
 <div class="section" id="gaussian-noise">
 <h2>Gaussian Noise<a class="headerlink" href="#gaussian-noise" title="Permalink to this headline">¶</a></h2>
 <p>Most people are aware of the concept of noise: unwanted fluctuations that can obscure our desired signal(s). Noise looks something like:</p>
@@ -257,8 +257,8 @@
 <p>In the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Frequency Domain</span></a> chapter we tackled “Fourier pairs”, i.e., what a certain time domain signal looks like in the frequency domain.  Well, what does Gaussian noise look like in the frequency domain?  The following graphs show some simulated noise in the time domain (top) and a plot of the Power Spectral Density (PSD) of that noise (below).  These plots were taken from GNU Radio.</p>
 <a class="reference internal image-reference" href="../_images/noise_freq.png"><img alt="../_images/noise_freq.png" class="align-center" src="../_images/noise_freq.png" style="width: 599.5px; height: 506.00000000000006px;" /></a>
 <p>We can see that it looks roughly the same across all frequencies and is fairly flat.  It turns out that Gaussian noise in the time domain is also Gaussian noise in the frequency domain.  So why don’t the two plots above look the same?  It’s because the frequency domain plot is showing the magnitude of the FFT, so there will only be positive numbers. Importantly, it’s using a log scale, or showing the magnitude in dB.  Otherwise these graphs would look the same.  We can prove this to ourselves by generating some noise (in the time domain) in Python and then taking the FFT.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span> <span class="c1"># number of samples to simulate, choose any number you want</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
@@ -279,7 +279,7 @@
 <h2>Complex Noise<a class="headerlink" href="#complex-noise" title="Permalink to this headline">¶</a></h2>
 <p>“Complex Gaussian” noise is what we will experience when we have a signal at baseband; the noise power is split between the real and imaginary portions equally.  And most importantly, the real and imaginary parts are independent of each other; knowing the values of one doesn’t give you the values of the other.</p>
 <p>We can generate complex Gaussian noise in Python using:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>But wait!  The equation above doesn’t generate the same “amount” of noise as <code class="code docutils literal notranslate"><span class="pre">np.random.randn()</span></code>, in terms of power (known as noise power).  We can find the average power of a zero-mean signal (or noise) using:</p>
@@ -287,11 +287,11 @@
 </pre></div>
 </div>
 <p>where np.var() is the function for variance.  Here the power of our signal n is 2.  In order to generate complex noise with “unit power”, i.e., a power of 1 (which makes things convenient), we have to use:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># AWGN with unity power</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># AWGN with unity power</span>
 </pre></div>
 </div>
 <p>To plot complex noise in the time domain, like any complex signal we need two lines:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;real&#39;</span><span class="p">,</span><span class="s1">&#39;imag&#39;</span><span class="p">])</span>
@@ -302,7 +302,7 @@
 <p>You can see that the real and imaginary portions are completely independent.</p>
 <p>What does complex Gaussian noise look like on an IQ plot?  Remember the IQ plot shows the real portion (horizontal axis) and the imaginary portion (vertical axis), both of which are independent random Gaussians.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -318,13 +318,21 @@
 <h2>AWGN<a class="headerlink" href="#awgn" title="Permalink to this headline">¶</a></h2>
 <p>Additive White Gaussian Noise (AWGN) is an abbreviation you will hear a lot in the DSP and SDR world.  The GN, Gaussian Noise, we already discussed.  Additive just means the noise is being added to our received signal.  White, in the frequency domain, means the spectrum is flat across our entire observation band.  It will almost always be white in practice,or approximately white.  In this textbook we will use AWGN as the only form of noise when dealing with communications links and link budgets and such.  Non-AWGN noise tends to be a niche topic.</p>
 </div>
-<div class="section" id="snr">
-<h2>SNR<a class="headerlink" href="#snr" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="snr-and-sinr">
+<h2>SNR and SINR<a class="headerlink" href="#snr-and-sinr" title="Permalink to this headline">¶</a></h2>
 <p>Signal-to-Noise Ratio (SNR) is how we will measure the differences in strength between the signal and noise. It’s a ratio so it’s unit-less.  SNR is almost always in dB, in practice.  Often in simulation we code in a way that our signals are one unit power (power = 1).  That way, we can create a SNR of 10 dB by producing noise that is -10 dB in power by adjusting the variance when we generate the noise.</p>
-<a class="reference internal image-reference" href="../_images/SNR.png"><img alt="../_images/SNR.png" class="align-center" src="../_images/SNR.png" style="width: 255.60000000000002px; height: 96.4px;" /></a>
-<p>If someone says “SNR = 0 dB” it means the signal and noise power are the same.  A positive SNR means our signal is higher power than the noise, while a negative SNR means the noise is higher power.  Detecting signals at negative SNR is usually pretty tough.</p>
+<div class="math">
+<p><img src="../_images/math/e3d034b776723e6c138a0ba0331cfd794b5fa4d8.svg" alt="\mathrm{SNR} = \frac{P_{signal}}{P_{noise}}"/></p>
+</div><div class="math">
+<p><img src="../_images/math/8f91e70a7813ff5dbe65bc819049807c241ca9ef.svg" alt="\mathrm{SNR_{dB}} = P_{signal\_dB} - P_{noise\_dB}"/></p>
+</div><p>If someone says “SNR = 0 dB” it means the signal and noise power are the same.  A positive SNR means our signal is higher power than the noise, while a negative SNR means the noise is higher power.  Detecting signals at negative SNR is usually pretty tough.</p>
 <p>Like we mentioned before, the power in a signal is equal to the variance of the signal.  So we can represent SNR as the ratio of the signal variance to noise variance:</p>
-<a class="reference internal image-reference" href="../_images/SNR2.png"><img alt="../_images/SNR2.png" class="align-center" src="../_images/SNR2.png" style="width: 193.20000000000002px; height: 59.2px;" /></a>
+<div class="math">
+<p><img src="../_images/math/54d1172719b541c20b1866f9617d2b0665cd94eb.svg" alt="\mathrm{SNR} = \frac{P_{signal}}{P_{noise}} = \frac{\sigma^2_{signal}}{\sigma^2_{noise}}"/></p>
+</div><p>Signal-to-Interference-plus-Noise Ratio (SINR) is essentially the same as SNR except you include interference along with the noise, in the denominator.</p>
+<div class="math">
+<p><img src="../_images/math/6a3ac8c945f1931a29da9c1cdd4b1506877c0088.svg" alt="\mathrm{SINR} = \frac{P_{signal}}{P_{interference} + P_{noise}}"/></p>
+</div><p>What constitutes interference is based on the application/situation, but typically it is another signal that is interfering with the signal of interest (SOI), and is either overlapping with the SOI in frequency, and/or cannot be filtered out for some reason.</p>
 </div>
 <div class="section" id="external-resources">
 <h2>External Resources<a class="headerlink" href="#external-resources" title="Permalink to this headline">¶</a></h2>

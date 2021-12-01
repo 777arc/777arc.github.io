@@ -126,7 +126,7 @@
             
   <div class="section" id="filters">
 <span id="filters-chapter"></span><h1><span class="section-number">8. </span>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h1>
-<p>This chapter introduces filters.  We learn about the types of filters, how filters are represented digitally, and how they are designed.  We finish with an introduction to pulse shaping, which we further explore in the <a class="reference internal" href="pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Pulse Shaping</span></a> chapter.</p>
+<p>In this chapter we learn about digital filters using Python.  We cover types of filters (FIR/IIR and low-pass/high-pass/band-pass/band-stop), how filters are represented digitally, and how they are designed.  We finish with an introduction to pulse shaping, which we further explore in the <a class="reference internal" href="pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Pulse Shaping</span></a> chapter.</p>
 <div class="section" id="filter-basics">
 <h2>Filter Basics<a class="headerlink" href="#filter-basics" title="Permalink to this headline">¶</a></h2>
 <p>Filters are used in many disciplines. For example, image processing makes heavy use of 2D filters, where the input and output are images.  You might use a filter every morning to make your coffee, which filters out solids from liquid.  In DSP, filters are primarily used for:</p>
@@ -215,9 +215,9 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 </pre></div>
 </div>
 <p>And even though we haven’t gotten into filter design yet, here is the Python code that generated that filter:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="n">num_taps</span> <span class="o">=</span> <span class="mi">51</span> <span class="c1"># it helps to use an odd number of taps</span>
 <span class="n">cut_off</span> <span class="o">=</span> <span class="mi">3000</span> <span class="c1"># Hz</span>
@@ -256,7 +256,7 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 <span class="n">f0</span> <span class="o">=</span> <span class="mf">10e3</span> <span class="c1"># amount we will shift</span>
 <span class="n">Ts</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">sample_rate</span> <span class="c1"># sample period</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">Ts</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">Ts</span><span class="p">)</span> <span class="c1"># time vector. args are (start, stop, step)</span>
-<span class="n">exponential</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="c1"># this is essentially a complex sine wave</span>
+<span class="n">exponential</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="c1"># this is essentially a complex sine wave</span>
 
 <span class="n">h_band_pass</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">exponential</span> <span class="c1"># do the shift</span>
 
@@ -348,8 +348,8 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 <p>You start by creating a vector of your desired frequency response.  Let’s design an arbitrarily shaped low-pass filter shown below:</p>
 <a class="reference internal image-reference" href="../_images/filter_design1.png"><img alt="../_images/filter_design1.png" class="align-center" src="../_images/filter_design1.png" style="width: 525.6999999999999px; height: 213.5px;" /></a>
 <p>The code used to create this filter is fairly simple:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">20</span><span class="p">)))</span>
 <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>

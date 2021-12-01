@@ -125,7 +125,7 @@
             
   <div class="section" id="pulse-shaping">
 <span id="pulse-shaping-chapter"></span><h1><span class="section-number">13. </span>Pulse Shaping<a class="headerlink" href="#pulse-shaping" title="Permalink to this headline">¶</a></h1>
-<p>You can consider this section Part II of the Filters chapter, where we take a deeper dive into pulse shaping.</p>
+<p>This chapter covers pulse shaping, inter-symbol-interference, matched filtering, and raised-cosine filters.  At the end we use Python to add pulse shaping to BPSK symbols.  You can consider this section Part II of the Filters chapter, where we take a deeper dive into pulse shaping.</p>
 <div class="section" id="inter-symbol-interference-isi">
 <h2>Inter-Symbol-Interference (ISI)<a class="headerlink" href="#inter-symbol-interference-isi" title="Permalink to this headline">¶</a></h2>
 <p>In the <a class="reference internal" href="filters.html#filters-chapter"><span class="std std-ref">Filters</span></a> chapter we learned that blocky-shaped symbols/pulses use an excess amount of spectrum, and we can greatly reduce the amount of spectrum used by “shaping” our pulses.  However, you can’t  use just any low-pass filter or you might get inter-symbol-interference (ISI), where symbols bleed into and interfere with each other.</p>
@@ -199,8 +199,8 @@
 <h2>Python Exercise<a class="headerlink" href="#python-exercise" title="Permalink to this headline">¶</a></h2>
 <p>As a Python exercise let’s filter and shape some pulses.  We will use BPSK symbols so that it’s easier to visualize–prior to the pulse-shaping step, BPSK involves transmitting 1’s or -1’s with the “Q” portion equal to zero.  With Q equal to zero we can plot the I portion only, and it’s easier to look at.</p>
 <p>In this simulation we will use 8 samples per symbol, and instead of using a square-wave looking signal of 1’s and -1’s, we use a pulse train of impulses.  When you put an impulse through a filter, the output is the impulse response (hence the name).  Therefore if you want a series of pulses, you want to use impulses with zeros in between to avoid square pulses.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
 
 <span class="n">num_symbols</span> <span class="o">=</span> <span class="mi">10</span>
@@ -215,7 +215,7 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">pulse</span><span class="p">))</span> <span class="c1"># add the 8 samples to the signal</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -235,7 +235,7 @@
 <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sinc</span><span class="p">(</span><span class="n">t</span><span class="o">/</span><span class="n">Ts</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">beta</span><span class="o">*</span><span class="n">t</span><span class="o">/</span><span class="n">Ts</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="o">*</span><span class="n">t</span><span class="o">/</span><span class="n">Ts</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -248,7 +248,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_shaped</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_symbols</span><span class="p">):</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">i</span><span class="o">*</span><span class="n">sps</span><span class="o">+</span><span class="n">num_taps</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="o">*</span><span class="n">sps</span><span class="o">+</span><span class="n">num_taps</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">x_shaped</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_shaped</span><span class="p">)])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>

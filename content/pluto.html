@@ -125,7 +125,7 @@
   <div class="section" id="plutosdr-in-python">
 <span id="pluto-chapter"></span><h1><span class="section-number">5. </span>PlutoSDR in Python<a class="headerlink" href="#plutosdr-in-python" title="Permalink to this headline">¶</a></h1>
 <a class="reference internal image-reference" href="../_images/pluto.png"><img alt="../_images/pluto.png" class="align-center" src="../_images/pluto.png" style="width: 323.5px; height: 250.0px;" /></a>
-<p>In this chapter we learn how to use the Python API for the PlutoSDR.</p>
+<p>In this chapter we learn how to use the Python API for the <a class="reference external" href="https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/adalm-pluto.html" rel="noopener noreferrer" target="_blank">PlutoSDR</a>, which is a low-cost SDR from Analog Devices.  We will cover the PlutoSDR install steps to get the drivers/software running, and then discuss transmitting and receiving with the PlutoSDR in Python.</p>
 <div class="section" id="software-drivers-install">
 <h2>Software/Drivers Install<a class="headerlink" href="#software-drivers-install" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="setting-up-vm">
@@ -238,7 +238,7 @@ reboot
 <h2>Receiving<a class="headerlink" href="#receiving" title="Permalink to this headline">¶</a></h2>
 <p>Sampling using the PlutoSDR’s Python API is straightforward.  With any SDR app we know we must tell it the center frequency, sample rate, and gain (or whether to use automatic gain control).  There might be other details, but those three parameters are necessary for the SDR to have enough information to receive samples.  Some SDRs have a command to tell it to start sampling, while others like the Pluto will start to sample as soon as you initialize it. Once the SDR’s internal buffer fills up, the oldest samples are dropped.  All SDR APIs have some sort of “receive samples” function, and for the Pluto it’s rx(), which returns a batch of samples.  The specific number of samples per batch is defined by the buffer size set beforehand.</p>
 <p>The code below assumes you have the Pluto’s Python API installed.  This code initializes the Pluto, sets the sample rate to 1 MHz, sets the center frequency to 100 MHz, and sets the gain to 70 dB with automatic gain control turned off.  Note it usually doesn’t matter the order in which you set the center frequency, gain, and sample rate.  In the code snippet below, we tell the Pluto that we want it to give us 10,000 samples per call to rx().  We print out the first 10 samples.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">adi</span>
 
 <span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># Hz</span>
@@ -254,7 +254,7 @@ reboot
 <span class="n">sdr</span><span class="o">.</span><span class="n">rx_buffer_size</span> <span class="o">=</span> <span class="n">num_samps</span>
 
 <span class="n">samples</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span> <span class="c1"># receive samples off Pluto</span>
-<span class="k">print</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>For now we aren’t going to do anything interesting with these samples, but the rest of this textbook is filled with Python code that works on IQ samples just like what we received above.</p>
@@ -273,7 +273,7 @@ reboot
 <li><code class="code docutils literal notranslate"><span class="pre">sdr.gain_control_mode_chan0</span> <span class="pre">=</span> <span class="pre">&quot;fast_attack&quot;</span></code></li>
 </ol>
 <p>And with AGC enabled you don’t provide a value to <code class="code docutils literal notranslate"><span class="pre">rx_hardwaregain_chan0</span></code>. It will get ignored because the Pluto itself adjusts the gain for the signal. The Pluto has two modes for AGC: fast attack and slow attack, as shown in the code snipped above. The difference between the two is intuitive, if you think about it. Fast attack mode reacts quicker to signals.  In other words, the gain value will change faster when the received signal changes level.  Adjusting to signal power levels can be important, especially for time-division duplex (TDD) systems that use the same frequency to transmit and receive. Setting the gain control to fast attack mode for this scenario limits signal attenuation.  With either mode, if there is no signal present and only noise, the AGC will max out the gain setting; when a signal does show up it will saturate the receiver briefly, until the AGC is able to react and ramp down the gain.  You can always check the current gain level in realtime with:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdr</span><span class="o">.</span><span class="n">_get_iio_attr</span><span class="p">(</span><span class="s1">&#39;voltage0&#39;</span><span class="p">,</span><span class="s1">&#39;hardwaregain&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdr</span><span class="o">.</span><span class="n">_get_iio_attr</span><span class="p">(</span><span class="s1">&#39;voltage0&#39;</span><span class="p">,</span><span class="s1">&#39;hardwaregain&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>For more details about the Pluto’s AGC, such as how to change the advanced AGC settings, refer to <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-drivers/iio-transceiver/ad9361" rel="noopener noreferrer" target="_blank">the “RX Gain Control” section of this page</a>.</p>
@@ -283,7 +283,7 @@ reboot
 <h2>Transmitting<a class="headerlink" href="#transmitting" title="Permalink to this headline">¶</a></h2>
 <p>Before you transmit any signal with your Pluto, make sure to connect a SMA cable between the Pluto’s TX port, and whatever device will be acting as the receiver.  It’s important to always start by transmitting over a cable, especially while you are learning <em>how</em> to transmit, to make sure the SDR is behaving how you intend.  Always keep your transmit power extremely low, as to not overpower the receiver, since the cable does not attenuate the signal like the wireless channel does.  If you own an attenuator (e.g. 30 dB), now would be a good time to use it.  If you do not have another SDR or a spectrum analyzer to act as the receiver, in theory you can use the RX port on the same Pluto, but it can get complicated.  I would recommend picking up a $10 RTL-SDR to act as the receiving SDR.</p>
 <p>Transmitting is very similar to receiving, except instead of telling the SDR to receive a certain number of samples, we will give it a certain number of samples to transmit.  Instead of <code class="code docutils literal notranslate"><span class="pre">rx_lo</span></code> we will be setting <code class="code docutils literal notranslate"><span class="pre">tx_lo</span></code>, to specify what carrier frequency to transmit on.  The sample rate is shared between the RX and TX, so we will be setting it like normal.  A full example of transmitting is shown below, where we generate a sinusoid at +100 kHz, then transmit the complex signal at a carrier frequency of 915 MHz, causing the receiver to see a carrier at 915.1 MHz.  There is really no practical reason to do this, we could have just set the center_freq to 915.1e6 and transmitted an array of 1’s, but we wanted to generate complex samples for demonstration purposes.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">adi</span>
 
 <span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># Hz</span>
@@ -297,7 +297,7 @@ reboot
 
 <span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span> <span class="c1"># number of samples to transmit at once</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">/</span><span class="n">sample_rate</span>
-<span class="n">samples</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">2.0j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">100e3</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="c1"># Simulate a sinusoid of 100 kHz, so it should show up at 915.1 MHz at the receiver</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">2.0</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">100e3</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="c1"># Simulate a sinusoid of 100 kHz, so it should show up at 915.1 MHz at the receiver</span>
 <span class="n">samples</span> <span class="o">*=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">14</span> <span class="c1"># The PlutoSDR expects samples to be between -2^14 and +2^14, not -1 and +1 like some SDRs</span>
 
 <span class="c1"># Transmit our batch of samples 100 times, so it should be 1 second worth of samples total, if USB can keep up</span>
@@ -309,7 +309,7 @@ reboot
 <div class="section" id="transmitting-samples-on-repeat">
 <h3>Transmitting Samples on Repeat<a class="headerlink" href="#transmitting-samples-on-repeat" title="Permalink to this headline">¶</a></h3>
 <p>If you want to continuously transmit the same set of samples on repeat, instead of using a for/while loop within Python like we did above, you can tell the Pluto to do so using just one line:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdr</span><span class="o">.</span><span class="n">tx_cyclic_buffer</span> <span class="o">=</span> <span class="bp">True</span> <span class="c1"># Enable cyclic buffers</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sdr</span><span class="o">.</span><span class="n">tx_cyclic_buffer</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># Enable cyclic buffers</span>
 </pre></div>
 </div>
 <p>You would then transmit your samples like normal: <code class="code docutils literal notranslate"><span class="pre">sdr.tx(samples)</span></code> just one time, and the Pluto will keep transmitting the signal indefinitely, until the sdr object destructor is called.  To change the samples that are being continuously transmitted, you cannot simply call <code class="code docutils literal notranslate"><span class="pre">sdr.tx(samples)</span></code> again with a new set of samples, you have to first call <code class="code docutils literal notranslate"><span class="pre">sdr.tx_destroy_buffer()</span></code>, then call <code class="code docutils literal notranslate"><span class="pre">sdr.tx(samples)</span></code>.</p>
@@ -327,9 +327,9 @@ effective radiated power.  <a class="reference external" href="http://www.arrl.o
 <h2>Transmitting and Receiving Simultaneously<a class="headerlink" href="#transmitting-and-receiving-simultaneously" title="Permalink to this headline">¶</a></h2>
 <p>Using the tx_cyclic_buffer trick you can easily receive and transmit at the same time, by kicking off the transmitter, then receiving.
 The following code shows a working example of transmitting a QPSK signal in the 915 MHz band, receiving it, and plotting the PSD.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">adi</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># Hz</span>
 <span class="n">center_freq</span> <span class="o">=</span> <span class="mf">915e6</span> <span class="c1"># Hz</span>
@@ -355,12 +355,12 @@ The following code shows a working example of transmitting a QPSK signal in the 
 <span class="n">x_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">num_symbols</span><span class="p">)</span> <span class="c1"># 0 to 3</span>
 <span class="n">x_degrees</span> <span class="o">=</span> <span class="n">x_int</span><span class="o">*</span><span class="mi">360</span><span class="o">/</span><span class="mf">4.0</span> <span class="o">+</span> <span class="mi">45</span> <span class="c1"># 45, 135, 225, 315 degrees</span>
 <span class="n">x_radians</span> <span class="o">=</span> <span class="n">x_degrees</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span> <span class="c1"># sin() and cos() takes in radians</span>
-<span class="n">x_symbols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x_radians</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x_radians</span><span class="p">)</span> <span class="c1"># this produces our QPSK complex symbols</span>
+<span class="n">x_symbols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x_radians</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x_radians</span><span class="p">)</span> <span class="c1"># this produces our QPSK complex symbols</span>
 <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">x_symbols</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="c1"># 16 samples per symbol (rectangular pulses)</span>
 <span class="n">samples</span> <span class="o">*=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">14</span> <span class="c1"># The PlutoSDR expects samples to be between -2^14 and +2^14, not -1 and +1 like some SDRs</span>
 
 <span class="c1"># Start the transmitter</span>
-<span class="n">sdr</span><span class="o">.</span><span class="n">tx_cyclic_buffer</span> <span class="o">=</span> <span class="bp">True</span> <span class="c1"># Enable cyclic buffers</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_cyclic_buffer</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># Enable cyclic buffers</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="c1"># start transmitting</span>
 
 <span class="c1"># Clear buffer just to be safe</span>
@@ -369,7 +369,7 @@ The following code shows a working example of transmitting a QPSK signal in the 
 
 <span class="c1"># Receive samples</span>
 <span class="n">rx_samples</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="n">rx_samples</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rx_samples</span><span class="p">)</span>
 
 <span class="c1"># Stop transmitting</span>
 <span class="n">sdr</span><span class="o">.</span><span class="n">tx_destroy_buffer</span><span class="p">()</span>
@@ -405,9 +405,9 @@ The following code shows a working example of transmitting a QPSK signal in the 
 <p><strong>Your task is to create a Python script that determines the rate samples are received in Python, i.e., count the samples received and keep track of time to figure out the rate.  Then, try using different sample_rate’s and buffer_size’s to see how it impacts the highest achievable rate.</strong></p>
 <p>Keep in mind, if you receive fewer samples per second than the specified sample_rate, it means you are losing/dropping some fraction of samples, which will likely happen at high sample_rate’s. The Pluto only uses USB 2.0.</p>
 <p>The following code will act as a starting point yet contains the instructions you need to accomplish this task.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">adi</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 <span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">10e6</span> <span class="c1"># Hz</span>
@@ -425,7 +425,7 @@ The following code shows a working example of transmitting a QPSK signal in the 
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 <span class="c1"># do stuff</span>
 <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;seconds elapsed:&#39;</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;seconds elapsed:&#39;</span><span class="p">,</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Here are several hints to get you started.</p>

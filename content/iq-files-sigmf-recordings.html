@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>11. IQ Files and SigMF &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <title>IQ Files and SigMF &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
@@ -16,8 +16,6 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="12. Multipath Fading" href="multipath_fading.html" />
-    <link rel="prev" title="10. Channel Coding" href="channel_coding.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -48,7 +46,7 @@
 
 
 <h3>Navigation</h3>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
@@ -59,14 +57,7 @@
 <li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">11. IQ Files and SigMF</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#binary-files">Binary Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#python-examples">Python Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#visually-analyzing-an-rf-file">Visually Analyzing an RF File</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#max-values-and-saturation">Max Values and Saturation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sigmf-and-annotating-iq-files">SigMF and Annotating IQ Files</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files and SigMF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronization</a></li>
@@ -84,8 +75,6 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="channel_coding.html" title="previous chapter"><span class="section-number">10. </span>Channel Coding</a></li>
-      <li>Next: <a href="multipath_fading.html" title="next chapter"><span class="section-number">12. </span>Multipath Fading</a></li>
   </ul></li>
 </ul>
 </div>
@@ -107,14 +96,6 @@
                 &nbsp;
   <nav id="rellinks">
     <ul>
-        <li>
-          &larr;
-          <a href="channel_coding.html" title="Previous document"><span class="section-number">10. </span>Channel Coding</a>
-        </li>
-        <li>
-          <a href="multipath_fading.html" title="Next document"><span class="section-number">12. </span>Multipath Fading</a>
-          &rarr;
-        </li>
     </ul>
   </nav>
               </div>
@@ -123,8 +104,8 @@
           <div class="body" role="main">
             
   <div class="section" id="iq-files-and-sigmf">
-<span id="iq-files-chapter"></span><h1><span class="section-number">11. </span>IQ Files and SigMF<a class="headerlink" href="#iq-files-and-sigmf" title="Permalink to this headline">¶</a></h1>
-<p>In all our previous Python examples we stored signals as 1D NumPy arrays of type “complex float”.  In this chapter we learn how signals can be stored to a file and then read back into Python, as well as introduce the SigMF standard.  Storing signal data in a file is extremeley useful; you may want to record a signal to a file in order to manually analyze it offline, or share it with a colleague, or build a whole dataset.</p>
+<span id="iq-files-chapter"></span><h1>IQ Files and SigMF<a class="headerlink" href="#iq-files-and-sigmf" title="Permalink to this headline">¶</a></h1>
+<p>In our Python examples we have stored signals as 1d numpy arrays of type “complex float”.  In this chapter we learn how signals can be stored to a file and then read back into Python.  Storing signal data in a file is useful.  You may want to record a signal to a file in order to manually analyze it offline or share it with a colleague.</p>
 <div class="section" id="binary-files">
 <h2>Binary Files<a class="headerlink" href="#binary-files" title="Permalink to this headline">¶</a></h2>
 <p>Recall that a digital signal at baseband is a sequence of complex numbers.</p>
@@ -341,14 +322,6 @@ sudo pip install .
                 &nbsp;
   <nav id="rellinks">
     <ul>
-        <li>
-          &larr;
-          <a href="channel_coding.html" title="Previous document"><span class="section-number">10. </span>Channel Coding</a>
-        </li>
-        <li>
-          <a href="multipath_fading.html" title="Next document"><span class="section-number">12. </span>Multipath Fading</a>
-          &rarr;
-        </li>
     </ul>
   </nav>
               </div>

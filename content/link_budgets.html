@@ -58,7 +58,7 @@
 <li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">9. Link Budgets</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#intro">Intro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#signal-power-budget">Signal Power Budget</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#noise-power-budget">Noise Power Budget</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#snr">SNR</a></li>
@@ -124,8 +124,9 @@
             
   <div class="section" id="link-budgets">
 <span id="link-budgets-chapter"></span><h1><span class="section-number">9. </span>Link Budgets<a class="headerlink" href="#link-budgets" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="intro">
-<h2>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h2>
+<p>This chapter covers link budgets, a big portion of which is understanding transmit/receive power, path loss, antenna gain, noise, and SNR.  We finish by constructing an example link budget for ADS-B, which are signals transmitted by commercial aircraft to share their position and other information.</p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>A link budget is an accounting of all of the gains and losses from the transmitter to the receiver in a communication system.  Link budgets describe one direction of the wireless link.  Most communications systems are bidirectional, so there must be a separate uplink and downlink budget.  The “result” of the link budget will tell you roughly how much signal-to-noise ratio (abbreviated as SNR, which this textbook uses, or S/N) you should expect to have at your receiver.  Further analysis would be needed to check if that SNR is high enough for your application.</p>
 <p>You study link budgets not for the purpose of being able to actually make a link budget for some situation, but to learn and develop a system-layer point of view of wireless communications.</p>
 <p>We will first cover the received signal power budget, then the noise power budget, and finally combine the two to find SNR (signal power divided by noise power).</p>

@@ -126,7 +126,7 @@
   <div class="section" id="usrp-in-python">
 <span id="usrp-chapter"></span><h1><span class="section-number">6. </span>USRP in Python<a class="headerlink" href="#usrp-in-python" title="Permalink to this headline">¶</a></h1>
 <a class="reference internal image-reference" href="../_images/usrp.png"><img alt="../_images/usrp.png" class="align-center" src="../_images/usrp.png" style="width: 428.5px; height: 212.0px;" /></a>
-<p>In this chapter we learn how to use the UHD Python API to control and receive/transmit signals with a USRP.</p>
+<p>In this chapter we learn how to use the UHD Python API to control and receive/transmit signals with a <a class="reference external" href="https://www.ettus.com/" rel="noopener noreferrer" target="_blank">USRP</a> which is a series of SDRs made by Ettus Research (now part of NI).  We will discuss transmitting and receiving on the USRP in Python, and dive into USRP-specific topics including stream args, subdevices, channels, 10 MHz and PPS synchronization.</p>
 <div class="section" id="software-drivers-install">
 <h2>Software/Drivers Install<a class="headerlink" href="#software-drivers-install" title="Permalink to this headline">¶</a></h2>
 <p>While the Python code provided in this textbook should work under Windows, Mac, and Linux, we will only be providing driver/API install instructions specific to Ubuntu 20 (although the instructions below should work on most Debian-based distributions).  We will start by creating an Ubuntu 20 VirtualBox VM; feel free to skip the VM portion if you already have your OS ready to go.</p>
@@ -189,7 +189,7 @@ print<span class="o">(</span>samples<span class="o">[</span><span class="m">0</s
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">uhd</span>
 <span class="n">usrp</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">usrp</span><span class="o">.</span><span class="n">MultiUSRP</span><span class="p">()</span>
 <span class="n">samples</span> <span class="o">=</span> <span class="n">usrp</span><span class="o">.</span><span class="n">recv_num_samps</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mf">100e6</span><span class="p">,</span> <span class="mf">1e6</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">50</span><span class="p">)</span> <span class="c1"># units: N, Hz, Hz, list of channel IDs, dB</span>
-<span class="k">print</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>The [0] is telling the USRP to use its first input port, and only receive one channel worth of samples (for a B210 to receive on two channels at once, for example, you could use [0, 1]).</p>
@@ -200,7 +200,7 @@ print<span class="o">(</span>samples<span class="o">[</span><span class="m">0</s
 <p>which makes the receive buffer much larger (the default value is 32), helping to reduce overflows.   The actual size of the buffer in bytes depends on the USRP and type of connection, but simply setting <code class="code docutils literal notranslate"><span class="pre">num_recv_frames</span></code> to a value much higher than 32 tends to help.</p>
 <p>For more serious applications I recommend not using the convenience function recv_num_samps(), because it hides some of the interesting behavior going on under the hood, and there is some set up that happens each call that we might only want to do once at the beginning, e.g., if we want to receive samples indefinitely.  The following code has the same functionality as recv_num_samps(), in fact it’s almost exactly what gets called when you use the convenience function, but now we have the option to modify the behavior:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">uhd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="n">usrp</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">usrp</span><span class="o">.</span><span class="n">MultiUSRP</span><span class="p">()</span>
 
@@ -222,7 +222,7 @@ print<span class="o">(</span>samples<span class="o">[</span><span class="m">0</s
 
 <span class="c1"># Start Stream</span>
 <span class="n">stream_cmd</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamCMD</span><span class="p">(</span><span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamMode</span><span class="o">.</span><span class="n">start_cont</span><span class="p">)</span>
-<span class="n">stream_cmd</span><span class="o">.</span><span class="n">stream_now</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">stream_cmd</span><span class="o">.</span><span class="n">stream_now</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">streamer</span><span class="o">.</span><span class="n">issue_stream_cmd</span><span class="p">(</span><span class="n">stream_cmd</span><span class="p">)</span>
 
 <span class="c1"># Receive Samples</span>
@@ -235,8 +235,8 @@ print<span class="o">(</span>samples<span class="o">[</span><span class="m">0</s
 <span class="n">stream_cmd</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamCMD</span><span class="p">(</span><span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamMode</span><span class="o">.</span><span class="n">stop_cont</span><span class="p">)</span>
 <span class="n">streamer</span><span class="o">.</span><span class="n">issue_stream_cmd</span><span class="p">(</span><span class="n">stream_cmd</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>With num_samps set to 10,000 and the recv_buffer set to 1000, the for loop will run 10 times, i.e., there will be 10 calls to streamer.recv.  Note that we hard-coded recv_buffer to 1000 but you can find the maximum allowed value using <code class="code docutils literal notranslate"><span class="pre">streamer.get_max_num_samps()</span></code>, which is often around 3000-something.  Also note that recv_buffer must be 2d because the same API is used when receiving multiple channels at once, but in our case we just received one channel, so recv_buffer[0] gave us the 1D array of samples that we wanted.  You don’t need to understand too much about how the stream starts/stops for now, but know that there are other options besides “continuous” mode, such as receiving a specific number of samples and having the stream stop automatically.  Although we don’t process metadata in this example code, it contains any errors that occur, among other things, which you can check by looking at metadata.error_code at each iteration of the loop, if desired (errors tend to also show up in the console itself, as a result of UHD, so don’t feel like you have to check for them within your Python code).</p>
@@ -256,7 +256,7 @@ print<span class="o">(</span>samples<span class="o">[</span><span class="m">0</s
 <div class="section" id="automatic-gain-control">
 <h3>Automatic Gain Control<a class="headerlink" href="#automatic-gain-control" title="Permalink to this headline">¶</a></h3>
 <p>Some USRPs, including the B200 and E310 series, support automatic gain control (AGC) which will automatically adjust the receive gain in response to the received signal level, in an attempt to best “fill” the ADC’s bits.  AGC can be turned on using:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">usrp</span><span class="o">.</span><span class="n">set_rx_agc</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># 0 for channel 0, i.e. the first channel of the USRP</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">usrp</span><span class="o">.</span><span class="n">set_rx_agc</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># 0 for channel 0, i.e. the first channel of the USRP</span>
 </pre></div>
 </div>
 <p>If you have a USRP that does not implement an AGC, an exception will be thrown when running the line above.  With AGC on, setting the gain won’t do anything.</p>
@@ -296,9 +296,9 @@ print<span class="o">(</span>samples<span class="o">[</span><span class="m">0</s
 <h2>Transmitting<a class="headerlink" href="#transmitting" title="Permalink to this headline">¶</a></h2>
 <p>Similar to the recv_num_samps() convenience function, UHD provides the send_waveform() function to transmit a batch of samples, an example is shown below.  If you specify a duration (in seconds) longer than the provided signal, it will simply repeat it.  It helps to keep the values of samples between -1.0 and 1.0.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">uhd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="n">usrp</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">usrp</span><span class="o">.</span><span class="n">MultiUSRP</span><span class="p">()</span>
-<span class="n">samples</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span> <span class="c1"># create random signal</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span> <span class="c1"># create random signal</span>
 <span class="n">duration</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># seconds</span>
 <span class="n">center_freq</span> <span class="o">=</span> <span class="mf">915e6</span>
 <span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span>
@@ -361,19 +361,19 @@ print<span class="o">(</span>samples<span class="o">[</span><span class="m">0</s
 <span class="c1"># Schedule Rx of num_samps samples exactly 3 seconds from last PPS</span>
 <span class="n">stream_cmd</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamCMD</span><span class="p">(</span><span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamMode</span><span class="o">.</span><span class="n">num_done</span><span class="p">)</span>
 <span class="n">stream_cmd</span><span class="o">.</span><span class="n">num_samps</span> <span class="o">=</span> <span class="n">num_samps</span>
-<span class="n">stream_cmd</span><span class="o">.</span><span class="n">stream_now</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">stream_cmd</span><span class="o">.</span><span class="n">stream_now</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">stream_cmd</span><span class="o">.</span><span class="n">time_spec</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">libpyuhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">time_spec</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span> <span class="c1"># set start time (try tweaking this)</span>
 <span class="n">streamer</span><span class="o">.</span><span class="n">issue_stream_cmd</span><span class="p">(</span><span class="n">stream_cmd</span><span class="p">)</span>
 
 <span class="c1"># Receive Samples.  recv() will return zeros, then our samples, then more zeros, letting us know it&#39;s done</span>
-<span class="n">waiting_to_start</span> <span class="o">=</span> <span class="bp">True</span> <span class="c1"># keep track of where we are in the cycle (see above comment)</span>
+<span class="n">waiting_to_start</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># keep track of where we are in the cycle (see above comment)</span>
 <span class="n">nsamps</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_samps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
 <span class="k">while</span> <span class="n">nsamps</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">waiting_to_start</span><span class="p">:</span>
     <span class="n">nsamps</span> <span class="o">=</span> <span class="n">streamer</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">recv_buffer</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">nsamps</span> <span class="ow">and</span> <span class="n">waiting_to_start</span><span class="p">:</span>
-        <span class="n">waiting_to_start</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">waiting_to_start</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">elif</span> <span class="n">nsamps</span><span class="p">:</span>
         <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">nsamps</span><span class="p">]</span> <span class="o">=</span> <span class="n">recv_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">nsamps</span><span class="p">]</span>
     <span class="n">i</span> <span class="o">+=</span> <span class="n">nsamps</span>
