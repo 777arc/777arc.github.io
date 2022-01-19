@@ -164,27 +164,31 @@
 <li><strong>libad9361-iio</strong>, AD9361 is the specific RF chip inside the PlutoSDR</li>
 <li><strong>pyadi-iio</strong>, the Pluto’s Python API, <em>this is our end goal</em>, but it depends on the previous two libraries</li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git libxml2 libxml2-dev bison flex libcdk5-dev cmake python3-pip
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install build-essential git libxml2-dev bison flex libcdk5-dev cmake python3-pip libusb-1.0-0-dev libavahi-client-dev libavahi-common-dev libaio-dev
 <span class="nb">cd</span> ~
-git clone --branch v0.19 https://github.com/analogdevicesinc/libiio.git
+git clone --branch v0.23 https://github.com/analogdevicesinc/libiio.git
 <span class="nb">cd</span> libiio
-cmake ./
-make all -j4
+mkdir build
+<span class="nb">cd</span> build
+cmake -DPYTHON_BINDINGS<span class="o">=</span>ON ..
+make -j<span class="k">$(</span>nproc<span class="k">)</span>
 sudo make install
 sudo ldconfig
-<span class="nb">cd</span> bindings/python/
-sudo python3 setup.py.cmakein install
 
 <span class="nb">cd</span> ~
 git clone https://github.com/analogdevicesinc/libad9361-iio.git
 <span class="nb">cd</span> libad9361-iio
-cmake ./
-make -j3
+mkdir build
+<span class="nb">cd</span> build
+cmake ..
+make -j<span class="k">$(</span>nproc<span class="k">)</span>
 sudo make install
 
 <span class="nb">cd</span> ~
 git clone https://github.com/analogdevicesinc/pyadi-iio.git
 <span class="nb">cd</span> pyadi-iio
+pip3 install --upgrade pip
+pip3 install -r requirements.txt
 sudo python3 setup.py install
 </pre></div>
 </div>
@@ -474,7 +478,7 @@ The following code shows a working example of transmitting a QPSK signal in the 
     <div class="clearer"></div>
   </div>
     <div class="footer">
-      &copy;2021, Marc Lichtman.
+      &copy;2022, Marc Lichtman.
       
     </div>
 

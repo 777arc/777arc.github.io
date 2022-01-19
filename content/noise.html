@@ -132,8 +132,8 @@
 <p>Most people are aware of the concept of noise: unwanted fluctuations that can obscure our desired signal(s). Noise looks something like:</p>
 <a class="reference internal image-reference" href="../_images/noise.png"><img alt="../_images/noise.png" class="align-center" src="../_images/noise.png" style="width: 663.5999999999999px; height: 352.09999999999997px;" /></a>
 <p>Note how the average value is zero in the time domain graph.  If the average value wasn’t zero, then we could subtract the average value, call it a bias, and we would be left with an average of zero.  Also note that the individual points in the graph are <em>not</em> “uniformly random”, i.e., larger values are rarer, most of the points are closer to zero.</p>
-<p>We call this type of noise “Gaussian noise”. It’s a good model for the type of noise that comes from many natural sources, such as thermal vibrations of atoms in the silicon of our receiver’s RF components.  The central limit theorem tells us that the summation of many random processes will tend to have a Gaussian distribution, even if the individual processes have some other distribution.  In other words, when a lot of random things happen and accumulate, the result appears Gaussian. The result will be Gaussian even when individual things are not distributed in this manner.</p>
-<img alt="../_images/central_limit_theorem.webp" class="align-center" src="../_images/central_limit_theorem.webp" />
+<p>We call this type of noise “Gaussian noise”. It’s a good model for the type of noise that comes from many natural sources, such as thermal vibrations of atoms in the silicon of our receiver’s RF components.  The <strong>central limit theorem</strong> tells us that the summation of many random processes will tend to have a Gaussian distribution, even if the individual processes have other distributions.  In other words, when a lot of random things happen and accumulate, the result appears approximately Gaussian, even when the individual things are not Gaussian distributed.</p>
+<a class="reference external image-reference" href="../_images/central_limit_theorem.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/central_limit_theorem.svg" class="align-center" src="../_images/central_limit_theorem.svg" /></a>
 <p>The Gaussian distribution is also called the “Normal” distribution (recall a bell curve).</p>
 <p>The Gaussian distribution has two parameters: mean and variance.  We already discussed how the mean can be considered zero because you can always remove the mean, or bias, if it’s not zero.  The variance changes how “strong” the noise is.  A higher variance will result in larger numbers.  It is for this reason that variance defines the noise power.</p>
 <p>Variance equals standard deviation squared (<img class="math" src="../_images/math/6ba6a750dfd04fbdaf6ec0daeca3e068d61d54e1.svg" alt="\sigma^2"/>).</p>
@@ -368,7 +368,7 @@
     <div class="clearer"></div>
   </div>
     <div class="footer">
-      &copy;2021, Marc Lichtman.
+      &copy;2022, Marc Lichtman.
       
     </div>
 
