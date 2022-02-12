@@ -215,17 +215,16 @@ inspectrum
 <p>The most simple (and minimal) way to use the SigMF standard to describe an IQ file you have created is to rename the .iq file to .sigmf-data and create a new file with the same name but .sigmf-meta extension.  This meta file is a plaintext file filled with json, so you can simply open it with a text editor and fill it out manually (later we will discuss doing this programmatically).  Here is an example .sigmf-meta file you can use as a template:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;global&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;core:datatype&quot;</span><span class="p">:</span> <span class="s2">&quot;cf32_le&quot;</span>
-        <span class="s2">&quot;core:sample_rate&quot;</span><span class="p">:</span> <span class="mi">8000000</span><span class="p">,</span>
+        <span class="s2">&quot;core:datatype&quot;</span><span class="p">:</span> <span class="s2">&quot;cf32_le&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;core:sample_rate&quot;</span><span class="p">:</span> <span class="mi">1000000</span><span class="p">,</span>
         <span class="s2">&quot;core:hw&quot;</span><span class="p">:</span> <span class="s2">&quot;PlutoSDR with 915 MHz whip antenna&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;core:author&quot;</span><span class="p">:</span> <span class="s2">&quot;Your name&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;core:description&quot;</span><span class="p">:</span> <span class="s2">&quot;Enter info about your signal recording here&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;core:version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;core:author&quot;</span><span class="p">:</span> <span class="s2">&quot;Art Vandelay&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;core:version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0&quot;</span>
     <span class="p">},</span>
     <span class="s2">&quot;captures&quot;</span><span class="p">:</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="s2">&quot;core:sample_start&quot;</span><span class="p">:</span> <span class="mi">0</span>
-            <span class="s2">&quot;core:frequency&quot;</span><span class="p">:</span> <span class="mi">915000000</span><span class="p">,</span>
+            <span class="s2">&quot;core:sample_start&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;core:frequency&quot;</span><span class="p">:</span> <span class="mi">915000000</span>
         <span class="p">}</span>
     <span class="p">],</span>
     <span class="s2">&quot;annotations&quot;</span><span class="p">:</span> <span class="p">[]</span>
