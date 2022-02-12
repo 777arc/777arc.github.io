@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>12. Multipath Fading &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="13. Pulse Shaping" href="pulse_shaping.html" />
+    <link rel="prev" title="11. IQ Files and SigMF" href="iq_files.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usrp.html">6. USRP in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files and SigMF</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">12. Multipath Fading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#multipath">Multipath</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fading">Fading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simulating-rayleigh-fading">Simulating Rayleigh Fading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mitigating-multipath-fading">Mitigating Multipath Fading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">15. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="iq_files.html" title="previous chapter"><span class="section-number">11. </span>IQ Files and SigMF</a></li>
+      <li>Next: <a href="pulse_shaping.html" title="next chapter"><span class="section-number">13. </span>Pulse Shaping</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="iq_files.html" title="Previous document"><span class="section-number">11. </span>IQ Files and SigMF</a>
+        </li>
+        <li>
+          <a href="pulse_shaping.html" title="Next document"><span class="section-number">13. </span>Pulse Shaping</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="multipath-fading">
+<span id="multipath-chapter"></span><h1><span class="section-number">12. </span>Multipath Fading<a class="headerlink" href="#multipath-fading" title="Permalink to this headline">¶</a></h1>
+<p>In this chapter we introduce multipath, a propagation phenomenon that results in signals reaching the receiver by two or more paths, which we experience in real-world wireless systems.  So far we have only discussed the “AWGN Channel”, i.e., a model for a wireless channel where the signal is simply added to noise, which really only applies to signals over a cable and some satellite communications systems.</p>
+<div class="section" id="multipath">
+<h2>Multipath<a class="headerlink" href="#multipath" title="Permalink to this headline">¶</a></h2>
+<p>All realistic wireless channels include many “reflectors”, given that RF signals bounce.  Any object between or near the transmitter (Tx) or receiver (Rx) can cause additional paths the signal travels along.  Each path experiences a different phase shift (delay) and attenuation (amplitude scaling).  At the receiver, all of the paths add up.  They can add up constructively, destructively, or a mix of both.  We call this concept of multiple signal paths “multipath”.  There is the Line-of-Sight (LOS) path, and then all other paths.  In the example below, we show the LOS path and a single non-LOS path:</p>
+<a class="reference external image-reference" href="../_images/multipath.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/multipath.svg" class="align-center" src="../_images/multipath.svg" /></a>
+<p>Destructive interference can happen if you get unlucky with how the paths sum together.  Consider the example above with just two paths.  Depending on the frequency and the exact distance of the paths, the two paths can be received 180 degrees out of phase at roughly the same amplitude, causing them to null out each other (depicted below).  You may have learned about constructive and destructive interference in physics class.  In wireless systems when the paths destructively combine, we call this interference “deep fade” because our signal briefly disappears.</p>
+<a class="reference external image-reference" href="../_images/destructive_interference.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/destructive_interference.svg" class="align-center" src="../_images/destructive_interference.svg" /></a>
+<p>Paths can also add up constructively, causing a strong signal to be received.  Each path has a different phase shift and amplitude, which we can visualize on a plot in the time domain called a “power delay profile”:</p>
+<a class="reference external image-reference" href="../_images/multipath2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/multipath2.svg" class="align-center" src="../_images/multipath2.svg" /></a>
+<p>The first path, the one closest to the y-axis, will always be the LOS path (assuming there is one) because there’s no way for any other path to reach the receiver faster than the LOS path.  Typically the magnitude will decrease as the delay increases, since a path that took longer to show up at the receiver will have traveled further.</p>
+</div>
+<div class="section" id="fading">
+<h2>Fading<a class="headerlink" href="#fading" title="Permalink to this headline">¶</a></h2>
+<p>What tends to happen is we get a mix of constructive and destructive interference, and it changes over time as the Rx, Tx, or environment is moving/changing.  We use the term “fading” when referring to the effects of a multipath channel <strong>changing</strong> over time.  That’s why we often refer to it as “multipath fading”; it’s really the combination of constructive/destructive interference and a changing environment.  What we end up with is a SNR that varies over time; changes are usually on the order of milliseconds to microseconds, depending on how fast the Tx/Rx is moving.  Beneath is a plot of SNR over time in milliseconds that demonstrates multipath fading.</p>
+<a class="reference internal image-reference" href="../_images/multipath_fading.png"><img alt="../_images/multipath_fading.png" class="align-center" src="../_images/multipath_fading.png" style="width: 617.0px; height: 272.0px;" /></a>
+<p>There are two types of fading from a <strong>time</strong> domain perspective:</p>
+<ul class="simple">
+<li><strong>Slow Fading:</strong> The channel doesn’t change within one packet’s worth of data.  That is, a deep null during slow fading will wipe out the whole packet.</li>
+<li><strong>Fast Fading:</strong> The channel changes very quickly compared to the length of one packet.  Forward error correction, combined with interleaving, can combat fast fading.</li>
+</ul>
+<p>There are also two types of fading from a <strong>frequency</strong> domain perspective:</p>
+<p><strong>Frequency Selective Fading</strong>: The constructive/destructive interference changes within the frequency range of the signal.  When we have a wideband signal, we span a large range of frequencies.  Recall that wavelength determines whether it’s constructive or destructive.  Well if our signal spans a wide frequency range, it also spans a wide wavelength range (since wavelength is the inverse of frequency).  Consequently we can get different channel qualities in different portions of our signal (in the frequency domain).  Hence the name frequency selective fading.</p>
+<p><strong>Flat Fading</strong>: Occurs when the signal’s bandwidth is narrow enough that all frequencies experience roughly the same channel.  If there is a deep fade then the whole signal will disappear (for the duration of the deep fade).</p>
+<p>In the figure below, the <span class="red">red</span> shape shows our signal in the frequency domain, and the black curvy line shows the current channel condition over frequency.  Because the narrower signal is experiencing the same channel conditions throughout the whole signal, it’s experiencing flat fading.  The wider signal is very much experiencing frequency selective fading.</p>
+<a class="reference internal image-reference" href="../_images/flat_vs_freq_selective.png"><img alt="../_images/flat_vs_freq_selective.png" class="align-center" src="../_images/flat_vs_freq_selective.png" style="width: 709.0999999999999px; height: 172.2px;" /></a>
+<p>Here is an example of a 16 MHz wide signal that is continuously transmitting.  There are several moments in the middle where there’s a period of time a piece of signal is missing.  This example depicts frequency selective fading, which causes holes in the signal that wipe out some frequencies but not others.</p>
+<a class="reference internal image-reference" href="../_images/fading_example.jpg"><img alt="../_images/fading_example.jpg" class="align-center" src="../_images/fading_example.jpg" style="width: 661.1999999999999px; height: 404.4px;" /></a>
+</div>
+<div class="section" id="simulating-rayleigh-fading">
+<h2>Simulating Rayleigh Fading<a class="headerlink" href="#simulating-rayleigh-fading" title="Permalink to this headline">¶</a></h2>
+<p>Rayleigh fading is used to model fading over time, when there is no significant LOS path.  When there is a dominant LOS path, the Rician fading model becomes more suitable, but we will be focusing on Rayleigh.  Note that Rayleigh and Rician models do not include the primarily path loss between the transmitter and receiver (such as the path loss calculated as part of a link budget), or any shadowing caused by large objects.  Their role is to model the multipath fading that occurs over time, as a result of movement and scatterers in the environment.</p>
+<p>There is a lot of theory that comes out of the Rayleigh fading model, such as expressions for level crossing rate and average fade duration.  But the Rayleigh fading model doesn’t directly tell us how to actually simulate a channel using the model.  To generate Rayleigh fading in simulation we have to use one of many published methods, and in the following Python example we will be using Clarke’s “sum-of-sinusoids” method.</p>
+<p>To generate a Rayleigh fading channel in Python we need to first specify the max Doppler shift, in Hz, which is based on how fast the transmitter and/or receiver is moving, denoted <img class="math" src="../_images/math/f18b1deaa474cf774445541adb1eeb4707669242.svg" alt="\Delta v"/>.  When the velocity is small compared to the speed of light, which will always be the case in wireless communications, the Doppler shift can be calculated as:</p>
+<div class="math">
+<p><img src="../_images/math/33082a944cabaeeb7f8830b2d0ca8936ace4a7cc.svg" alt="f_D = \frac{\Delta v f_c}{c}"/></p>
+</div><p>where <img class="math" src="../_images/math/341ae5f7c52af1963e056b70131682274a396508.svg" alt="c"/> is the speed of light, roughly 3e8 m/s, and <img class="math" src="../_images/math/852c5d6001dcb2c5d6047cc1ee451735a4153eec.svg" alt="f_c"/> is the carrier frequency being transmitted on.</p>
+<p>We also choose how many sinusoids to simulate, and there’s no right answer because it’s based on the number of scatterers in the environment, which we never actually know.  As part of the calculations we assume the phase of the received signal from each path is uniformly random between 0 and <img class="math" src="../_images/math/bf50b56b21d67ede45fc1ec5b8213871824fe365.svg" alt="2\pi"/>.  The following code simulates a Rayleigh fading channel using Clarke’s method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Simulation Params, feel free to tweak these</span>
+<span class="n">v_mph</span> <span class="o">=</span> <span class="mi">60</span> <span class="c1"># velocity of either TX or RX, in miles per hour</span>
+<span class="n">center_freq</span> <span class="o">=</span> <span class="mf">200e6</span> <span class="c1"># RF carrier frequency in Hz</span>
+<span class="n">Fs</span> <span class="o">=</span> <span class="mf">1e5</span> <span class="c1"># sample rate of simulation</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># number of sinusoids to sum</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="n">v_mph</span> <span class="o">*</span> <span class="mf">0.44704</span> <span class="c1"># convert to m/s</span>
+<span class="n">fd</span> <span class="o">=</span> <span class="n">v</span><span class="o">*</span><span class="n">center_freq</span><span class="o">/</span><span class="mf">3e8</span> <span class="c1"># max Doppler shift</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max Doppler shift:&quot;</span><span class="p">,</span> <span class="n">fd</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">Fs</span><span class="p">)</span> <span class="c1"># time vector. (start, stop, step)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">fd</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">+</span> <span class="n">phi</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">fd</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="o">+</span> <span class="n">phi</span><span class="p">)</span>
+
+<span class="c1"># z is the complex coefficient representing channel, you can think of this as a phase shift and magnitude scale</span>
+<span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">y</span><span class="p">)</span> <span class="c1"># this is what you would actually use when simulating the channel</span>
+<span class="n">z_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="c1"># take magnitude for the sake of plotting</span>
+<span class="n">z_mag_dB</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">z_mag</span><span class="p">)</span> <span class="c1"># convert to dB</span>
+
+<span class="c1"># Plot fading over time</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">z_mag_dB</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;:r&#39;</span><span class="p">)</span> <span class="c1"># 0 dB</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Rayleigh Fading&#39;</span><span class="p">,</span> <span class="s1">&#39;No Fading&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If you are intending to use this channel model as part of a larger simulation, you would simply multiply the received signal by the complex number <code class="code docutils literal notranslate"><span class="pre">z</span></code>, representing flat fading.   The value <code class="code docutils literal notranslate"><span class="pre">z</span></code> would then update every time step.  This means all frequency components of the signal experience the same channel at any given moment in time, so you would <strong>not</strong> be simulating frequency selective fading, that requires a multi-tap channel impulse response which we will not get into in this chapter.  If we look at the magnitude of <code class="code docutils literal notranslate"><span class="pre">z</span></code>, we can see the Rayleigh fading over time:</p>
+<a class="reference external image-reference" href="../_images/rayleigh.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/rayleigh.svg" class="align-center" src="../_images/rayleigh.svg" /></a>
+<p>Note the deep fades that occur briefly, as well as the small fraction of time where the channel is actually performing better than if there was no fading at all.</p>
+</div>
+<div class="section" id="mitigating-multipath-fading">
+<h2>Mitigating Multipath Fading<a class="headerlink" href="#mitigating-multipath-fading" title="Permalink to this headline">¶</a></h2>
+<p>In modern communications, we have developed ways to combat multipath fading.</p>
+<div class="section" id="cdma">
+<h3>CDMA<a class="headerlink" href="#cdma" title="Permalink to this headline">¶</a></h3>
+<p>3G cellular uses a technology called code division multiple access (CDMA).  With CDMA you take a narrowband signal and spread it over a wide bandwidth before transmitting it (using a spread spectrum technique called DSSS).  Under frequency selective fading, it’s unlikely that all frequencies will be in a deep null at the same time.  At the receiver the spreading is reversed, and this de-spreading process greatly mitigates a deep null.</p>
+<a class="reference internal image-reference" href="../_images/cdma.png"><img alt="../_images/cdma.png" class="align-center" src="../_images/cdma.png" style="width: 529.0px; height: 242.0px;" /></a>
+</div>
+<div class="section" id="ofdm">
+<h3>OFDM<a class="headerlink" href="#ofdm" title="Permalink to this headline">¶</a></h3>
+<p>4G cellular, WiFi, and many other technologies use a scheme called orthogonal frequency-division multiplexing (OFDM).  OFDM uses something called subcarriers, where we split up the signal in the frequency domain into a bunch of narrow signals squashed together.  To combat multipath fading we can avoid assigning data to subcarriers that are in a deep fade, although it requires the receiving end to send channel information back to the transmitter quick enough.  We can also assign high order modulation schemes to subcarriers with great channel quality to maximize our data rate.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="iq_files.html" title="Previous document"><span class="section-number">11. </span>IQ Files and SigMF</a>
+        </li>
+        <li>
+          <a href="pulse_shaping.html" title="Next document"><span class="section-number">13. </span>Pulse Shaping</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2022, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

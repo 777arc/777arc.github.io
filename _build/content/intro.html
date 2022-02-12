@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>1. Introduction &#8212; PySDR: A Guide to SDR and DSP using Python 0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2. Frequency Domain" href="frequency_domain.html" />
+    <link rel="prev" title="PySDR: A Guide to SDR and DSP using Python" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#purpose-and-target-audience">Purpose and Target Audience</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usrp.html">6. USRP in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files and SigMF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">15. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">PySDR: A Guide to SDR and DSP using Python</a></li>
+      <li>Next: <a href="frequency_domain.html" title="next chapter"><span class="section-number">2. </span>Frequency Domain</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="../index.html" title="Previous document">PySDR: A Guide to SDR and DSP using Python</a>
+        </li>
+        <li>
+          <a href="frequency_domain.html" title="Next document"><span class="section-number">2. </span>Frequency Domain</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="introduction">
+<span id="intro-chapter"></span><h1><span class="section-number">1. </span>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="purpose-and-target-audience">
+<h2>Purpose and Target Audience<a class="headerlink" href="#purpose-and-target-audience" title="Permalink to this headline">¶</a></h2>
+<p>First and foremost, a couple important terms:</p>
+<dl class="docutils">
+<dt><strong>Software-Defined Radio (SDR):</strong></dt><dd>A radio that uses software to perform signal-processing tasks that were traditionally performed by hardware</dd>
+<dt><strong>Digital Signal Processing (DSP):</strong></dt><dd>The digital processing of signals, in our case RF signals</dd>
+</dl>
+<p>This textbook acts as a hands-on introduction to the areas of DSP, SDR, and wireless communications.  It is designed for someone who is:</p>
+<ol class="arabic simple">
+<li>Interested in <em>using</em> SDRs to do cool stuff</li>
+<li>Good with Python</li>
+<li>Relatively new to DSP, wireless communications, and SDR</li>
+<li>A visual learner, preferring animations over equations</li>
+<li>Better at understanding equations <em>after</em> learning the concepts</li>
+<li>Looking for concise explanations, not a 1,000 page textbook</li>
+</ol>
+<p>An example is a Computer Science student interested in a job involving wireless communications after graduation, although it can be used by anyone itching to learn about SDR who has programming experience.  As such, it covers the necessary theory to understand DSP techniques without the intense math that is usually included in DSP courses.  Instead of burying ourselves in equations, an abundance of images and animations are used to help convey the concepts, such as the Fourier series complex plane animation below.  I believe that equations are best understood <em>after</em> learning the concepts through visuals and practical exercises.  The heavy use of animations is why PySDR will never have a hardcopy version being sold on Amazon.</p>
+<a class="reference internal image-reference" href="../_images/fft_logo_wide.gif"><img alt="../_images/fft_logo_wide.gif" class="align-center" src="../_images/fft_logo_wide.gif" style="width: 707.6999999999999px; height: 470.4px;" /></a>
+<p>This textbook is meant to introduce concepts quickly and smoothly, enabling the reader to perform DSP and use SDRs intelligently.  It’s not meant to be a reference textbook for all DSP/SDR topics; there are plenty of great textbooks already out there, such as <a class="reference external" href="https://www.analog.com/en/education/education-library/software-defined-radio-for-engineers.html" rel="noopener noreferrer" target="_blank">Analog Device’s SDR textbook</a> and <a class="reference external" href="http://www.dspguide.com/" rel="noopener noreferrer" target="_blank">dspguide.com</a>.  You can always use Google to recall trig identities or the Shannon limit.  Think of this textbook like a gateway into the world of DSP and SDR: it’s lighter and less of a time and monetary commitment, when compared to more traditional courses and textbooks.</p>
+<p>To cover foundational DSP theory, an entire semester of “Signals and Systems”, a typical course within electrical engineering, is condensed into a few chapters.  Once the DSP fundamentals are covered, we launch into SDRs, although DSP and wireless communications concepts continue to come up throughout the textbook.</p>
+<p>Code examples are provided in Python.  They utilize NumPy, which is Python’s standard library for arrays and high-level math.  The examples also rely upon Matplotlib, which is a Python plotting library that provides an easy way to visualize signals, arrays, and complex numbers.  Note that while Python is “slower” than C++ in general, most math functions within Python/NumPy are implemented in C/C++ and heavily optimized.  Likewise, the SDR API we use is simply a set of Python bindings for C/C++ functions/classes.  Those who have little Python experience yet a solid foundation in MATLAB, Ruby, or Perl will likely be fine after familiarizing themselves with Python’s syntax.</p>
+</div>
+<div class="section" id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h2>
+<p>If you get through any amount of this textbook and email me at <a class="reference external" href="mailto:pysdr&#37;&#52;&#48;vt&#46;edu" rel="noopener noreferrer" target="_blank">pysdr<span>&#64;</span>vt<span>&#46;</span>edu</a> with questions/comments/suggestions, then congratulations, you will have contributed to this textbook!</p>
+<p>But on a more grand scale, you can help contribute to this textbook in the same way as any open source software project- through Git.  This textbook might be in the form of a website, but the source material it’s generated from all lives on the <a class="reference external" href="https://github.com/777arc/textbook" rel="noopener noreferrer" target="_blank">textbook’s GitHub page</a>.  Feel free to submit an issue or even a Pull Request (PR) with fixes or improvements.  Those who submit valuable feedback/fixes will be permanently added to the acknowledgments section below.  Not good at Git but have changes to suggest?  Feel free to email me at <a class="reference external" href="mailto:pysdr&#37;&#52;&#48;vt&#46;edu" rel="noopener noreferrer" target="_blank">pysdr<span>&#64;</span>vt<span>&#46;</span>edu</a>.</p>
+<p>The website this textbook is hosted on is ad-free because we all hate ads.  I also don’t provide a PayPal or Bitcoin address where I accept donations.  There is literally no way for me to get paid for this textbook.  Instead, I merely suggest sharing this textbook with colleagues, students, and other lifelong learners who may be interested in the material.</p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>Thank you to anyone who has read any portion of this textbook and provided feedback, and especially to:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://github.com/duggabe" rel="noopener noreferrer" target="_blank">Barry Duggan</a></li>
+<li>Matthew Hannon</li>
+<li>James Hayek</li>
+<li><a class="reference external" href="http://kd9qgl.wordpress.com/" rel="noopener noreferrer" target="_blank">Deidre Stuffer</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="../index.html" title="Previous document">PySDR: A Guide to SDR and DSP using Python</a>
+        </li>
+        <li>
+          <a href="frequency_domain.html" title="Next document"><span class="section-number">2. </span>Frequency Domain</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2022, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
