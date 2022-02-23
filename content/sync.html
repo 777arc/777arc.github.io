@@ -16,7 +16,7 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="15. About the Author" href="about_author.html" />
+    <link rel="next" title="15. End-to-End Example" href="rds.html" />
     <link rel="prev" title="13. Pulse Shaping" href="pulse_shaping.html" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
@@ -76,7 +76,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#frame-synchronization">Frame Synchronization</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">15. About the Author</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rds.html">15. End-to-End Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. About the Author</a></li>
 </ul>
 
 
@@ -91,7 +92,7 @@
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="pulse_shaping.html" title="previous chapter"><span class="section-number">13. </span>Pulse Shaping</a></li>
-      <li>Next: <a href="about_author.html" title="next chapter"><span class="section-number">15. </span>About the Author</a></li>
+      <li>Next: <a href="rds.html" title="next chapter"><span class="section-number">15. </span>End-to-End Example</a></li>
   </ul></li>
 </ul>
 </div>
@@ -118,7 +119,7 @@
           <a href="pulse_shaping.html" title="Previous document"><span class="section-number">13. </span>Pulse Shaping</a>
         </li>
         <li>
-          <a href="about_author.html" title="Next document"><span class="section-number">15. </span>About the Author</a>
+          <a href="rds.html" title="Next document"><span class="section-number">15. </span>End-to-End Example</a>
           &rarr;
         </li>
     </ul>
@@ -210,7 +211,7 @@
 <p>You can picture timing recovery as a block in the receiver, which accepts a stream of samples and outputs another stream of samples (similar to a filter).  We program this timing recovery block with information about our signal, the most important being the number of samples per symbol (or our best guess at it, if we are not 100% sure what was transmitted).  This block acts as a “decimator”, i.e., our sample output will be a fraction of the number of samples in.  We want one sample per digital symbol, so the decimation rate is simply the samples per symbol.  If the transmitter transmits at 1M symbols per second, and we sample at 16 Msps, we will receive 16 samples per symbol.  That will be the sample rate going into the timing sync block.  The sample rate coming out of the block will be 1 Msps because we want one sample per digital symbol.</p>
 <p>Most timing recovery methods rely on the fact that our digital symbols rise and then fall, and the crest is the point at which we want to sample the symbol. To put it another way, we sample the maximum point after taking the absolute value:</p>
 <a class="reference internal image-reference" href="../_images/symbol_sync2.png"><img alt="../_images/symbol_sync2.png" class="align-center" src="../_images/symbol_sync2.png" style="width: 667.6px; height: 194.8px;" /></a>
-<p>There are many timing recovery methods, most resembling a PLL.  Generally the difference between them is the equation used to perform “correction” on the timing offset, which we denote as <img class="math" src="../_images/math/c859a8f80a5b73b97ecb9d3c15842e979a0f6fe2.svg" alt="\mu"/> or <code class="code docutils literal notranslate"><span class="pre">mu</span></code> in code.  The value of <code class="code docutils literal notranslate"><span class="pre">mu</span></code> gets updated every loop iteration.  It is in units of symbols, and you can think of it as how much we have to shift by to be able to sample at the “perfect” time.  So if <code class="code docutils literal notranslate"><span class="pre">mu</span> <span class="pre">=</span> <span class="pre">3.61</span></code> then that means we have to shift the input by 3.61 samples to sample at the right spot.  Because we have 8 samples per symbol, if <code class="code docutils literal notranslate"><span class="pre">mu</span></code> goes over 8 it will just wrap back around to zero.</p>
+<p>There are many timing recovery methods, most resembling a PLL.  Generally the difference between them is the equation used to perform “correction” on the timing offset, which we denote as <img class="math" src="../_images/math/c859a8f80a5b73b97ecb9d3c15842e979a0f6fe2.svg" alt="\mu"/> or <code class="code docutils literal notranslate"><span class="pre">mu</span></code> in code.  The value of <code class="code docutils literal notranslate"><span class="pre">mu</span></code> gets updated every loop iteration.  It is in units of samples, and you can think of it as how much we have to shift by to be able to sample at the “perfect” time.  So if <code class="code docutils literal notranslate"><span class="pre">mu</span> <span class="pre">=</span> <span class="pre">3.61</span></code> then that means we have to shift the input by 3.61 samples to sample at the right spot.  Because we have 8 samples per symbol, if <code class="code docutils literal notranslate"><span class="pre">mu</span></code> goes over 8 it will just wrap back around to zero.</p>
 <p>The following Python code implements the Mueller and Muller clock recovery technique.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># initial estimate of phase of sample</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex</span><span class="p">)</span>
@@ -424,7 +425,7 @@
           <a href="pulse_shaping.html" title="Previous document"><span class="section-number">13. </span>Pulse Shaping</a>
         </li>
         <li>
-          <a href="about_author.html" title="Next document"><span class="section-number">15. </span>About the Author</a>
+          <a href="rds.html" title="Next document"><span class="section-number">15. </span>End-to-End Example</a>
           &rarr;
         </li>
     </ul>
