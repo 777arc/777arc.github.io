@@ -250,9 +250,9 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">samples_interpolated</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">resample_poly</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># Plot the old vs new</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;before interp&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;after interp&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">samples_interpolated</span><span class="p">,</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
