@@ -204,7 +204,7 @@
 <div class="section" id="acquiring-a-signal">
 <h2>Acquiring a Signal<a class="headerlink" href="#acquiring-a-signal" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">resample_poly</span><span class="p">,</span> <span class="n">firwin</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">resample_poly</span><span class="p">,</span> <span class="n">firwin</span><span class="p">,</span> <span class="n">bilinear</span><span class="p">,</span> <span class="n">lfilter</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="c1"># Read in signal</span>
@@ -995,7 +995,31 @@
 </pre></div>
 </div>
 </details><p>Once again, the example FM recording known to work with this code <a class="reference external" href="https://github.com/777arc/498x/blob/master/fm_rds_250k_1Msamples.iq?raw=true" rel="noopener noreferrer" target="_blank">can be found here</a>.</p>
-<p>For those interested in demodulating the actual audio signal, it’s actually not that difficult, I plan to add it to the bottom of this chapter in the near future.  If anyone wants to beat me to it, and figure out a concise set of Python code to play the audio (even if it’s just mono), please reach out, <a class="reference external" href="mailto:pysdr&#37;&#52;&#48;vt&#46;edu" rel="noopener noreferrer" target="_blank">pysdr<span>&#64;</span>vt<span>&#46;</span>edu</a>.</p>
+<p>For those interested in demodulating the actual audio signal, just add the following lines right after the “Acquiring a Signal” section:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add the following code right after the &quot;Acquiring a Signal&quot; section</span>
+
+<span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">wavfile</span>
+
+<span class="c1"># Demodulation</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+
+<span class="c1"># De-emphasis filter, H(s) = 1/(RC*s + 1), implemented as IIR via bilinear transform</span>
+<span class="n">bz</span><span class="p">,</span> <span class="n">az</span> <span class="o">=</span> <span class="n">bilinear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mf">75e-6</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">fs</span><span class="o">=</span><span class="n">sample_rate</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">lfilter</span><span class="p">(</span><span class="n">bz</span><span class="p">,</span> <span class="n">az</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># decimate filter to get mono audio</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[::</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="n">sample_rate</span><span class="o">/</span><span class="mi">6</span>
+
+<span class="c1"># normalizes volume</span>
+<span class="n">x</span> <span class="o">/=</span> <span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+
+<span class="c1"># Save to wav file, you can open this in Audacity for example</span>
+<span class="n">wavfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;fm.wav&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The most complicated part is the de-emphasis filter, <a class="reference external" href="https://wiki.gnuradio.org/index.php/FM_Preemphasis" rel="noopener noreferrer" target="_blank">which you can learn about here</a>, although it’s actually an optional step if you are OK with audio that has a poor bass/treble balance.  For those curious, here is what the frequency response of the <a class="reference external" href="https://en.wikipedia.org/wiki/Infinite_impulse_response" rel="noopener noreferrer" target="_blank">IIR</a> de-emphasis filter looks like, it doesn’t fully filter out any frequencies, it’s more of a “shaping” filter.</p>
+<a class="reference external image-reference" href="../_images/fm_demph_filter_freq_response.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fm_demph_filter_freq_response.svg" class="align-center" src="../_images/fm_demph_filter_freq_response.svg" /></a>
 </div>
 <div class="section" id="acknowledgments">
 <h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permalink to this headline">¶</a></h2>
