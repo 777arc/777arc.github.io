@@ -275,9 +275,12 @@
 </div>
 <div class="section" id="snr">
 <h2>SNR<a class="headerlink" href="#snr" title="Permalink to this headline">¶</a></h2>
-<p>Now that we have both numbers, we can take the ratio to find SNR:</p>
-<a class="reference internal image-reference" href="../_images/SNR.png"><img alt="../_images/SNR.png" class="align-center" src="../_images/SNR.png" style="width: 319.5px; height: 120.5px;" /></a>
-<p>We typically shoot for an SNR &gt; 10 dB, although it really depends on the application.  In practice, SNR can be verified by looking at the FFT of the received signal or by calculating the power with and without the signal present (recall variance = power).  The higher the SNR, the more bits per symbol you can manage without too many errors.</p>
+<p>Now that we have both numbers, we can take the ratio to find SNR, (see the <a class="reference internal" href="noise.html#noise-chapter"><span class="std std-ref">Noise and dB</span></a> chapter for more information about SNR):</p>
+<div class="math">
+<p><img src="../_images/math/e3d034b776723e6c138a0ba0331cfd794b5fa4d8.svg" alt="\mathrm{SNR} = \frac{P_{signal}}{P_{noise}}"/></p>
+</div><div class="math">
+<p><img src="../_images/math/8f91e70a7813ff5dbe65bc819049807c241ca9ef.svg" alt="\mathrm{SNR_{dB}} = P_{signal\_dB} - P_{noise\_dB}"/></p>
+</div><p>We typically shoot for an SNR &gt; 10 dB, although it really depends on the application.  In practice, SNR can be verified by looking at the FFT of the received signal or by calculating the power with and without the signal present (recall variance = power).  The higher the SNR, the more bits per symbol you can manage without too many errors.</p>
 </div>
 <div class="section" id="example-link-budget-ads-b">
 <h2>Example Link Budget: ADS-B<a class="headerlink" href="#example-link-budget-ads-b" title="Permalink to this headline">¶</a></h2>
