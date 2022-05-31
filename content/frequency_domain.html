@@ -28,6 +28,14 @@
   gtag('config', 'G-TGRQK1JJYD');
 </script>
 
+<!-- French/English Chooser, couldnt get it working with local URLs -->
+<div style="float: right; padding-bottom: 0;">
+  <select onchange="location = this.value;">
+    <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/fr/index-fr.html">French</option>
+  </select>
+</div>
+
   </head><body>
   <div class="document">
     
@@ -188,7 +196,7 @@
 <p>To return to the time domain from frequency is almost the same, aside from a scaling factor and negative sign:</p>
 <div class="math">
 <p><img src="../_images/math/5be5072ccaf0978ad48c208cd73799c36aef51cd.svg" alt="x(t) = \frac{1}{2 \pi} \int X(f) e^{j2\pi ft} df"/></p>
-</div><p>Note that a lot of textbooks and other resources use <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> in place of the <img class="math" src="../_images/math/f2db2fc8f3c55a36937062e1797243b47a90f001.svg" alt="2\pi f"/>.  <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> is angular frequency in radians, while <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is in Hz.  All you have to know is that</p>
+</div><p>Note that a lot of textbooks and other resources use <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> in place of the <img class="math" src="../_images/math/f2db2fc8f3c55a36937062e1797243b47a90f001.svg" alt="2\pi f"/>.  <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> is angular frequency in radians per second, while <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is in Hz.  All you have to know is that</p>
 <div class="math">
 <p><img src="../_images/math/198ad5c1c03eb34cf94aa5de5ecc4e89624a2964.svg" alt="\omega = 2 \pi f"/></p>
 </div><p>Even though it adds a <img class="math" src="../_images/math/adbf740b3ae712140edad99b950ffd8c9ec2919b.svg" alt="2 \pi"/> term to many equations, it’s easier to stick with frequency in Hz. Ultimately you will work with Hz in your SDR application.</p>
@@ -282,13 +290,13 @@
 <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">0.15</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If we plot s it looks like:</p>
+<p>If we plot <code class="code docutils literal notranslate"><span class="pre">s</span></code> it looks like:</p>
 <a class="reference internal image-reference" href="../_images/fft-python1.png"><img alt="../_images/fft-python1.png" class="align-center" src="../_images/fft-python1.png" style="width: 477.4px; height: 282.79999999999995px;" /></a>
 <p>Next let’s use Numpy’s FFT function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>If we look at S we see it’s an array of complex numbers:</p>
+<p>If we look at <code class="code docutils literal notranslate"><span class="pre">S</span></code> we see it’s an array of complex numbers:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span>  <span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.01865008</span> <span class="o">+</span><span class="mf">0.00000000e+00</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01171553</span> <span class="o">-</span><span class="mf">2.79073782e-01</span><span class="n">j</span><span class="p">,</span><span class="mf">0.02526446</span> <span class="o">-</span><span class="mf">8.82681208e-01</span><span class="n">j</span><span class="p">,</span>  <span class="mf">3.50536075</span> <span class="o">-</span><span class="mf">4.71354150e+01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.15045671</span> <span class="o">+</span><span class="mf">1.31884375e+00</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10769903</span> <span class="o">+</span><span class="mf">7.10452463e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.09435855</span> <span class="o">+</span><span class="mf">5.01303240e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.08808671</span> <span class="o">+</span><span class="mf">3.92187956e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.08454414</span> <span class="o">+</span><span class="mf">3.23828386e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.08231753</span> <span class="o">+</span><span class="mf">2.76337148e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.08081535</span> <span class="o">+</span><span class="mf">2.41078885e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07974909</span> <span class="o">+</span><span class="mf">2.13663710e-01</span><span class="n">j</span><span class="p">,</span><span class="o">...</span>
 </pre></div>
 </div>

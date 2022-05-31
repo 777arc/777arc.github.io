@@ -1,0 +1,428 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2. Domaine Fréquentiel &#8212; PySDR: A Guide to SDR and DSP using Python</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3. IQ Sampling" href="sampling.html" />
+    <link rel="prev" title="1. Introduction" href="intro.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TGRQK1JJYD');
+</script>
+
+<!-- French/English Chooser, couldnt get it working with local URLs -->
+<div style="float: right; padding-bottom: 0;">
+  <select onchange="location = this.value;">
+    <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/fr/index-fr.html">French</option>
+  </select>
+</div>
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index-fr.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Domaine Fréquentiel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fourier-series">Fourier Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#couples-temps-frequence">Couples Temps-Fréquence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fourier-transform">Fourier Transform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#time-frequency-proprietes">Time-Frequency Propriétés</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fast-fourier-transform-fft">Fast Fourier Transform (FFT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#frequences-negatives">Fréquences négatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#l-ordre-dans-le-temps-n-a-pas-d-importance">L’ordre dans le temps n’a pas d’importance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fft-in-python">FFT in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#windowing">Windowing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fft-sizing">FFT Sizing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spectrogram-waterfall">Spectrogram/Waterfall</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usrp.html">6. USRP in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files and SigMF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rds.html">15. End-to-End Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index-fr.html">Documentation overview</a><ul>
+      <li>Previous: <a href="intro.html" title="previous chapter"><span class="section-number">1. </span>Introduction</a></li>
+      <li>Next: <a href="sampling.html" title="next chapter"><span class="section-number">3. </span>IQ Sampling</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="intro.html" title="Previous document"><span class="section-number">1. </span>Introduction</a>
+        </li>
+        <li>
+          <a href="sampling.html" title="Next document"><span class="section-number">3. </span>IQ Sampling</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="domaine-frequentiel">
+<span id="freq-domain-chapter"></span><h1><span class="section-number">2. </span>Domaine Fréquentiel<a class="headerlink" href="#domaine-frequentiel" title="Permalink to this headline">¶</a></h1>
+<p>Ce chapitre présente le domaine fréquentiel et couvre les séries de Fourier, la transformée de Fourier, les propriétés de Fourier, la FFT, le fenêtrage et les spectrogrammes, à l’aide d’exemples Python.</p>
+<p>L’un des effets secondaires les plus intéressants de l’apprentissage du DSP et des communications sans fil est que vous apprendrez également à penser dans le domaine des fréquences. L’expérience de la plupart des gens avec le <em>travail</em> dans le domaine fréquentiel se limite au réglage des boutons graves/moyens/aigus sur le système audio d’une voiture. L’expérience de la plupart des gens avec <em>visualiser</em> quelque chose dans le domaine fréquentiel se limite à voir un égaliseur audio, tel que ce clip&nbsp;:</p>
+<img alt="../_images/audio_equalizer.webp" class="align-center" src="../_images/audio_equalizer.webp" />
+<p>À la fin de ce chapitre, vous comprendrez ce que signifie réellement le domaine fréquentiel, comment convertir entre le temps et la fréquence (ainsi que ce qui se passe lorsque nous le faisons), et quelques principes intéressants que nous utiliserons tout au long de nos études sur DSP et SDR. À la fin de ce manuel, vous serez passé maître dans l’art de travailler dans le domaine fréquentiel, c’est garanti&nbsp;!</p>
+<p>Tout d’abord, pourquoi aimons-nous regarder les signaux dans le domaine fréquentiel&nbsp;? Eh bien, voici deux exemples de signaux, affichés à la fois dans le domaine temporel et fréquentiel.</p>
+<a class="reference internal image-reference" href="../_images/time_and_freq_domain_example_signals.png"><img alt="../_images/time_and_freq_domain_example_signals.png" class="align-center" src="../_images/time_and_freq_domain_example_signals.png" style="width: 576.0px; height: 238.8px;" /></a>
+<p>Comme vous pouvez le voir, dans le domaine temporel, ils ressemblent tous les deux à du bruit, mais dans le domaine fréquentiel, nous pouvons voir différentes caractéristiques. Tout est dans le domaine temporel sous sa forme naturelle ; lorsque nous échantillonnons des signaux, nous les échantillonnons dans le domaine temporel, car vous ne pouvez pas <em>directement</em> échantillonner un signal dans le domaine fréquentiel. Mais les choses intéressantes se produisent généralement dans le domaine fréquentiel.</p>
+<div class="section" id="fourier-series">
+<h2>Fourier Series<a class="headerlink" href="#fourier-series" title="Permalink to this headline">¶</a></h2>
+<p>Les bases du domaine fréquentiel commencent par comprendre que tout signal peut être représenté par des ondes sinusoïdales additionnées. Lorsque nous décomposons un signal en ses ondes sinusoïdales composites, nous l’appelons une série de Fourier. Voici un exemple de signal composé de seulement deux ondes sinusoïdales :</p>
+<a class="reference external image-reference" href="../_images/summing_sinusoids.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/summing_sinusoids.svg" class="align-center" src="../_images/summing_sinusoids.svg" /></a>
+<p>Voici un autre exemple; la courbe rouge ci-dessous se rapproche d’une onde en dents de scie en additionnant jusqu’à 10 ondes sinusoïdales. Nous pouvons voir que ce n’est pas une reconstruction parfaite - il faudrait un nombre infini d’ondes sinusoïdales pour reproduire cette onde en dents de scie en raison des transitions nettes&nbsp;:</p>
+<a class="reference internal image-reference" href="../_images/fourier_series_triangle.gif"><img alt="../_images/fourier_series_triangle.gif" class="align-center" src="../_images/fourier_series_triangle.gif" style="width: 561.4px; height: 180.6px;" /></a>
+<p>Certains signaux nécessitent plus d’ondes sinusoïdales que d’autres, et certains nécessitent une quantité infinie, bien qu’ils puissent toujours être approximés avec un nombre limité. Voici un autre exemple de signal décomposé en une série d’ondes sinusoïdales&nbsp;:</p>
+<a class="reference internal image-reference" href="../_images/fourier_series_arbitrary_function.gif"><img alt="../_images/fourier_series_arbitrary_function.gif" class="align-center" src="../_images/fourier_series_arbitrary_function.gif" style="width: 561.4px; height: 180.6px;" /></a>
+<p>Pour comprendre comment nous pouvons décomposer un signal en ondes sinusoïdales, ou sinusoïdes, nous devons d’abord passer en revue les trois attributs d’une onde sinusoïdale :</p>
+<ol class="arabic simple">
+<li>Amplitude</li>
+<li>Phase</li>
+<li>La fréquence</li>
+</ol>
+<p><strong>Amplitude</strong> indique la “force” de l’onde, tandis que <strong>phase</strong> est utilisée pour représenter la manière dont l’onde sinusoïdale est décalée dans le temps, de 0 à 360&nbsp;degrés (ou de 0 à :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>2pi <a href="#id3"><span class="problematic" id="id4">`</span></a>). <strong>Fréquence</strong> est le nombre d’ondes par seconde.</p>
+<a class="reference external image-reference" href="../_images/amplitude_phase_period.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/amplitude_phase_period.svg" class="align-center" src="../_images/amplitude_phase_period.svg" /></a>
+<p>À ce stade, vous avez peut-être réalisé qu’un “signal” n’est essentiellement qu’une fonction, généralement représentée “dans le temps” (c’est-à-dire l’axe des x). Un autre attribut facile à retenir est la <strong>période</strong>, qui est l’inverse de la <strong>fréquence</strong>. La <strong>période</strong> d’une sinusoïde est le temps, en secondes, nécessaire à l’onde pour terminer un cycle. Ainsi, l’unité de fréquence est 1/seconde, ou Hz.</p>
+<p>Lorsque nous décomposons un signal en une somme d’ondes sinusoïdales, chacune aura une certaine <strong>amplitude</strong>, <strong>phase</strong> et <strong>fréquence</strong>. L’<strong>amplitude</strong> de chaque onde sinusoïdale nous indiquera la force de la <strong>fréquence</strong> dans le signal d’origine. Ne vous inquiétez pas trop de <strong>phase</strong> pour l’instant, à part réaliser que la seule différence entre sin() et cos() est un déphasage (décalage temporel).</p>
+<p>Il est plus important de comprendre le concept sous-jacent que les équations réelles à résoudre pour une série de Fourier, mais pour ceux qui sont intéressés par les équations, je vous renvoie à l’explication concise de Wolfram : <a class="reference external" href="https://mathworld.wolfram.com/FourierSeries.html" rel="noopener noreferrer" target="_blank">https://mathworld.wolfram.com/FourierSeries.html</a>.</p>
+</div>
+<div class="section" id="couples-temps-frequence">
+<h2>Couples Temps-Fréquence<a class="headerlink" href="#couples-temps-frequence" title="Permalink to this headline">¶</a></h2>
+<p>Nous avons établi que les signaux peuvent être représentés comme des ondes sinusoïdales, qui ont plusieurs attributs. Maintenant, apprenons à tracer des signaux dans le domaine fréquentiel. Alors que le domaine temporel montre comment un signal change dans le temps, le domaine fréquentiel affiche la quantité d’un signal dans quelles fréquences. Au lieu que l’axe des x soit le temps, ce sera la fréquence. Nous pouvons tracer un signal donné à la fois en temps * et * en fréquence. Regardons quelques exemples simples pour commencer.</p>
+<p>Voici à quoi ressemble une onde sinusoïdale, de fréquence f, dans le domaine temporel et fréquentiel&nbsp;:</p>
+<a class="reference internal image-reference" href="../_images/sine-wave.png"><img alt="../_images/sine-wave.png" class="align-center" src="../_images/sine-wave.png" style="width: 407.4px; height: 171.5px;" /></a>
+<p>Le domaine temporel devrait vous sembler très familier. C’est une fonction oscillante. Ne vous inquiétez pas à quel moment du cycle il commence ou combien de temps il dure. Le point à retenir est que le signal a une <strong>fréquence unique</strong>, c’est pourquoi nous voyons un seul pic/pic dans le domaine fréquentiel. Quelle que soit la fréquence à laquelle l’onde sinusoïdale oscille, nous verrons le pic dans le domaine fréquentiel. Le nom mathématique d’un pic comme celui-ci s’appelle une “impulsion”.</p>
+<p>Et si nous avions une impulsion dans le domaine temporel ? Imaginez un enregistrement sonore de quelqu’un frappant dans ses mains ou frappant un clou avec un marteau. Ce couple temps-fréquence est un peu moins intuitif.</p>
+<a class="reference internal image-reference" href="../_images/impulse.png"><img alt="../_images/impulse.png" class="align-center" src="../_images/impulse.png" style="width: 409.5px; height: 161.0px;" /></a>
+<p>Comme nous pouvons le voir, un pic/impulsion dans le domaine temporel est plat dans le domaine fréquentiel, et théoriquement il contient toutes les fréquences. Il n’y a pas d’impulsion théoriquement parfaite car elle devrait être infiniment courte dans le domaine temporel. Comme l’onde sinusoïdale, peu importe où dans le domaine temporel l’impulsion se produit. Le point important à retenir ici est que des changements rapides dans le domaine temporel entraînent l’apparition de nombreuses fréquences.</p>
+<p>Examinons ensuite les tracés des domaines temporel et fréquentiel d’une onde carrée&nbsp;:</p>
+<a class="reference external image-reference" href="../_images/square-wave.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/square-wave.svg" class="align-center" src="../_images/square-wave.svg" /></a>
+<p>Celui-ci est également moins intuitif, mais nous pouvons voir que le domaine fréquentiel a un fort pic à 10 Hz, qui est la fréquence de l’onde carrée, mais il semble également continuer. Cela est dû au changement rapide de domaine temporel, tout comme dans l’exemple précédent. Mais ce n’est pas plat en fréquence. Il a des pointes à intervalles réguliers et le niveau diminue lentement (bien qu’il continue indéfiniment). Une onde carrée dans le domaine temporel a un motif sin(x)/x dans le domaine fréquentiel (alias la fonction sinc).</p>
+<p>Et si nous avions un signal constant dans le domaine temporel ? Un signal constant n’a pas de “fréquence”. Voyons voir:</p>
+<a class="reference internal image-reference" href="../_images/dc-signal.png"><img alt="../_images/dc-signal.png" class="align-center" src="../_images/dc-signal.png" style="width: 633.0px; height: 217.0px;" /></a>
+<p>Parce qu’il n’y a pas de fréquence, dans le domaine fréquentiel, nous avons un pic à 0 Hz. Cela a du sens si vous y réfléchissez. Le domaine fréquentiel ne sera pas “vide” car cela ne se produit que lorsqu’il n’y a pas de signal présent (c’est-à-dire, domaine temporel de 0). Nous appelons 0 Hz dans le domaine fréquentiel “DC”, car il est causé par un signal DC dans le temps (un signal constant qui ne change pas). Notez que si nous augmentons l’amplitude de notre signal DC dans le domaine temporel, le pic à 0 Hz dans le domaine fréquentiel augmentera également.</p>
+<p>Plus tard, nous apprendrons ce que signifie exactement l’axe des ordonnées dans le tracé du domaine fréquentiel, mais pour l’instant, vous pouvez le considérer comme une sorte d’amplitude qui vous indique quelle quantité de cette fréquence était présente dans le signal du domaine temporel.</p>
+</div>
+<div class="section" id="fourier-transform">
+<h2>Fourier Transform<a class="headerlink" href="#fourier-transform" title="Permalink to this headline">¶</a></h2>
+<p>Mathématiquement, la “transformée” que nous utilisons pour passer du domaine temporel au domaine fréquentiel et inversement s’appelle la transformée de Fourier. Il est défini comme suit :</p>
+<div class="math">
+<p><img src="../_images/math/6ec9b03637d9f36f1f21065d0ea5f51a02de4423.svg" alt="X(f) = \int x(t) e^{-j2\pi ft} dt"/></p>
+</div><p>Pour un signal x(t), nous pouvons obtenir la version dans le domaine fréquentiel, X(f), en utilisant cette formule. Nous représenterons la version temporelle d’une fonction avec x(t) ou y(t), et la version fréquentielle correspondante avec X(f) et Y(f). Notez le «&nbsp;t&nbsp;» pour le temps et le «&nbsp;f&nbsp;» pour la fréquence. Le “j” est simplement l’unité imaginaire. Vous l’avez peut-être vu comme “i” en cours de mathématiques au lycée. Nous utilisons “j” en ingénierie et en informatique car “i” fait souvent référence au courant, et en programmation, il est souvent utilisé comme itérateur.</p>
+<p>Pour revenir au domaine temporel à partir de la fréquence, c’est presque la même chose, à part un facteur d’échelle et un signe négatif&nbsp;:</p>
+<div class="math">
+<p><img src="../_images/math/5be5072ccaf0978ad48c208cd73799c36aef51cd.svg" alt="x(t) = \frac{1}{2 \pi} \int X(f) e^{j2\pi ft} df"/></p>
+</div><p>Notez que de nombreux manuels et autres ressources utilisent <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> à la place de <img class="math" src="../_images/math/f2db2fc8f3c55a36937062e1797243b47a90f001.svg" alt="2\pi f"/>. <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> est la fréquence angulaire en radians par seconde, tandis que <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> est en Hz. Tout ce que vous devez savoir, c’est que</p>
+<div class="math">
+<p><img src="../_images/math/198ad5c1c03eb34cf94aa5de5ecc4e89624a2964.svg" alt="\omega = 2 \pi f"/></p>
+</div><p>Même s’il ajoute un terme <img class="math" src="../_images/math/adbf740b3ae712140edad99b950ffd8c9ec2919b.svg" alt="2 \pi"/> à de nombreuses équations, il est plus facile de s’en tenir à la fréquence en Hz. En fin de compte, vous travaillerez avec Hz dans votre application SDR.</p>
+<p>L’équation ci-dessus pour la transformée de Fourier est la forme continue, que vous ne verrez que dans les problèmes mathématiques. La forme discrète est beaucoup plus proche de ce qui est implémenté dans le code&nbsp;:</p>
+<div class="math">
+<p><img src="../_images/math/d94eb6f124e7e929c0420fd6d6a19eb14903b593.svg" alt="X_k = \sum_{n=0}^{N-1} x_n e^{-\frac{j2\pi}{N}kn}"/></p>
+</div><p>Notez que la principale différence est que nous avons remplacé l’intégrale par une sommation. L’indice <img class="math" src="../_images/math/30d4f39194cc2ced00937a2642c0345222fed6cd.svg" alt="k"/> va de 0 à N-1.</p>
+<p>Ce n’est pas grave si aucune de ces équations ne signifie beaucoup pour vous. Nous n’avons en fait pas besoin de les utiliser directement pour faire des choses sympas avec DSP et SDR!</p>
+</div>
+<div class="section" id="time-frequency-proprietes">
+<h2>Time-Frequency Propriétés<a class="headerlink" href="#time-frequency-proprietes" title="Permalink to this headline">¶</a></h2>
+<p>Plus tôt, nous avons examiné des exemples de la façon dont les signaux apparaissent dans le domaine temporel et le domaine fréquentiel. Maintenant, nous allons couvrir cinq “propriétés de Fourier” importantes. Ce sont des propriétés qui nous disent si nous faisons ____ à notre signal dans le domaine temporel, alors ____ arrive à notre signal dans le domaine fréquentiel. Cela nous donnera un aperçu important du type de traitement numérique du signal (DSP) que nous effectuerons sur les signaux du domaine temporel dans la pratique.</p>
+<ol class="arabic simple">
+<li>Linearity Propriété:</li>
+</ol>
+<div class="math">
+<p><img src="../_images/math/746a7887541f0ad9d3847793bc3a342014dc4d6d.svg" alt="a x(t) + b y(t) \leftrightarrow a X(f) + b Y(f)"/></p>
+</div><p>Cette propriété est probablement la plus facile à comprendre. Si nous ajoutons deux signaux dans le temps, la version du domaine fréquentiel sera également les deux signaux du domaine fréquentiel additionnés. Cela nous indique également que si nous multiplions l’un ou l’autre par un facteur d’échelle, le domaine fréquentiel sera également mis à l’échelle du même montant. L’utilité de cette propriété deviendra plus évidente lorsque nous additionnerons plusieurs signaux.</p>
+<ol class="arabic simple" start="2">
+<li>Frequency Shift Propriété:</li>
+</ol>
+<div class="math">
+<p><img src="../_images/math/be894b85227c716548c31342eccabe9c1b515b57.svg" alt="e^{2 \pi j f_0 t}x(t) \leftrightarrow X(f-f_0)"/></p>
+</div><p>Le terme à gauche de x(t) est ce que nous appelons une “sinusoïde complexe” ou une “exponentielle complexe”. Pour l’instant, tout ce que nous devons savoir, c’est qu’il s’agit essentiellement d’une onde sinusoïdale à la fréquence <img class="math" src="../_images/math/da647bd66569f61d6a3f16c3c2e09085c351a343.svg" alt="f_0"/>. Cette propriété nous dit que si nous prenons un signal <img class="math" src="../_images/math/b52a14c3452fbd1a467b640bb6269127e997a8e3.svg" alt="x(t)"/> et le multiplions par une onde sinusoïdale, alors dans le domaine fréquentiel nous obtenons <img class="math" src="../_images/math/8107fe72abc774dcc596c9fa4ee452bf8f6748af.svg" alt="X(f)"/> sauf décalé d’une certaine fréquence, <a href="#id5"><span class="problematic" id="id6">:maths:`f_0`</span></a>. Ce changement de fréquence peut être plus facile à visualiser&nbsp;:</p>
+<a class="reference external image-reference" href="../_images/freq-shift.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/freq-shift.svg" class="align-center" src="../_images/freq-shift.svg" /></a>
+<p>Le décalage de fréquence fait partie intégrante du DSP car nous voudrons décaler les signaux de haut en bas en fréquence pour de nombreuses raisons. Cette propriété nous indique comment faire cela (multiplier par une onde sinusoïdale). Voici une autre façon de visualiser cette propriété&nbsp;:</p>
+<a class="reference external image-reference" href="../_images/freq-shift-diagram.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/freq-shift-diagram.svg" class="align-center" src="../_images/freq-shift-diagram.svg" /></a>
+<ol class="arabic simple" start="3">
+<li>Scaling in Time Propriété:</li>
+</ol>
+<div class="math">
+<p><img src="../_images/math/0a4a9d25a8969bb46059aa8e6ae6672fce599b17.svg" alt="x(at) \leftrightarrow X\left(\frac{f}{a}\right)"/></p>
+</div><p>Sur le côté gauche de l’équation, nous pouvons voir que nous mettons à l’échelle notre signal x(t) dans le domaine temporel. Voici un exemple d’un signal mis à l’échelle dans le temps, puis ce qui arrive aux versions du domaine fréquentiel de chacun.</p>
+<a class="reference external image-reference" href="../_images/time-scaling.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/time-scaling.svg" class="align-center" src="../_images/time-scaling.svg" /></a>
+<p>La mise à l’échelle dans le temps réduit ou étend essentiellement le signal sur l’axe des x. Ce que cette propriété nous dit, c’est que la mise à l’échelle dans le domaine temporel provoque une mise à l’échelle inverse dans le domaine fréquentiel. Par exemple, lorsque nous transmettons des bits plus rapidement, nous devons utiliser plus de fréquences. La propriété aide à expliquer pourquoi les signaux à débit de données plus élevé occupent plus de bande passante/spectre. Si la mise à l’échelle temps-fréquence était proportionnelle au lieu d’être inversement proportionnelle, les opérateurs cellulaires seraient capables de transmettre tous les bits par seconde qu’ils voulaient sans payer des milliards pour le spectre&nbsp;! Malheureusement ce n’est pas le cas.</p>
+<p>Ceux qui connaissent déjà cette propriété peuvent remarquer qu’il manque un facteur d’échelle&nbsp;; il est omis par souci de simplicité. Pour des raisons pratiques, cela ne fait aucune différence.</p>
+<ol class="arabic simple" start="4">
+<li>Convolution in Time Propriété:</li>
+</ol>
+<div class="math">
+<p><img src="../_images/math/866b024f252bc95ed034ab893af1cb799453d7d0.svg" alt="\int x(\tau) y(t-\tau) d\tau  \leftrightarrow X(f)Y(f)"/></p>
+</div><p>C’est ce qu’on appelle la propriété de convolution parce que dans le domaine temporel nous convoluons x(t) et y(t). Vous ne connaissez peut-être pas encore l’opération de convolution, alors imaginez-la pour l’instant comme une corrélation croisée. Lorsque nous convoluons des signaux dans le domaine temporel, cela équivaut à multiplier les versions dans le domaine fréquentiel de ces deux signaux. C’est très différent de l’addition de deux signaux. Lorsque vous ajoutez deux signaux, comme nous l’avons vu, rien ne se passe vraiment, vous additionnez simplement la version du domaine fréquentiel. Mais lorsque vous convoluez deux signaux, c’est comme créer un nouveau troisième signal à partir d’eux. La convolution est la technique la plus importante dans DSP, bien que nous devions d’abord comprendre comment fonctionnent les filtres pour bien la saisir.</p>
+<p>Avant de continuer, pour expliquer brièvement pourquoi cette propriété est si importante, considérez cette situation&nbsp;: vous avez un signal que vous souhaitez recevoir, et il y a un signal interférant à côté.</p>
+<a class="reference external image-reference" href="../_images/two-signals.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/two-signals.svg" class="align-center" src="../_images/two-signals.svg" /></a>
+<p>Le concept de masquage est fortement utilisé en programmation, alors utilisons-le ici. Et si nous pouvions créer le masque ci-dessous et le multiplier par le signal ci-dessus afin de masquer celui que nous ne voulons pas&nbsp;?</p>
+<a class="reference external image-reference" href="../_images/masking.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/masking.svg" class="align-center" src="../_images/masking.svg" /></a>
+<p>Nous effectuons généralement des opérations DSP dans le domaine temporel, utilisons donc la propriété de convolution pour voir comment nous pouvons effectuer ce masquage dans le domaine temporel. Disons que x(t) est notre signal reçu. Soit Y(f) le masque que nous voulons appliquer dans le domaine fréquentiel. Eh bien, cela signifie que y(t) est la représentation dans le domaine temporel de notre masque, et si nous le convoluons avec x(t), nous pouvons “filtrer” le signal que nous ne voulons pas.</p>
+<a class="reference internal image-reference" href="../_images/masking-equation.png"><img alt="../_images/masking-equation.png" class="align-center" src="../_images/masking-equation.png" style="width: 327.0px; height: 134.0px;" /></a>
+<p>Lorsque nous discutons du filtrage, la propriété de convolution aura plus de sens.</p>
+<ol class="arabic simple" start="5">
+<li>Convolution in Frequency Propriété:</li>
+</ol>
+<p>Enfin, je tiens à souligner que la propriété de convolution fonctionne à l’envers, même si nous ne l’utiliserons pas autant que la convolution dans le domaine temporel&nbsp;:</p>
+<div class="math">
+<p><img src="../_images/math/4d0228bed6205664ca7c69fc28ff975676f0e932.svg" alt="x(t)y(t)  \leftrightarrow  \int X(g) Y(f-g) dg"/></p>
+</div><p>Il existe d’autres propriétés, mais les cinq ci-dessus sont les plus cruciales à comprendre à mon avis. Même si nous n’avons pas parcouru la preuve pour chaque propriété, le fait est que nous utilisons les propriétés mathématiques pour avoir un aperçu de ce qui arrive aux signaux réels lorsque nous effectuons une analyse et un traitement. Ne vous laissez pas prendre aux équations. Assurez-vous de bien comprendre la description de chaque propriété.</p>
+</div>
+<div class="section" id="fast-fourier-transform-fft">
+<h2>Fast Fourier Transform (FFT)<a class="headerlink" href="#fast-fourier-transform-fft" title="Permalink to this headline">¶</a></h2>
+<p>Revenons maintenant à la transformée de Fourier. Je vous ai montré l’équation de la transformée de Fourier discrète, mais ce que vous utiliserez lors du codage 99,9&nbsp;% du temps sera la fonction FFT, fft(). La transformée de Fourier rapide (FFT) est simplement un algorithme pour calculer la transformée de Fourier discrète. Il a été développé il y a des décennies, et même s’il existe des variations dans l’implémentation, il reste le leader en titre pour le calcul d’une transformée de Fourier discrète. Heureusement, étant donné qu’ils ont utilisé “Fast” dans le nom.</p>
+<p>La FFT est une fonction à une entrée et une sortie. Il convertit un signal de temps en fréquence&nbsp;:</p>
+<a class="reference external image-reference" href="../_images/fft-block-diagram.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fft-block-diagram.svg" class="align-center" src="../_images/fft-block-diagram.svg" /></a>
+<p>Nous ne traiterons que des FFT à 1 dimension dans ce manuel (la 2D est utilisée pour le traitement d’images et d’autres applications). Pour nos besoins, considérons la fonction FFT comme ayant une entrée&nbsp;: un vecteur d’échantillons et une sortie&nbsp;: la version dans le domaine fréquentiel de ce vecteur d’échantillons. La taille de la sortie est toujours la même que la taille de l’entrée. Si j’introduis 1 024 échantillons dans la FFT, j’en sortirai 1 024. La partie déroutante est que la sortie sera toujours dans le domaine fréquentiel, et donc la “portée” de l’axe des x si nous devions le tracer ne change pas en fonction du nombre d’échantillons dans l’entrée du domaine temporel. Visualisons cela en examinant les tableaux d’entrée et de sortie, ainsi que les unités de leurs indices&nbsp;:</p>
+<a class="reference external image-reference" href="../_images/fft-io.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fft-io.svg" class="align-center" src="../_images/fft-io.svg" /></a>
+<p>Étant donné que la sortie est dans le domaine fréquentiel, l’étendue de l’axe des x est basée sur la fréquence d’échantillonnage, que nous aborderons au chapitre suivant. Lorsque nous utilisons plus d’échantillons pour le vecteur d’entrée, nous obtenons une meilleure résolution dans le domaine fréquentiel (en plus de traiter plus d’échantillons à la fois). Nous ne “voyons” pas réellement plus de fréquences en ayant une entrée plus grande. Le seul moyen serait d’augmenter le taux d’échantillonnage (diminuer la période d’échantillonnage <img class="math" src="../_images/math/39bb0cf165301516f1e7396af7393a5b3f6c733e.svg" alt="\Delta t"/>).</p>
+<p>Comment traçons-nous réellement cette sortie&nbsp;? A titre d’exemple, disons que notre taux d’échantillonnage était de 1 million d’échantillons par seconde (1 MHz). Comme nous l’apprendrons au chapitre suivant, cela signifie que nous ne pouvons voir que des signaux jusqu’à 0,5 MHz, quel que soit le nombre d’échantillons que nous alimentons dans la FFT. La façon dont la sortie de la FFT est représentée est la suivante&nbsp;:</p>
+<a class="reference external image-reference" href="../_images/negative-frequencies.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/negative-frequencies.svg" class="align-center" src="../_images/negative-frequencies.svg" /></a>
+<p>C’est toujours le cas; la sortie de la FFT affichera toujours <img class="math" src="../_images/math/cb05020c98608fb3c62ed9132b03cb70bfeac2d4.svg" alt="\text{-} f_s/2"/> à <img class="math" src="../_images/math/afde4de8938387b8c8e7277067b0eb0ab90ab483.svg" alt="f_s/2"/> où <img class="math" src="../_images/math/7daaccc7c28018a253e53d5cde99a13764df9a8d.svg" alt="f_s"/> est la fréquence d’échantillonnage. C’est-à-dire que la sortie aura toujours une partie négative et une partie positive. Si l’entrée est complexe, les parties négatives et positives seront différentes, mais si elles sont réelles, elles seront identiques.</p>
+<p>En ce qui concerne l’intervalle de fréquence, chaque bin correspond à <img class="math" src="../_images/math/da39ae114c94fb9dc38f7c6bbe66183011c21dc3.svg" alt="f_s/N"/> Hz, c’est-à-dire que l’alimentation de plus d’échantillons à chaque FFT conduira à une résolution plus granulaire de votre sortie. Un détail très mineur qui peut être ignoré si vous êtes nouveau : mathématiquement, le tout dernier index ne correspond pas <em>exactement</em> à <img class="math" src="../_images/math/afde4de8938387b8c8e7277067b0eb0ab90ab483.svg" alt="f_s/2"/>, c’est plutôt <img class="math" src="../_images/math/85b4914ed3d51eb47935368044def8b2299898e1.svg" alt="f_s/2 - f_s/N"/> qui pour un grand <img class="math" src="../_images/math/24ca8296258e6d43d10327cf05e8d5b650662803.svg" alt="N"/> sera approximativement <img class="math" src="../_images/math/afde4de8938387b8c8e7277067b0eb0ab90ab483.svg" alt="f_s/2"/>.</p>
+</div>
+<div class="section" id="frequences-negatives">
+<h2>Fréquences négatives<a class="headerlink" href="#frequences-negatives" title="Permalink to this headline">¶</a></h2>
+<p>Qu’est-ce qu’une fréquence négative&nbsp;? Pour l’instant, sachez simplement qu’ils ont à voir avec l’utilisation de nombres complexes (nombres imaginaires) - il n’y a pas vraiment de “fréquence négative”, c’est juste une représentation que nous utilisons. Voici une façon intuitive d’y penser. Considérons que nous disons à notre SDR de se régler sur 100 MHz (la bande radio FM) et d’échantillonner à une fréquence de 10 MHz. En d’autres termes, nous verrons le spectre de 95 MHz à 105 MHz. Il y a peut-être trois signaux présents :</p>
+<a class="reference external image-reference" href="../_images/negative-frequencies2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/negative-frequencies2.svg" class="align-center" src="../_images/negative-frequencies2.svg" /></a>
+<p>Lorsque le SDR nous donnera les échantillons, il apparaîtra comme ceci :</p>
+<a class="reference external image-reference" href="../_images/negative-frequencies3.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/negative-frequencies3.svg" class="align-center" src="../_images/negative-frequencies3.svg" /></a>
+<p>Rappelez-vous que nous avons réglé le SDR sur 100 MHz. Ainsi, le signal qui était à environ 97,5 MHz apparaît à -2,5 MHz, qui est une fréquence négative. En réalité, c’est juste une fréquence inférieure à la fréquence centrale. Cela aura plus de sens lorsque nous en apprendrons davantage sur l’échantillonnage et utiliserons nos SDR.</p>
+</div>
+<div class="section" id="l-ordre-dans-le-temps-n-a-pas-d-importance">
+<h2>L’ordre dans le temps n’a pas d’importance<a class="headerlink" href="#l-ordre-dans-le-temps-n-a-pas-d-importance" title="Permalink to this headline">¶</a></h2>
+<p>Une dernière propriété avant de sauter dans les FFT. La fonction FFT “mélange autour” le signal d’entrée pour former la sortie, qui a une échelle et des unités différentes. Nous ne sommes plus dans le domaine temporel après tout. Un bon moyen d’internaliser cette différence entre les domaines consiste à réaliser que le fait de changer l’ordre dans lequel les événements se produisent dans le domaine temporel ne modifie pas les composantes de fréquence du signal. C’est-à-dire que la FFT des deux signaux suivants aura les deux mêmes pics car le signal n’est que deux ondes sinusoïdales à des fréquences différentes. Changer l’ordre dans lequel les ondes sinusoïdales se produisent ne change pas le fait qu’il s’agit de deux ondes sinusoïdales à des fréquences différentes.</p>
+<a class="reference internal image-reference" href="../_images/fft_signal_order.png"><img alt="../_images/fft_signal_order.png" class="align-center" src="../_images/fft_signal_order.png" style="width: 634.0px; height: 224.0px;" /></a>
+<p>Techniquement, la phase de la FFT va changer à cause du décalage temporel des sinusoïdes ; cependant, 99% du temps, nous ne nous préoccupons que de l’ampleur de la FFT, comme nous l’apprendrons bientôt.</p>
+</div>
+<div class="section" id="fft-in-python">
+<h2>FFT in Python<a class="headerlink" href="#fft-in-python" title="Permalink to this headline">¶</a></h2>
+<p>Maintenant que nous avons appris ce qu’est une FFT et comment la sortie est représentée, regardons en fait du code Python et utilisons la fonction FFT de Numpy, np.fft.fft(). Il est recommandé d’utiliser une console/IDE Python complète sur votre ordinateur, mais à la rigueur, vous pouvez utiliser la console Python en ligne liée au bas de la barre de navigation à gauche.</p>
+<p>Nous devons d’abord créer un signal dans le domaine temporel. N’hésitez pas à suivre avec votre propre console Python. Pour simplifier les choses, nous allons faire une simple onde sinusoïdale à 0,15 Hz. Nous utiliserons également une fréquence d’échantillonnage de 1 Hz, ce qui signifie que nous échantillonnons dans le temps à 0, 1, 2, 3 secondes, etc.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">0.15</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Si nous traçons s, cela ressemble à :</p>
+<a class="reference internal image-reference" href="../_images/fft-python1.png"><img alt="../_images/fft-python1.png" class="align-center" src="../_images/fft-python1.png" style="width: 477.4px; height: 282.79999999999995px;" /></a>
+<p>Utilisons ensuite la fonction FFT de Numpy&nbsp;:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Si nous regardons S, nous voyons qu’il s’agit d’un tableau de nombres complexes&nbsp;:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span>  <span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">0.01865008</span> <span class="o">+</span><span class="mf">0.00000000e+00</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01171553</span> <span class="o">-</span><span class="mf">2.79073782e-01</span><span class="n">j</span><span class="p">,</span><span class="mf">0.02526446</span> <span class="o">-</span><span class="mf">8.82681208e-01</span><span class="n">j</span><span class="p">,</span>  <span class="mf">3.50536075</span> <span class="o">-</span><span class="mf">4.71354150e+01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.15045671</span> <span class="o">+</span><span class="mf">1.31884375e+00</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10769903</span> <span class="o">+</span><span class="mf">7.10452463e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.09435855</span> <span class="o">+</span><span class="mf">5.01303240e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.08808671</span> <span class="o">+</span><span class="mf">3.92187956e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.08454414</span> <span class="o">+</span><span class="mf">3.23828386e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.08231753</span> <span class="o">+</span><span class="mf">2.76337148e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.08081535</span> <span class="o">+</span><span class="mf">2.41078885e-01</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07974909</span> <span class="o">+</span><span class="mf">2.13663710e-01</span><span class="n">j</span><span class="p">,</span><span class="o">...</span>
+</pre></div>
+</div>
+<p>Astuce&nbsp;: quoi que vous fassiez, si jamais vous rencontrez des nombres complexes, essayez de calculer la magnitude et la phase et voyez s’ils ont plus de sens. Faisons exactement cela, et traçons la magnitude et la phase. Dans la plupart des langages, abs() est une fonction de magnitude d’un nombre complexe. La fonction de phase varie, mais en Python c’est <code class="code docutils literal notranslate"><span class="pre">np.angle()</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">S_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+<span class="n">S_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">S_mag</span><span class="p">,</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">S_phase</span><span class="p">,</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/fft-python2.png"><img alt="../_images/fft-python2.png" class="align-center" src="../_images/fft-python2.png" style="width: 526.4px; height: 465.6px;" /></a>
+<p>À l’heure actuelle, nous ne fournissons aucun axe x aux tracés, c’est juste l’index du tableau (en partant de 0). Pour des raisons mathématiques, la sortie de la FFT a le format suivant&nbsp;:</p>
+<a class="reference external image-reference" href="../_images/fft-python3.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fft-python3.svg" class="align-center" src="../_images/fft-python3.svg" /></a>
+<p>Mais nous voulons 0 Hz (DC) au centre et des fréquences négatives à gauche (c’est comme ça que nous aimons visualiser les choses). Donc, chaque fois que nous faisons une FFT, nous devons effectuer un “décalage FFT”, qui est juste une simple opération de réarrangement de tableau, un peu comme un décalage circulaire mais plus un “mettre ceci ici et cela là”. Le schéma ci-dessous définit pleinement ce que fait l’opération de décalage FFT&nbsp;:</p>
+<a class="reference external image-reference" href="../_images/fft-python4.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fft-python4.svg" class="align-center" src="../_images/fft-python4.svg" /></a>
+<p>Pour notre commodité, Numpy a une fonction de décalage FFT, <code class="code docutils literal notranslate"><span class="pre">np.fft.fftshift()</span></code>. Remplacez la ligne np.fft.fft() par :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Nous devons également déterminer les valeurs/étiquettes de l’axe des x. Rappelez-vous que nous avons utilisé une fréquence d’échantillonnage de 1 Hz pour simplifier les choses. Cela signifie que le bord gauche du tracé du domaine fréquentiel sera de -0,5 Hz et le bord droit sera de 0,5 Hz. Si cela n’a pas de sens, il le sera après avoir lu le chapitre sur <a class="reference internal" href="sampling.html#sampling-chapter"><span class="std std-ref">IQ Sampling</span></a>. Tenons-nous en à cette hypothèse selon laquelle notre fréquence d’échantillonnage était de 1 Hz et traçons l’amplitude et la phase de la sortie FFT avec une étiquette d’axe x appropriée. Voici la version finale de cet exemple Python et le résultat&nbsp;:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">Fs</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># Hz</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># number of points to simulate, and our FFT size</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="c1"># because our sample rate is 1 Hz</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">0.15</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+<span class="n">S_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+<span class="n">S_phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">Fs</span><span class="o">/-</span><span class="mi">2</span><span class="p">,</span> <span class="n">Fs</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">Fs</span><span class="o">/</span><span class="n">N</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">S_mag</span><span class="p">,</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">S_phase</span><span class="p">,</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/fft-python5.png"><img alt="../_images/fft-python5.png" class="align-center" src="../_images/fft-python5.png" style="width: 518.4px; height: 442.40000000000003px;" /></a>
+<p>Notez que nous voyons notre pic à 0,15 Hz, qui est la fréquence que nous avons utilisée lors de la création de l’onde sinusoïdale. Cela signifie donc que notre FFT a fonctionné ! Si nous ne connaissions pas le code utilisé pour générer cette onde sinusoïdale, mais que nous venions de recevoir la liste des échantillons, nous pourrions utiliser la FFT pour déterminer la fréquence. La raison pour laquelle nous voyons un pic également à -0,15 Hz est liée au fait qu’il s’agissait d’un signal réel, pas complexe, et nous approfondirons cela plus tard.</p>
+</div>
+<div class="section" id="windowing">
+<h2>Windowing<a class="headerlink" href="#windowing" title="Permalink to this headline">¶</a></h2>
+<p>Lorsque nous utilisons une FFT pour mesurer les composantes de fréquence de notre signal, la FFT suppose qu’il reçoit un morceau d’un signal <em>périodique</em>. Il se comporte comme si le morceau de signal que nous avons fourni continuait à se répéter indéfiniment. C’est comme si le dernier échantillon de la tranche se reconnectait au premier échantillon. Il découle de la théorie de la transformée de Fourier. Cela signifie que nous voulons éviter les transitions soudaines entre le premier et le dernier échantillon car les transitions soudaines dans le domaine temporel ressemblent à de nombreuses fréquences et, en réalité, notre dernier échantillon ne se connecte pas réellement à notre premier échantillon. Pour faire simple : si nous faisons une FFT de 100 échantillons, en utilisant <code class="code docutils literal notranslate"><span class="pre">np.fft.fft(x)</span></code>, nous voulons <code class="code docutils literal notranslate"><span class="pre">x[0]</span></code> et :code:<a href="#id7"><span class="problematic" id="id8">`</span></a>x[99] ` pour être égal ou proche en valeur.</p>
+<p>La façon dont nous compensons cette propriété cyclique est par le “fenêtrage”. Juste avant la FFT, nous multiplions la tranche de signal par une fonction de fenêtre, qui est n’importe quelle fonction qui se rétrécit à zéro aux deux extrémités. Cela garantit que la tranche de signal commencera et se terminera à zéro et se connectera. Les fonctions de fenêtre courantes incluent Hamming, Hanning, Blackman et Kaiser. Lorsque vous n’appliquez aucun fenêtrage, cela s’appelle utiliser une fenêtre “rectangulaire” car c’est comme multiplier par un tableau de uns. Voici à quoi ressemblent plusieurs fonctions de fenêtre&nbsp;:</p>
+<a class="reference external image-reference" href="../_images/windows.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/windows.svg" class="align-center" src="../_images/windows.svg" /></a>
+<p>Une approche simple pour les débutants consiste à simplement s’en tenir à une fenêtre de Hamming, qui peut être créée en Python avec <code class="code docutils literal notranslate"><span class="pre">np.hamming(N)</span></code> où N est le nombre d’éléments dans le tableau, qui est votre taille FFT. Dans l’exercice ci-dessus, nous appliquerions la fenêtre juste avant la FFT. Après la 2ème ligne de code, nous insérerions :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">hamming</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Si vous avez peur de choisir la mauvaise fenêtre, ne le soyez pas. La différence entre Hamming, Hanning, Blackman et Kaiser est très minime par rapport au fait de ne pas utiliser de fenêtre du tout, car ils se réduisent tous à zéro des deux côtés et résolvent le problème sous-jacent.</p>
+</div>
+<div class="section" id="fft-sizing">
+<h2>FFT Sizing<a class="headerlink" href="#fft-sizing" title="Permalink to this headline">¶</a></h2>
+<p>La dernière chose à noter est le dimensionnement FFT. La meilleure taille de FFT est toujours d’ordre 2 en raison de la manière dont la FFT est implémentée. Vous pouvez utiliser une taille qui n’est pas de l’ordre de 2, mais ce sera plus lent. Les tailles courantes se situent entre 128 et 4 096, bien que vous puissiez certainement aller plus loin. En pratique, nous devrons peut-être traiter des signaux longs de millions ou de milliards d’échantillons, nous devons donc décomposer le signal et effectuer de nombreuses FFT. Cela signifie que nous obtiendrons de nombreuses sorties. Nous pouvons soit les calculer en moyenne, soit les tracer dans le temps (en particulier lorsque notre signal change dans le temps). Vous n’avez pas besoin de mettre * chaque * échantillon d’un signal dans une FFT pour obtenir une bonne représentation dans le domaine fréquentiel de ce signal. Par exemple, vous ne pouvez FFT que 1 024 échantillons sur 100 000 dans un signal et cela aura probablement l’air correct, tant que le signal est toujours activé.</p>
+</div>
+<div class="section" id="spectrogram-waterfall">
+<h2>Spectrogram/Waterfall<a class="headerlink" href="#spectrogram-waterfall" title="Permalink to this headline">¶</a></h2>
+<p>Un spectrogramme est le graphique qui montre la fréquence dans le temps. Il s’agit simplement d’un tas de FFT empilées (verticalement, si vous voulez une fréquence sur l’axe horizontal). Nous pouvons également le montrer en temps réel, souvent appelé cascade. Un analyseur de spectre est l’équipement qui affiche ce spectrogramme/cascade. Voici un exemple de spectrogramme, avec la fréquence sur l’axe horizontal/x et le temps sur l’axe vertical/y. Le bleu représente l’énergie la plus faible et le rouge la plus élevée. Nous pouvons voir qu’il y a une forte pointe à DC (0 Hz) au centre avec un signal variable autour de lui. Le bleu représente notre plancher de bruit.</p>
+<a class="reference internal image-reference" href="../_images/waterfall.png"><img alt="../_images/waterfall.png" class="align-center" src="../_images/waterfall.png" style="width: 463.2px; height: 297.59999999999997px;" /></a>
+<p>Comme exercice, essayez d’écrire le code Python nécessaire pour produire un spectrogramme. N’oubliez pas qu’il ne s’agit que de rangées de FFT empilées les unes sur les autres, chaque rangée correspond à 1 FFT. Assurez-vous de trancher dans le temps votre signal d’entrée en tranches de la taille de votre FFT (par exemple, 1024 échantillons par tranche). Pour garder les choses simples, vous pouvez entrer un signal réel et simplement jeter la moitié négative des fréquences avant de tracer le spectrogramme. Voici un exemple de signal que vous pouvez utiliser, c’est simplement une tonalité dans un bruit blanc :</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span>
+
+<span class="c1"># Generate tone plus noise</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1024</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span><span class="o">/</span><span class="n">sample_rate</span> <span class="c1"># time vector</span>
+<span class="n">f</span> <span class="o">=</span> <span class="mf">50e3</span> <span class="c1"># freq of tone</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Voici à quoi cela ressemble dans le domaine temporel (first 200&nbsp;samples)&nbsp;:</p>
+<a class="reference external image-reference" href="../_images/spectrogram_time.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/spectrogram_time.svg" class="align-center" src="../_images/spectrogram_time.svg" /></a>
+<details>
+<summary>Example spectrogram code (try to write it yourself first!)</summary><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># simulate the signal above, or use your own signal</span>
+
+<span class="n">fft_size</span> <span class="o">=</span> <span class="mi">1024</span>
+<span class="n">num_rows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">fft_size</span><span class="p">))</span>
+<span class="n">spectrogram</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_rows</span><span class="p">,</span> <span class="n">fft_size</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_rows</span><span class="p">):</span>
+    <span class="n">spectrogram</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">fft_size</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">fft_size</span><span class="p">])))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">spectrogram</span> <span class="o">=</span> <span class="n">spectrogram</span><span class="p">[:,</span><span class="n">fft_size</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span> <span class="c1"># get rid of negative freqs because we simulated a real signal</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">spectrogram</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="mf">1e6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">sample_rate</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Frequency [MHz]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Time [s]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Ce qui devrait produire le spectrogramme suivant, qui n’est pas le plus intéressant car il n’y a pas de comportement variant dans le temps. Comme exercice supplémentaire, essayez d’ajouter un comportement variant dans le temps, par exemple, voyez si vous pouvez faire démarrer et arrêter la tonalité.</p>
+<a class="reference external image-reference" href="../_images/spectrogram.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/spectrogram.svg" class="align-center" src="../_images/spectrogram.svg" /></a>
+</details></div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="intro.html" title="Previous document"><span class="section-number">1. </span>Introduction</a>
+        </li>
+        <li>
+          <a href="sampling.html" title="Next document"><span class="section-number">3. </span>IQ Sampling</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2022, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

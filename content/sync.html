@@ -28,6 +28,14 @@
   gtag('config', 'G-TGRQK1JJYD');
 </script>
 
+<!-- French/English Chooser, couldnt get it working with local URLs -->
+<div style="float: right; padding-bottom: 0;">
+  <select onchange="location = this.value;">
+    <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/fr/index-fr.html">French</option>
+  </select>
+</div>
+
   </head><body>
   <div class="document">
     
@@ -182,7 +190,7 @@
 <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="c1"># apply filter</span>
 </pre></div>
 </div>
-<p>As you can see, we are calculating the filter taps using a sinc() function.  A sinc in the time domain is a rectangle in the frequency domain, and our rectangle for this filter spans the entire frequency range of our signal.  This filter does not reshape the signal, it just delays it in time.  In our example we are delaying by 0.3 of a sample.  Keep in mind that applying <em>any</em> filter delays a signal by half of the filter taps minus one, due to the act of convolving the signal through the filter.</p>
+<p>As you can see, we are calculating the filter taps using a sinc() function.  A sinc in the time domain is a rectangle in the frequency domain, and our rectangle for this filter spans the entire frequency range of our signal.  This filter does not reshape the signal, it just delays it in time.  In our example we are delaying by 0.4 of a sample.  Keep in mind that applying <em>any</em> filter delays a signal by half of the filter taps minus one, due to the act of convolving the signal through the filter.</p>
 <p>If we plot the “before” and “after” of filtering a signal, we can observe the fractional delay.  In our plot we zoom into only a couple of symbols.  Otherwise, the fractional delay is not viewable.</p>
 <a class="reference external image-reference" href="../_images/fractional-delay-filter.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fractional-delay-filter.svg" class="align-center" src="../_images/fractional-delay-filter.svg" /></a>
 </div>

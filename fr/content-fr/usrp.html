@@ -1,0 +1,431 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>6. USRP in Python &#8212; PySDR: A Guide to SDR and DSP using Python</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7. Noise and dB" href="noise.html" />
+    <link rel="prev" title="5. PlutoSDR in Python" href="pluto.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TGRQK1JJYD');
+</script>
+
+<!-- French/English Chooser, couldnt get it working with local URLs -->
+<div style="float: right; padding-bottom: 0;">
+  <select onchange="location = this.value;">
+    <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/fr/index-fr.html">French</option>
+  </select>
+</div>
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index-fr.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Domaine Fréquentiel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. USRP in Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#software-drivers-install">Software/Drivers Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#receiving">Receiving</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transmitting">Transmitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transmitting-and-receiving-simultaneously">Transmitting and Receiving Simultaneously</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subdevice-channels-and-antennas">Subdevice, Channels, and Antennas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#syncing-to-10-mhz-and-pps">Syncing to 10 MHz and PPS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files and SigMF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rds.html">15. End-to-End Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index-fr.html">Documentation overview</a><ul>
+      <li>Previous: <a href="pluto.html" title="previous chapter"><span class="section-number">5. </span>PlutoSDR in Python</a></li>
+      <li>Next: <a href="noise.html" title="next chapter"><span class="section-number">7. </span>Noise and dB</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="pluto.html" title="Previous document"><span class="section-number">5. </span>PlutoSDR in Python</a>
+        </li>
+        <li>
+          <a href="noise.html" title="Next document"><span class="section-number">7. </span>Noise and dB</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="usrp-in-python">
+<span id="usrp-chapter"></span><h1><span class="section-number">6. </span>USRP in Python<a class="headerlink" href="#usrp-in-python" title="Permalink to this headline">¶</a></h1>
+<a class="reference internal image-reference" href="../_images/usrp.png"><img alt="../_images/usrp.png" class="align-center" src="../_images/usrp.png" style="width: 428.5px; height: 212.0px;" /></a>
+<p>In this chapter we learn how to use the UHD Python API to control and receive/transmit signals with a <a class="reference external" href="https://www.ettus.com/" rel="noopener noreferrer" target="_blank">USRP</a> which is a series of SDRs made by Ettus Research (now part of NI).  We will discuss transmitting and receiving on the USRP in Python, and dive into USRP-specific topics including stream args, subdevices, channels, 10 MHz and PPS synchronization.</p>
+<div class="section" id="software-drivers-install">
+<h2>Software/Drivers Install<a class="headerlink" href="#software-drivers-install" title="Permalink to this headline">¶</a></h2>
+<p>While the Python code provided in this textbook should work under Windows, Mac, and Linux, we will only be providing driver/API install instructions specific to Ubuntu 20 (although the instructions below should work on most Debian-based distributions).  We will start by creating an Ubuntu 20 VirtualBox VM; feel free to skip the VM portion if you already have your OS ready to go.</p>
+<div class="section" id="setting-up-an-ubuntu-20-vm">
+<h3>Setting Up an Ubuntu 20 VM<a class="headerlink" href="#setting-up-an-ubuntu-20-vm" title="Permalink to this headline">¶</a></h3>
+<p>(Optional)</p>
+<ol class="arabic simple">
+<li>Download Ubuntu 20.04 Desktop .iso- <a class="reference external" href="https://ubuntu.com/download/desktop" rel="noopener noreferrer" target="_blank">https://ubuntu.com/download/desktop</a></li>
+<li>Install and open <a class="reference external" href="https://www.virtualbox.org/wiki/Downloads" rel="noopener noreferrer" target="_blank">VirtualBox</a>.</li>
+<li>Create a new VM.  For memory size, I recommend using 50% of your computer’s RAM.</li>
+<li>Create the virtual hard disk, choose VDI, and dynamically allocate size.  15 GB should be enough. If you want to be really safe you can use more.</li>
+<li>Start the VM. It will ask you for installation media. Choose the Ubuntu 20 desktop .iso file.  Choose “install ubuntu”, use default options, and a pop up will warn you about the changes you are about to make. Hit continue.  Choose name/password and then wait for the VM to finish initializing.  After finishing the VM will restart, but you should power off the VM after the restart.</li>
+<li>Go into the VM settings (the gear icon).</li>
+<li>Under system &gt; processor &gt; choose at least 3 CPUs.  If you have an actual video card then in display &gt; video memory &gt; choose something much higher.</li>
+<li>Start up your VM.</li>
+<li>For USB type USRPs you’ll need to install VM guest additions. Within the VM go to Devices &gt; Insert Guest Additions CD &gt; hit run when a box pops up.  Follow the instructions. Restart the VM, then attempt to forward the USRP to the VM, assuming it shows up in the list under Devices &gt; USB.  The shared clipboard can be enabled through Devices &gt; Shared Clipboard &gt; Bidirectional.</li>
+</ol>
+</div>
+<div class="section" id="installing-uhd-and-python-api">
+<h3>Installing UHD and Python API<a class="headerlink" href="#installing-uhd-and-python-api" title="Permalink to this headline">¶</a></h3>
+<p>The terminal commands below should build and install the latest version of UHD, including the Python API:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install git cmake libboost-all-dev libusb-1.0-0-dev python3-docutils python3-mako python3-numpy python3-requests python3-ruamel.yaml python3-setuptools build-essential
+<span class="nb">cd</span> ~
+git clone https://github.com/EttusResearch/uhd.git
+<span class="nb">cd</span> uhd/host
+mkdir build
+<span class="nb">cd</span> build
+cmake -DENABLE_TESTS<span class="o">=</span>OFF -DENABLE_C_API<span class="o">=</span>OFF -DENABLE_MANUAL<span class="o">=</span>OFF ..
+make -j8
+sudo make install
+sudo ldconfig
+</pre></div>
+</div>
+<p>For more help see Ettus’ official <a class="reference external" href="https://files.ettus.com/manual/page_build_guide.html" rel="noopener noreferrer" target="_blank">Building and Installing UHD from source</a> page.  Note that there are also methods of installing the drivers that don’t require building from source.</p>
+</div>
+<div class="section" id="testing-uhd-drivers-and-python-api">
+<h3>Testing UHD Drivers and Python API<a class="headerlink" href="#testing-uhd-drivers-and-python-api" title="Permalink to this headline">¶</a></h3>
+<p>Open a new terminal and type the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3
+import uhd
+<span class="nv">usrp</span> <span class="o">=</span> uhd.usrp.MultiUSRP<span class="o">()</span>
+<span class="nv">samples</span> <span class="o">=</span> usrp.recv_num_samps<span class="o">(</span><span class="m">10000</span>, 100e6, 1e6, <span class="o">[</span><span class="m">0</span><span class="o">]</span>, <span class="m">50</span><span class="o">)</span>
+print<span class="o">(</span>samples<span class="o">[</span><span class="m">0</span>:10<span class="o">])</span>
+</pre></div>
+</div>
+<p>If no errors occur, you are good to go!</p>
+</div>
+<div class="section" id="benchmarking-usrp-speed-in-python">
+<h3>Benchmarking USRP Speed in Python<a class="headerlink" href="#benchmarking-usrp-speed-in-python" title="Permalink to this headline">¶</a></h3>
+<p>(Optional)</p>
+<p>If you used the standard from-source install, the following command should benchmark the receive rate of your USRP using the Python API.  If using 56e6 caused many dropped samples or overruns, try lowering the number.  Dropped samples aren’t necessarily going to ruin anything, but it’s a good way to test the inefficiencies that might come with using a VM or older computer, for example.  If using a B 2X0, a fairly modern computer with a USB 3.0 port running properly should manage to do 56 MHz without dropped samples, especially with num_recv_frames set so high.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python /usr/lib/uhd/examples/python/benchmark_rate.py --rx_rate 56e6 --args <span class="s2">&quot;num_recv_frames=1000&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="receiving">
+<h2>Receiving<a class="headerlink" href="#receiving" title="Permalink to this headline">¶</a></h2>
+<p>Receiving samples off a USRP is extremely easy using the built-in convenience function “recv_num_samps()”, below is Python code that tunes the USRP to 100 MHz, using a sample rate of 1 MHz, and grabs 10,000 samples off the USRP, using a receive gain of 50 dB:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">uhd</span>
+<span class="n">usrp</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">usrp</span><span class="o">.</span><span class="n">MultiUSRP</span><span class="p">()</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">usrp</span><span class="o">.</span><span class="n">recv_num_samps</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mf">100e6</span><span class="p">,</span> <span class="mf">1e6</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">50</span><span class="p">)</span> <span class="c1"># units: N, Hz, Hz, list of channel IDs, dB</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The [0] is telling the USRP to use its first input port, and only receive one channel worth of samples (for a B210 to receive on two channels at once, for example, you could use [0, 1]).</p>
+<p>Here’s a tip if you are trying to receive at a high rate but are getting overflows (O’s are showing up in your console).  Instead of <code class="code docutils literal notranslate"><span class="pre">usrp</span> <span class="pre">=</span> <span class="pre">uhd.usrp.MultiUSRP()</span></code>, use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">usrp</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">usrp</span><span class="o">.</span><span class="n">MultiUSRP</span><span class="p">(</span><span class="s2">&quot;num_recv_frames=1000&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which makes the receive buffer much larger (the default value is 32), helping to reduce overflows.   The actual size of the buffer in bytes depends on the USRP and type of connection, but simply setting <code class="code docutils literal notranslate"><span class="pre">num_recv_frames</span></code> to a value much higher than 32 tends to help.</p>
+<p>For more serious applications I recommend not using the convenience function recv_num_samps(), because it hides some of the interesting behavior going on under the hood, and there is some set up that happens each call that we might only want to do once at the beginning, e.g., if we want to receive samples indefinitely.  The following code has the same functionality as recv_num_samps(), in fact it’s almost exactly what gets called when you use the convenience function, but now we have the option to modify the behavior:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">uhd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">usrp</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">usrp</span><span class="o">.</span><span class="n">MultiUSRP</span><span class="p">()</span>
+
+<span class="n">num_samps</span> <span class="o">=</span> <span class="mi">10000</span> <span class="c1"># number of samples received</span>
+<span class="n">center_freq</span> <span class="o">=</span> <span class="mf">100e6</span> <span class="c1"># Hz</span>
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="c1"># Hz</span>
+<span class="n">gain</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># dB</span>
+
+<span class="n">usrp</span><span class="o">.</span><span class="n">set_rx_rate</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">usrp</span><span class="o">.</span><span class="n">set_rx_freq</span><span class="p">(</span><span class="n">uhd</span><span class="o">.</span><span class="n">libpyuhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">tune_request</span><span class="p">(</span><span class="n">center_freq</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">usrp</span><span class="o">.</span><span class="n">set_rx_gain</span><span class="p">(</span><span class="n">gain</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Set up the stream and receive buffer</span>
+<span class="n">st_args</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">usrp</span><span class="o">.</span><span class="n">StreamArgs</span><span class="p">(</span><span class="s2">&quot;fc32&quot;</span><span class="p">,</span> <span class="s2">&quot;sc16&quot;</span><span class="p">)</span>
+<span class="n">st_args</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">RXMetadata</span><span class="p">()</span>
+<span class="n">streamer</span> <span class="o">=</span> <span class="n">usrp</span><span class="o">.</span><span class="n">get_rx_stream</span><span class="p">(</span><span class="n">st_args</span><span class="p">)</span>
+<span class="n">recv_buffer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+
+<span class="c1"># Start Stream</span>
+<span class="n">stream_cmd</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamCMD</span><span class="p">(</span><span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamMode</span><span class="o">.</span><span class="n">start_cont</span><span class="p">)</span>
+<span class="n">stream_cmd</span><span class="o">.</span><span class="n">stream_now</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">streamer</span><span class="o">.</span><span class="n">issue_stream_cmd</span><span class="p">(</span><span class="n">stream_cmd</span><span class="p">)</span>
+
+<span class="c1"># Receive Samples</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_samps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samps</span><span class="o">//</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">streamer</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">recv_buffer</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+    <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">1000</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">]</span> <span class="o">=</span> <span class="n">recv_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Stop Stream</span>
+<span class="n">stream_cmd</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamCMD</span><span class="p">(</span><span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamMode</span><span class="o">.</span><span class="n">stop_cont</span><span class="p">)</span>
+<span class="n">streamer</span><span class="o">.</span><span class="n">issue_stream_cmd</span><span class="p">(</span><span class="n">stream_cmd</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>With num_samps set to 10,000 and the recv_buffer set to 1000, the for loop will run 10 times, i.e., there will be 10 calls to streamer.recv.  Note that we hard-coded recv_buffer to 1000 but you can find the maximum allowed value using <code class="code docutils literal notranslate"><span class="pre">streamer.get_max_num_samps()</span></code>, which is often around 3000-something.  Also note that recv_buffer must be 2d because the same API is used when receiving multiple channels at once, but in our case we just received one channel, so recv_buffer[0] gave us the 1D array of samples that we wanted.  You don’t need to understand too much about how the stream starts/stops for now, but know that there are other options besides “continuous” mode, such as receiving a specific number of samples and having the stream stop automatically.  Although we don’t process metadata in this example code, it contains any errors that occur, among other things, which you can check by looking at metadata.error_code at each iteration of the loop, if desired (errors tend to also show up in the console itself, as a result of UHD, so don’t feel like you have to check for them within your Python code).</p>
+<div class="section" id="receive-gain">
+<h3>Receive Gain<a class="headerlink" href="#receive-gain" title="Permalink to this headline">¶</a></h3>
+<p>The following list shows the gain range of the different USRPs, they all go from 0 dB to the number specified below.  Note that this is not dBm, it’s essentially dBm combined with some unknown offset because these are not calibrated devices.</p>
+<ul class="simple">
+<li>B200/B210/B200-mini: 76 dB</li>
+<li>X310/N210 with WBX/SBX/UBX: 31.5 dB</li>
+<li>X310 with TwinRX: 93 dB</li>
+<li>E310/E312: 76 dB</li>
+<li>N320/N321: 60 dB</li>
+</ul>
+<p>You can also use the command <code class="code docutils literal notranslate"><span class="pre">uhd_usrp_probe</span></code> in a terminal and in the RX Frontend section it will mention the gain range.</p>
+<p>When specifying the gain, you can use the normal set_rx_gain() function which takes in the gain value in dB, but you can also use set_normalized_rx_gain() which takes in a value from 0 to 1 and automatically converts it to the range of the USRP you’re using.  This is convenient when making an app that supports different models of USRP.  The downside of using normalized gain is that you no longer have your units in dB, so if you want to increase your gain by 10 dB, for example, you now have to calculate the amount.</p>
+</div>
+<div class="section" id="automatic-gain-control">
+<h3>Automatic Gain Control<a class="headerlink" href="#automatic-gain-control" title="Permalink to this headline">¶</a></h3>
+<p>Some USRPs, including the B200 and E310 series, support automatic gain control (AGC) which will automatically adjust the receive gain in response to the received signal level, in an attempt to best “fill” the ADC’s bits.  AGC can be turned on using:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">usrp</span><span class="o">.</span><span class="n">set_rx_agc</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># 0 for channel 0, i.e. the first channel of the USRP</span>
+</pre></div>
+</div>
+<p>If you have a USRP that does not implement an AGC, an exception will be thrown when running the line above.  With AGC on, setting the gain won’t do anything.</p>
+<div class="section" id="stream-arguments">
+<h4>Stream Arguments<a class="headerlink" href="#stream-arguments" title="Permalink to this headline">¶</a></h4>
+<p>In the full example above you’ll see the line <code class="code docutils literal notranslate"><span class="pre">st_args</span> <span class="pre">=</span> <span class="pre">uhd.usrp.StreamArgs(&quot;fc32&quot;,</span> <span class="pre">&quot;sc16&quot;)</span></code>.  The first argument is the CPU data format, which is the data type of the samples once they are on your host computer.  UHD supports the following CPU data types when using the Python API:</p>
+<table border="1" class="colwidths-given docutils align-default">
+<colgroup>
+<col width="23%" />
+<col width="31%" />
+<col width="46%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Stream Arg</th>
+<th class="head">Numpy Data Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>fc64</td>
+<td>np.complex128</td>
+<td>Complex-valued double-precision data</td>
+</tr>
+<tr class="row-odd"><td>fc32</td>
+<td>np.complex64</td>
+<td>Complex-valued single-precision data</td>
+</tr>
+</tbody>
+</table>
+<p>You might see other options in documentation for the UHD C++ API, but these were never implemented within the Python API, at least at the time of this writing.</p>
+<p>The second argument is the “over-the-wire” data format, i.e. the data type as the samples are sent over USB/Ethernet/SFP to the host.  For the Python API, the options are: “sc16”, “sc12”, and “sc8”, with the 12 bit option only supported by certain USRPs.  This choice is important because the connection between the USRP and host computer is often the bottleneck, so by switching from 16 bits to 8 bits you might achieve a higher rate.  Also remember that many USRPs have ADCs limited to 12 or 14 bits, using “sc16” doesn’t mean the ADC is 16 bits.</p>
+<p>For the channel portion of the <code class="code docutils literal notranslate"><span class="pre">st_args</span></code>, see the Subdevice and Channels subsection below.</p>
+</div>
+</div>
+</div>
+<div class="section" id="transmitting">
+<h2>Transmitting<a class="headerlink" href="#transmitting" title="Permalink to this headline">¶</a></h2>
+<p>Similar to the recv_num_samps() convenience function, UHD provides the send_waveform() function to transmit a batch of samples, an example is shown below.  If you specify a duration (in seconds) longer than the provided signal, it will simply repeat it.  It helps to keep the values of samples between -1.0 and 1.0.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">uhd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">usrp</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">usrp</span><span class="o">.</span><span class="n">MultiUSRP</span><span class="p">()</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span> <span class="c1"># create random signal</span>
+<span class="n">duration</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># seconds</span>
+<span class="n">center_freq</span> <span class="o">=</span> <span class="mf">915e6</span>
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span>
+<span class="n">gain</span> <span class="o">=</span> <span class="mi">20</span> <span class="c1"># [dB] start low then work your way up</span>
+<span class="n">usrp</span><span class="o">.</span><span class="n">send_waveform</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">center_freq</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">gain</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For details about how this convenience function works under the hood, see the source code <a class="reference external" href="https://github.com/EttusResearch/uhd/blob/master/host/python/uhd/usrp/multi_usrp.py" rel="noopener noreferrer" target="_blank">here</a>.</p>
+<div class="section" id="transmit-gain">
+<h3>Transmit Gain<a class="headerlink" href="#transmit-gain" title="Permalink to this headline">¶</a></h3>
+<p>Similar to the receive side, the transmit gain range varies based on USRP model, going from 0 dB to the specified number below:</p>
+<ul class="simple">
+<li>B200/B210/B200-mini: 90 dB</li>
+<li>N210 with WBX: 25 dB</li>
+<li>N210 with SBX or UBX: 31.5 dB</li>
+<li>E310/E312: 90 dB</li>
+<li>N320/N321: 60 dB</li>
+</ul>
+<p>There is also a set_normalized_tx_gain() function if you would like to specify the transmit gain using the range 0 to 1.</p>
+</div>
+</div>
+<div class="section" id="transmitting-and-receiving-simultaneously">
+<h2>Transmitting and Receiving Simultaneously<a class="headerlink" href="#transmitting-and-receiving-simultaneously" title="Permalink to this headline">¶</a></h2>
+<p>If you want to transmit and receive using the same USRP at the same time, the key is to do it using multiple threads within the same process; the USRP can’t span multiple processes.  For example, in the <a class="reference external" href="https://github.com/EttusResearch/uhd/blob/master/host/examples/txrx_loopback_to_file.cpp" rel="noopener noreferrer" target="_blank">txrx_loopback_to_file</a> C++ example a separate thread is created to run the transmitter, and the receiving is done in the main thread.  You can also just spawn two threads, one for transmit and one for receive, as is done in the <a class="reference external" href="https://github.com/EttusResearch/uhd/blob/master/host/examples/python/benchmark_rate.py" rel="noopener noreferrer" target="_blank">benchmark_rate</a> Python example.  A full example is not shown here, simply because it would be a fairly long example and Ettus’ benchmark_rate.py can always act as a starting point for someone.</p>
+</div>
+<div class="section" id="subdevice-channels-and-antennas">
+<h2>Subdevice, Channels, and Antennas<a class="headerlink" href="#subdevice-channels-and-antennas" title="Permalink to this headline">¶</a></h2>
+<p>One common source of confusion when using USRPs is how to pick the right subdevice and channel ID.  You may have noticed in every example above we used channel 0, and did not specify anything related to subdev.  If you’re using a B210 and just want to use RF:B instead of RF:A, all you have to do is choose channel 1 instead of 0.  But on USRPs like the X310 that have two daughterboard slots, you have to tell UHD whether you want to use slot A or B, and which channel on that daughterboard, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">usrp</span><span class="o">.</span><span class="n">set_rx_subdev_spec</span><span class="p">(</span><span class="s2">&quot;B:0&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to use the TX/RX port instead of RX2 (the default), it’s as simple as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">usrp</span><span class="o">.</span><span class="n">set_rx_antenna</span><span class="p">(</span><span class="s1">&#39;TX/RX&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># set channel 0 to &#39;TX/RX&#39;</span>
+</pre></div>
+</div>
+<p>which essentially just controls an RF switch onboard the USRP, to route from the other SMA connector.</p>
+<p>To receive or transmit on two channels at once, instead of using <code class="code docutils literal notranslate"><span class="pre">st_args.channels</span> <span class="pre">=</span> <span class="pre">[0]</span></code> you provide a list, such as <code class="code docutils literal notranslate"><span class="pre">[0,1]</span></code>.  The receive samples buffer will have to be of size (2, N) in this case, instead of (1,N).  Just remember that with most USRPs, both channels share an LO, so you cant tune to different frequencies at once.</p>
+</div>
+<div class="section" id="syncing-to-10-mhz-and-pps">
+<h2>Syncing to 10 MHz and PPS<a class="headerlink" href="#syncing-to-10-mhz-and-pps" title="Permalink to this headline">¶</a></h2>
+<p>One of the huge advantages of using a USRP over other SDRs is their ability to synchronize to an external source or onboard <a class="reference external" href="https://www.ettus.com/all-products/gpsdo-tcxo-module/" rel="noopener noreferrer" target="_blank">GPSDO</a>.  If you have connected an external 10 MHz and PPS source to your USRP, you will want to make sure to call these two lines after initializing your USRP:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">usrp</span><span class="o">.</span><span class="n">set_clock_source</span><span class="p">(</span><span class="s2">&quot;external&quot;</span><span class="p">)</span>
+<span class="n">usrp</span><span class="o">.</span><span class="n">set_time_source</span><span class="p">(</span><span class="s2">&quot;external&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you are using an onboard GPSDO, you will instead use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">usrp</span><span class="o">.</span><span class="n">set_clock_source</span><span class="p">(</span><span class="s2">&quot;gpsdo&quot;</span><span class="p">)</span>
+<span class="n">usrp</span><span class="o">.</span><span class="n">set_time_source</span><span class="p">(</span><span class="s2">&quot;gpsdo&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On the frequency sync side there’s not much else to do; the LO used in the USRP’s mixer is now going to be tied to the external source or <a class="reference external" href="https://www.ettus.com/all-products/gpsdo-tcxo-module/" rel="noopener noreferrer" target="_blank">GPSDO</a>.  But on the timing side, you may wish to command the USRP to start sampling exactly on the PPS, for example.  This can be done with the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># copy the receive example above, everything up until # Start Stream</span>
+
+<span class="c1"># Wait for 1 PPS to happen, then set the time at next PPS to 0.0</span>
+<span class="n">time_at_last_pps</span> <span class="o">=</span> <span class="n">usrp</span><span class="o">.</span><span class="n">get_time_last_pps</span><span class="p">()</span><span class="o">.</span><span class="n">get_real_secs</span><span class="p">()</span>
+<span class="k">while</span> <span class="n">time_at_last_pps</span> <span class="o">==</span> <span class="n">usrp</span><span class="o">.</span><span class="n">get_time_last_pps</span><span class="p">()</span><span class="o">.</span><span class="n">get_real_secs</span><span class="p">():</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span> <span class="c1"># keep waiting till it happens- if this while loop never finishes then the PPS signal isn&#39;t there</span>
+<span class="n">usrp</span><span class="o">.</span><span class="n">set_time_next_pps</span><span class="p">(</span><span class="n">uhd</span><span class="o">.</span><span class="n">libpyuhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">time_spec</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
+
+<span class="c1"># Schedule Rx of num_samps samples exactly 3 seconds from last PPS</span>
+<span class="n">stream_cmd</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamCMD</span><span class="p">(</span><span class="n">uhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">StreamMode</span><span class="o">.</span><span class="n">num_done</span><span class="p">)</span>
+<span class="n">stream_cmd</span><span class="o">.</span><span class="n">num_samps</span> <span class="o">=</span> <span class="n">num_samps</span>
+<span class="n">stream_cmd</span><span class="o">.</span><span class="n">stream_now</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">stream_cmd</span><span class="o">.</span><span class="n">time_spec</span> <span class="o">=</span> <span class="n">uhd</span><span class="o">.</span><span class="n">libpyuhd</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">time_spec</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span> <span class="c1"># set start time (try tweaking this)</span>
+<span class="n">streamer</span><span class="o">.</span><span class="n">issue_stream_cmd</span><span class="p">(</span><span class="n">stream_cmd</span><span class="p">)</span>
+
+<span class="c1"># Receive Samples.  recv() will return zeros, then our samples, then more zeros, letting us know it&#39;s done</span>
+<span class="n">waiting_to_start</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># keep track of where we are in the cycle (see above comment)</span>
+<span class="n">nsamps</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_samps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+<span class="k">while</span> <span class="n">nsamps</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">waiting_to_start</span><span class="p">:</span>
+    <span class="n">nsamps</span> <span class="o">=</span> <span class="n">streamer</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">recv_buffer</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nsamps</span> <span class="ow">and</span> <span class="n">waiting_to_start</span><span class="p">:</span>
+        <span class="n">waiting_to_start</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="n">nsamps</span><span class="p">:</span>
+        <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">nsamps</span><span class="p">]</span> <span class="o">=</span> <span class="n">recv_buffer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">nsamps</span><span class="p">]</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="n">nsamps</span>
+</pre></div>
+</div>
+<p>If it seems like it’s not working, but is not throwing any errors, try changing that 3.0 number from anything between 1.0 and 5.0.  You can also check the metadata after the call to recv(), simply check <code class="code docutils literal notranslate"><span class="pre">if</span> <span class="pre">metadata.error_code</span> <span class="pre">!=</span> <span class="pre">uhd.types.RXMetadataErrorCode.none:</span></code>.</p>
+<p>For debugging sake, you can verify the 10 MHz signal is showing up to the USRP by checking the return of <code class="code docutils literal notranslate"><span class="pre">usrp.get_mboard_sensor(&quot;ref_locked&quot;,</span> <span class="pre">0)</span></code>.  If the PPS signal isn’t showing up, you’ll know it because the first while loop in the code above will never finish.</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="pluto.html" title="Previous document"><span class="section-number">5. </span>PlutoSDR in Python</a>
+        </li>
+        <li>
+          <a href="noise.html" title="Next document"><span class="section-number">7. </span>Noise and dB</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2022, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

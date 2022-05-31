@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>4. Digital Modulation &#8212; PySDR: A Guide to SDR and DSP using Python</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5. PlutoSDR in Python" href="pluto.html" />
+    <link rel="prev" title="3. IQ Sampling" href="sampling.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TGRQK1JJYD');
+</script>
+
+<!-- French/English Chooser, couldnt get it working with local URLs -->
+<div style="float: right; padding-bottom: 0;">
+  <select onchange="location = this.value;">
+    <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/fr/index-fr.html">French</option>
+  </select>
+</div>
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index-fr.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Domaine Fréquentiel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4. Digital Modulation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#symbols">Symbols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wireless-symbols">Wireless Symbols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#amplitude-shift-keying-ask">Amplitude Shift Keying (ASK)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#phase-shift-keying-psk">Phase Shift Keying (PSK)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iq-plots-constellations">IQ Plots/Constellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quadrature-amplitude-modulation-qam">Quadrature Amplitude Modulation (QAM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#frequency-shift-keying-fsk">Frequency Shift Keying (FSK)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#differential-coding">Differential Coding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-example">Python Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#further-reading">Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usrp.html">6. USRP in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files and SigMF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rds.html">15. End-to-End Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index-fr.html">Documentation overview</a><ul>
+      <li>Previous: <a href="sampling.html" title="previous chapter"><span class="section-number">3. </span>IQ Sampling</a></li>
+      <li>Next: <a href="pluto.html" title="next chapter"><span class="section-number">5. </span>PlutoSDR in Python</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="sampling.html" title="Previous document"><span class="section-number">3. </span>IQ Sampling</a>
+        </li>
+        <li>
+          <a href="pluto.html" title="Next document"><span class="section-number">5. </span>PlutoSDR in Python</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="digital-modulation">
+<span id="modulation-chapter"></span><h1><span class="section-number">4. </span>Digital Modulation<a class="headerlink" href="#digital-modulation" title="Permalink to this headline">¶</a></h1>
+<p>In this chapter we will discuss <em>actually transmitting data</em> using digital modulation and wireless symbols!  We will design signals that convey “information”, e.g., 1’s and 0’s, using modulation schemes like ASK, PSK, QAM, and FSK.  We will also discuss IQ plots and constellations, and end the chapter with some Python examples.</p>
+<p>The main goal of modulation is to squeeze as much data into the least amount of spectrum possible.  Technically speaking we want to maximize “spectral efficiency” in units bits/sec/Hz.  Transmitting 1’s and 0’s faster will increase the bandwidth of our signal (recall Fourier properties), which means more spectrum is used. We will also examine other techniques besides transmitting faster.  There will be many trade-offs when deciding how to modulate, but there will also be room for creativity.</p>
+<div class="section" id="symbols">
+<h2>Symbols<a class="headerlink" href="#symbols" title="Permalink to this headline">¶</a></h2>
+<p>New term alert!  Our transmit signal is going to be made up of “symbols”.  Each symbol will carry some number of bits of information, and we will transmit symbols back to back, thousands or even millions in a row.</p>
+<p>As a simplified example, let’s say we have a wire and are sending 1’s and 0’s using high and low voltage levels.  A symbol is one of those 1’s or 0’s:</p>
+<a class="reference internal image-reference" href="../_images/symbols.png"><img alt="../_images/symbols.png" class="align-center" src="../_images/symbols.png" style="width: 602.4px; height: 102.0px;" /></a>
+<p>In the above example each symbol represents one bit.  How can we convey more than one bit per symbol?  Let’s study the signals that travel down Ethernet cables, which is defined in an IEEE standard called IEEE 802.3 1000BASE-T.  The common operating mode of ethernet uses a 4-level amplitude modulation (2 bits per symbol) with 8 ns symbols.</p>
+<a class="reference external image-reference" href="../_images/ethernet.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ethernet.svg" class="align-center" src="../_images/ethernet.svg" /></a>
+<p>Take a moment to try to answer these questions:</p>
+<ol class="arabic simple">
+<li>How many bits per second are transmitted in the example shown above?</li>
+<li>How many pairs of these data wires would be needed to transmit 1 gigabit/sec?</li>
+<li>If a modulation scheme has 16 different levels, how many bits per symbol is that?</li>
+<li>With 16 different levels and 8 ns symbols, how many bits per second is that?</li>
+</ol>
+<details>
+<summary>Answers</summary><ol class="arabic simple">
+<li>250 Mbps - (1/8e-9)*2</li>
+<li>Four (which is what ethernet cables have)</li>
+<li>4 bits per symbol - log_2(16)</li>
+<li>0.5 Gbps - (1/8e-9)*4</li>
+</ol>
+</details></div>
+<div class="section" id="wireless-symbols">
+<h2>Wireless Symbols<a class="headerlink" href="#wireless-symbols" title="Permalink to this headline">¶</a></h2>
+<p>Question: Why can’t we directly transmit the ethernet signal shown in the figure above?  There are many reasons, the biggest two being:</p>
+<ol class="arabic simple">
+<li>Low frequencies require <em>huge</em> antennas</li>
+<li>Square waves take an excessive amount of spectrum for the bits per second–recall from the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Domaine Fréquentiel</span></a> chapter that sharp changes in time domain use a large amount of bandwidth/spectrum:</li>
+</ol>
+<a class="reference external image-reference" href="../_images/square-wave.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/square-wave.svg" class="align-center" src="../_images/square-wave.svg" /></a>
+<p>What we do for wireless signals is start with a carrier, which is just a sinusoid.  E.g., FM radio uses a carrier like 101.1 MHz or 100.3 MHz.  We modulate that carrier in some way (there are many).  For FM radio it’s an analog modulation, not digital, but it’s the same concept as digital modulation.</p>
+<p>In what ways can we modulate the carrier?  Another way to ask the same question: what are the different properties of a sinusoid?</p>
+<ol class="arabic simple">
+<li>Amplitude</li>
+<li>Phase</li>
+<li>Frequency</li>
+</ol>
+<p>We can modulate our data onto a carrier by modifying any one (or more) of these three.</p>
+</div>
+<div class="section" id="amplitude-shift-keying-ask">
+<h2>Amplitude Shift Keying (ASK)<a class="headerlink" href="#amplitude-shift-keying-ask" title="Permalink to this headline">¶</a></h2>
+<p>Amplitude Shift Keying (ASK) is the first digital modulation scheme we will discuss because amplitude modulation is the simplest to visualize of the three sinusoid properties.  We literally modulate the <strong>amplitude</strong> of the carrier.  Here is an example of 2-level ASK, called 2-ASK:</p>
+<a class="reference external image-reference" href="../_images/ASK.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ASK.svg" class="align-center" src="../_images/ASK.svg" /></a>
+<p>Note how the average value is zero; we always prefer this whenever possible.</p>
+<p>We can use more than two levels, allowing for more bits per symbol.  Below shows an example of 4-ASK.  In this case each symbol carries 2 bits of information.</p>
+<a class="reference external image-reference" href="../_images/ask2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ask2.svg" class="align-center" src="../_images/ask2.svg" /></a>
+<p>Question: How many symbols are shown in the signal snippet above?  How many bits are represented total?</p>
+<details>
+<summary>Answers</summary><p>20 symbols, so 40 bits of information</p>
+</details><p>How do we actually create this signal digitally, through code?  All we have to do is create a vector with N samples per symbol, then multiply that vector by a sinusoid.  This modulates the signal onto a carrier (the sinusoid acts as that carrier).  The example below shows 2-ASK with 10 samples per symbol.</p>
+<a class="reference external image-reference" href="../_images/ask3.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/ask3.svg" class="align-center" src="../_images/ask3.svg" /></a>
+<p>The top plot shows the discrete samples represented by red dots, i.e., our digital signal.  The bottom plot shows what the resulting modulated signal looks like, which could be transmitted over the air.  In real systems, the frequency of the carrier is usually much much higher than the rate the symbols are changing.  In this example there are only three cycles of the sinusoid in each symbol, but in practice there may be thousands, depending on how high in the spectrum the signal is being transmitted.</p>
+</div>
+<div class="section" id="phase-shift-keying-psk">
+<h2>Phase Shift Keying (PSK)<a class="headerlink" href="#phase-shift-keying-psk" title="Permalink to this headline">¶</a></h2>
+<p>Now let’s consider modulating the phase in a similar manner as we did with the amplitude.  The simplest form is Binary PSK, a.k.a. BPSK, where there are two levels of phase:</p>
+<ol class="arabic simple">
+<li>No phase change</li>
+<li>180 degree phase change</li>
+</ol>
+<p>Example of BPSK (note the phase changes):</p>
+<a class="reference external image-reference" href="../_images/bpsk.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/bpsk.svg" class="align-center" src="../_images/bpsk.svg" /></a>
+<p>It’s not very fun to look at plots like this:</p>
+<a class="reference external image-reference" href="../_images/bpsk2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/bpsk2.svg" class="align-center" src="../_images/bpsk2.svg" /></a>
+<p>Instead we usually represent the phase in the complex plane.</p>
+</div>
+<div class="section" id="iq-plots-constellations">
+<h2>IQ Plots/Constellations<a class="headerlink" href="#iq-plots-constellations" title="Permalink to this headline">¶</a></h2>
+<p>You have seen IQ plots before in the complex numbers subsection of the <a class="reference internal" href="sampling.html#sampling-chapter"><span class="std std-ref">IQ Sampling</span></a> chapter, but now we will use them in a new and fun way.  For a given symbol, we can show the amplitude and phase on an IQ plot.  For the BPSK example we said we had phases of 0 and 180 degrees.  Let’s plot those two points on the IQ plot. We will assume a magnitude of 1. In practice it doesn’t really matter what magnitude you use; a higher value means a higher power signal, but you can also just increase the amplifier gain instead.</p>
+<a class="reference internal image-reference" href="../_images/bpsk_iq.png"><img alt="../_images/bpsk_iq.png" class="align-center" src="../_images/bpsk_iq.png" style="width: 384.0px; height: 316.0px;" /></a>
+<p>The above IQ plot shows what we will transmit, or rather the set of symbols we will transmit from.  It does not show the carrier, so you can think about it as representing the symbols at baseband.  When we show the set of possible symbols for a given modulation scheme, we call it the “constellation”.  Many modulation schemes can be defined by their constellation.</p>
+<p>To receive and decode BPSK we can use IQ sampling, like we learned about last chapter, and examine where the points end up on the IQ plot.  However, there will be a random phase rotation due to the wireless channel because the signal will have some random delay as it passes through the air between antennas.  The random phase rotation can be reversed using various methods we will learn about later.  Here is an example of a few different ways that BPSK signal might show up at the receiver (this does not include noise):</p>
+<a class="reference internal image-reference" href="../_images/bpsk3.png"><img alt="../_images/bpsk3.png" class="align-center" src="../_images/bpsk3.png" style="width: 732.6px; height: 217.79999999999998px;" /></a>
+<p>Back to PSK.  What if we want four different levels of phase?  I.e., 0, 90, 180, and 270 degrees.  In this case it would be represented like so on the IQ plot, and it forms a modulation scheme we call Quadrature Phase Shift Keying (QPSK):</p>
+<a class="reference internal image-reference" href="../_images/qpsk.png"><img alt="../_images/qpsk.png" class="align-center" src="../_images/qpsk.png" style="width: 706.1999999999999px; height: 240.0px;" /></a>
+<p>For PSK we always have N different phases, equally spaced around 360 degrees for best results.  We often show the unit circle to emphasize that all points have the same magnitude:</p>
+<a class="reference internal image-reference" href="../_images/psk_set.png"><img alt="../_images/psk_set.png" class="align-center" src="../_images/psk_set.png" style="width: 733.1999999999999px; height: 246.6px;" /></a>
+<p>Question: What’s wrong with using a PSK scheme like the one in the below image?  Is it a valid PSK modulation scheme?</p>
+<a class="reference internal image-reference" href="../_images/weird_psk.png"><img alt="../_images/weird_psk.png" class="align-center" src="../_images/weird_psk.png" style="width: 216.6px; height: 225.6px;" /></a>
+<details>
+<summary>Answer</summary><p>There is nothing invalid about this PSK scheme. You can certainly use it, but, because the symbols are not uniformly spaced, this scheme is not as effective as it could be. Scheme efficiency will become clear once we discuss how noise impacts our symbols.  The short answer is that we want to leave as much room as possible in between the symbols, in case there is noise, so that a symbol is not interpreted at the receiver as one of the other (incorrect) symbols.  We don’t want a 0 being received as a 1.</p>
+</details><p>Let’s detour back to ASK for a moment.  Note that we can show ASK on the IQ plot just like PSK.  Here is the IQ plot of 2-ASK, 4-ASK, and 8-ASK, in the bipolar configuration, as well as 2-ASK and 4-ASK in the unipolar configuration.</p>
+<a class="reference internal image-reference" href="../_images/ask_set.png"><img alt="../_images/ask_set.png" class="align-center" src="../_images/ask_set.png" style="width: 642.5px; height: 370.0px;" /></a>
+<p>As you may have noticed, bipolar 2-ASK and BPSK are the same. A 180 degree phase shift is the same as multiplying the sinusoid by -1.  We call it BPSK, probably because PSK is used way more than ASK.</p>
+</div>
+<div class="section" id="quadrature-amplitude-modulation-qam">
+<h2>Quadrature Amplitude Modulation (QAM)<a class="headerlink" href="#quadrature-amplitude-modulation-qam" title="Permalink to this headline">¶</a></h2>
+<p>What if we combine ASK and PSK?  We call this modulation scheme Quadrature Amplitude Modulation (QAM). QAM usually looks something like this:</p>
+<a class="reference internal image-reference" href="../_images/64qam.png"><img alt="../_images/64qam.png" class="align-center" src="../_images/64qam.png" style="width: 276.3px; height: 282.6px;" /></a>
+<p>Here are some other examples of QAM:</p>
+<a class="reference internal image-reference" href="../_images/qam.png"><img alt="../_images/qam.png" class="align-center" src="../_images/qam.png" style="width: 695.5px; height: 236.5px;" /></a>
+<p>For a QAM modulation scheme, we can technically put points wherever we want to on the IQ plot since the phase <em>and</em> amplitude are modulated.  The “parameters” of a given QAM scheme are best defined by showing the QAM constellation. Alternatively, you may list the I and Q values for each point, like below for QPSK:</p>
+<a class="reference internal image-reference" href="../_images/qpsk_list.png"><img alt="../_images/qpsk_list.png" class="align-center" src="../_images/qpsk_list.png" style="width: 308.8px; height: 215.20000000000002px;" /></a>
+<p>Note that most modulation schemes, except the various ASKs and BPSK, are pretty hard to “see” in the time domain.  To prove my point, here is an example of QAM in time domain. Can you distinguish between the phase of each symbol in the below image? It’s tough.</p>
+<a class="reference internal image-reference" href="../_images/qam_time_domain.png"><img alt="../_images/qam_time_domain.png" class="align-center" src="../_images/qam_time_domain.png" style="width: 658.0px; height: 148.0px;" /></a>
+<p>Given the difficulty discerning modulation schemes in the time domain, we prefer to use IQ plots over displaying the time domain signal.  We might, nonetheless, show the time domain signal if there’s a certain packet structure or the sequence of symbols matters.</p>
+</div>
+<div class="section" id="frequency-shift-keying-fsk">
+<h2>Frequency Shift Keying (FSK)<a class="headerlink" href="#frequency-shift-keying-fsk" title="Permalink to this headline">¶</a></h2>
+<p>Last on the list is Frequency Shift Keying (FSK).  FSK is fairly simple to understand–we just shift between N frequencies where each frequency is one possible symbol.  However, because we are modulating a carrier, it’s really our carrier frequency +/- these N frequencies. E.g.. we might be at a carrier of 1.2 GHz and shift between these four frequencies:</p>
+<ol class="arabic simple">
+<li>1.2005 GHz</li>
+<li>1.2010 GHz</li>
+<li>1.1995 GHz</li>
+<li>1.1990 GHz</li>
+</ol>
+<p>The example above would be 4-FSK, and there would be two bits per symbol.  A 4-FSK signal in the frequency domain might look something like this:</p>
+<a class="reference external image-reference" href="../_images/fsk.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fsk.svg" class="align-center" src="../_images/fsk.svg" /></a>
+<p>If you use FSK, you must ask a critical question: What should the spacing between frequencies be?  We often denote this spacing as <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/> in Hz. We want to avoid overlap in the frequency domain, so <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/> must be large enough.  The width of each carrier in frequency is a function of our symbol rate.  More symbols per second means shorter symbols, which means wider bandwidth (recall the inverse relationship between time and frequency scaling).  The faster we transmit symbols, the wider each carrier will get, and consequently the larger we have to make <img class="math" src="../_images/math/32174248216c37ca883a89a6883863fa3225d71e.svg" alt="\Delta f"/> to avoid overlapping carriers.  We won’t go into any more details about the design of FSK in this textbook.</p>
+<p>IQ plots can’t be used to show different frequencies. They show magnitude and phase.  While it is possible to show FSK in the time domain, any more than 2 frequencies makes it difficult to distinguish between symbols:</p>
+<a class="reference external image-reference" href="../_images/fsk2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fsk2.svg" class="align-center" src="../_images/fsk2.svg" /></a>
+<p>As an aside, note that FM radio uses Frequency Modulation (FM) which is like an analog version of FSK.  Instead of having discrete frequencies we jump between, FM radio uses a continuous audio signal to modulate the frequency of the carrier.  Below is an example of FM and AM modulation where the “signal” at the top is the audio signal being modulated onto to the carrier.</p>
+<a class="reference external image-reference" href="../_images/Carrier_Mod_AM_FM.webp" rel="noopener noreferrer" target="_blank"><img alt="../_images/Carrier_Mod_AM_FM.webp" class="align-center" src="../_images/Carrier_Mod_AM_FM.webp" /></a>
+<p>In this textbook we are mainly concerned about digital forms of modulation.</p>
+</div>
+<div class="section" id="differential-coding">
+<h2>Differential Coding<a class="headerlink" href="#differential-coding" title="Permalink to this headline">¶</a></h2>
+<p>In many wireless (and wired) communications protocols you are likely to run into something called differential coding.  To demonstrate its utility consider receiving a BPSK signal.  As the signal flies through the air it experiences some random delay between the transmitter and receiver, causing a random rotation in the constellation, as we mentioned earlier.  When the receiver synchronizes to it, and aligns the BPSK to the “I” axis, it has no way of knowing if it is 180 degrees out of phase or not, because the constellation looks the same.  So instead of having to send pilot symbols to let it know which cluster represents 1 and which is 0, it can choose to use differential coding and not even worry about it.</p>
+<p>In its most basic form, which is what is used for BPSK, differential coding involves transmitting a 1 when the input bit changes from a 1 to 0 or 0 to 1, and a 0 when it doesn’t change.  So it still transmits the same number of bits (except you lose 1 extra bit at the beginning), but now you don’t have to worry about the 180 degree phase ambiguity.  To demonstrate how this works, consider transmitting the bit sequence [1, 1, 0, 0, 0, 1, 0] using BPSK.  Instead of transmitting those bits directly, mapped to the positive and negative symbols we showed earlier, you would transmit [nothing, 0, 1, 0, 0, 1, 1], each 1 represents a change in the data bits.  It might be easier to visualize stacked with an offset like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">]</span> <span class="c1"># before differential coding</span>
+<span class="p">[</span><span class="o">-</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">]</span>   <span class="c1"># after differential coding</span>
+</pre></div>
+</div>
+<p>The big downside to using differential coding is that if you have a bit error, it will lead to two bit errors.  The alternative to using differential coding for BPSK is to add pilot symbols periodically, which are symbols already known by the receiver, and it can use the known values to not only figure out which cluster is 1 and which is 0, but also reverse multipath caused by the channel.  One problem with pilot symbols is that the wireless channel can change very quickly, on the order of tens or hundreds of symbols if it’s a moving receiver and/or transmitter, so you would need pilot symbols often enough to reflect the changing channel.  So if a wireless protocol is putting high emphasis on reducing the complexity of the receiver, such as RDS which we study in the <a class="reference internal" href="rds.html#rds-chapter"><span class="std std-ref">End-to-End Example</span></a> chapter, it may choose to use differential coding.</p>
+</div>
+<div class="section" id="python-example">
+<h2>Python Example<a class="headerlink" href="#python-example" title="Permalink to this headline">¶</a></h2>
+<p>As a short Python example, let’s generate QPSK at baseband and plot the constellation.</p>
+<p>Even though we could generate the complex symbols directly, let’s start from the knowledge that QPSK has four symbols at 90-degree intervals around the unit circle.  We will use 45, 135, 225, and 315 degrees for our points.  First we will generate random numbers between 0 and 3 and perform math to get the degrees we want before converting to radians.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">num_symbols</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">x_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">num_symbols</span><span class="p">)</span> <span class="c1"># 0 to 3</span>
+<span class="n">x_degrees</span> <span class="o">=</span> <span class="n">x_int</span><span class="o">*</span><span class="mi">360</span><span class="o">/</span><span class="mf">4.0</span> <span class="o">+</span> <span class="mi">45</span> <span class="c1"># 45, 135, 225, 315 degrees</span>
+<span class="n">x_radians</span> <span class="o">=</span> <span class="n">x_degrees</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span> <span class="c1"># sin() and cos() takes in radians</span>
+<span class="n">x_symbols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x_radians</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x_radians</span><span class="p">)</span> <span class="c1"># this produces our QPSK complex symbols</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">x_symbols</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">x_symbols</span><span class="p">),</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference external image-reference" href="../_images/qpsk_python.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/qpsk_python.svg" class="align-center" src="../_images/qpsk_python.svg" /></a>
+<p>Observe how all the symbols we generated overlap. There’s no noise so the symbols all have the same value.  Let’s add some noise:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_symbols</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_symbols</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># AWGN with unity power</span>
+<span class="n">noise_power</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">x_symbols</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">noise_power</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference external image-reference" href="../_images/qpsk_python2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/qpsk_python2.svg" class="align-center" src="../_images/qpsk_python2.svg" /></a>
+<p>Consider how additive white Gaussian noise (AGWN) produces a uniform spread around each point in the constellation.  If there’s too much noise then symbols start passing the boundary (the four quadrants) and will be interpreted by the receiver as an incorrect symbol.  Try increasing <code class="code docutils literal notranslate"><span class="pre">noise_power</span></code> until that happens.</p>
+<p>For those interested in simulating phase noise, which could result from phase jitter within the local oscillator (LO), replace the <code class="code docutils literal notranslate"><span class="pre">r</span></code> with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">phase_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_symbols</span><span class="p">))</span> <span class="o">*</span> <span class="mf">0.1</span> <span class="c1"># adjust multiplier for &quot;strength&quot; of phase noise</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">x_symbols</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">phase_noise</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference external image-reference" href="../_images/phase_jitter.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/phase_jitter.svg" class="align-center" src="../_images/phase_jitter.svg" /></a>
+<p>You could even combine phase noise with AWGN to get the full experience:</p>
+<a class="reference external image-reference" href="../_images/phase_jitter_awgn.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/phase_jitter_awgn.svg" class="align-center" src="../_images/phase_jitter_awgn.svg" /></a>
+<p>We’re going to stop at this point.  If we wanted to see what the QPSK signal looked like in the time domain, we would need to generate multiple samples per symbol (in this exercise we just did 1 sample per symbol). You will learn why you need to generate multiple samples per symbol once we discuss pulse shaping.  The Python exercise in the <a class="reference internal" href="pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Pulse Shaping</span></a> chapter will continue where we left off here.</p>
+</div>
+<div class="section" id="further-reading">
+<h2>Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="https://en.wikipedia.org/wiki/Differential_coding" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Differential_coding</a></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="sampling.html" title="Previous document"><span class="section-number">3. </span>IQ Sampling</a>
+        </li>
+        <li>
+          <a href="pluto.html" title="Next document"><span class="section-number">5. </span>PlutoSDR in Python</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2022, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

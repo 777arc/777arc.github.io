@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>1. Introduction &#8212; PySDR: A Guide to SDR and DSP using Python</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2. Domaine Fréquentiel" href="frequency_domain.html" />
+    <link rel="prev" title="PySDR: A Guide to SDR and DSP using Python (French)" href="../index-fr.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TGRQK1JJYD');
+</script>
+
+<!-- French/English Chooser, couldnt get it working with local URLs -->
+<div style="float: right; padding-bottom: 0;">
+  <select onchange="location = this.value;">
+    <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/fr/index-fr.html">French</option>
+  </select>
+</div>
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index-fr.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#objectif-et-public-cible">Objectif et public cible</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contribuant">Contribuant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remerciements">Remerciements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Domaine Fréquentiel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usrp.html">6. USRP in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files and SigMF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rds.html">15. End-to-End Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index-fr.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index-fr.html" title="previous chapter">PySDR: A Guide to SDR and DSP using Python (French)</a></li>
+      <li>Next: <a href="frequency_domain.html" title="next chapter"><span class="section-number">2. </span>Domaine Fréquentiel</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="../index-fr.html" title="Previous document">PySDR: A Guide to SDR and DSP using Python (French)</a>
+        </li>
+        <li>
+          <a href="frequency_domain.html" title="Next document"><span class="section-number">2. </span>Domaine Fréquentiel</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="introduction">
+<span id="intro-chapter"></span><h1><span class="section-number">1. </span>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="objectif-et-public-cible">
+<h2>Objectif et public cible<a class="headerlink" href="#objectif-et-public-cible" title="Permalink to this headline">¶</a></h2>
+<p>Tout d’abord, quelques termes importants :</p>
+<dl class="docutils">
+<dt><strong>Software-Defined Radio (SDR):</strong></dt><dd>Une radio qui utilise un logiciel pour effectuer des tâches de traitement du signal qui étaient traditionnellement effectuées par le matériel</dd>
+<dt><strong>Digital Signal Processing (DSP):</strong></dt><dd>Le traitement numérique des signaux, dans notre cas les signaux RF</dd>
+</dl>
+<p>Ce manuel agit comme une introduction pratique aux domaines des communications DSP, SDR et sans fil. Il est destiné à une personne :</p>
+<ol class="arabic simple">
+<li>Intéressé à * utiliser * les SDR pour faire des trucs sympas</li>
+<li>Bon avec Python</li>
+<li>Relativement nouveau au DSP, aux communications sans fil et au SDR</li>
+<li>Un apprenant visuel, préférant les animations aux équations</li>
+<li>Mieux comprendre les équations * après * avoir appris les concepts</li>
+<li>Vous cherchez des explications concises, pas un manuel de 1 000 pages</li>
+</ol>
+<p>Un exemple est un étudiant en informatique intéressé par un travail impliquant des communications sans fil après l’obtention de son diplôme, bien qu’il puisse être utilisé par toute personne désireuse d’en savoir plus sur SDR qui a de l’expérience en programmation. En tant que tel, il couvre la théorie nécessaire pour comprendre les techniques DSP sans les mathématiques intenses qui sont généralement incluses dans les cours DSP. Au lieu de nous plonger dans des équations, une abondance d’images et d’animations sont utilisées pour aider à transmettre les concepts, comme l’animation de plan complexe de la série de Fourier ci-dessous. Je crois que les équations sont mieux comprises * après * avoir appris les concepts à travers des visuels et des exercices pratiques. L’utilisation intensive d’animations est la raison pour laquelle PySDR n’aura jamais de version papier vendue sur Amazon.</p>
+<a class="reference internal image-reference" href="../_images/fft_logo_wide.gif"><img alt="../_images/fft_logo_wide.gif" class="align-center" src="../_images/fft_logo_wide.gif" style="width: 707.6999999999999px; height: 470.4px;" /></a>
+<p>Ce manuel est destiné à introduire les concepts rapidement et en douceur, permettant au lecteur d’effectuer le DSP et d’utiliser les SDR intelligemment. Il n’est pas censé être un manuel de référence pour tous les sujets DSP/SDR&nbsp;; il existe déjà de nombreux manuels de qualité, tels que le manuel SDR de <a class="reference external" href="https://www.analog.com/en/education/education-library/software-defined-radio-for-engineers.html" rel="noopener noreferrer" target="_blank">Analog Device’s</a> and <a class="reference external" href="http://www.dspguide.com/" rel="noopener noreferrer" target="_blank">dspguide.com</a>.  Vous pouvez toujours utiliser Google pour rappeler les identités trigonométriques ou la limite de Shannon. Considérez ce manuel comme une porte d’entrée dans le monde du DSP et du SDR&nbsp;: il est plus léger et nécessite moins d’engagement en termes de temps et d’argent, par rapport aux cours et manuels plus traditionnels.</p>
+<p>Pour couvrir la théorie fondamentale du DSP, un semestre entier de “Signaux et systèmes”, un cours typique en génie électrique, est condensé en quelques chapitres. Une fois les principes fondamentaux du DSP couverts, nous nous lançons dans les SDR, bien que les concepts de DSP et de communications sans fil continuent d’apparaître tout au long du manuel.</p>
+<p>Des exemples de code sont fournis en Python. Ils utilisent NumPy, qui est la bibliothèque standard de Python pour les tableaux et les mathématiques de haut niveau. Les exemples s’appuient également sur Matplotlib, qui est une bibliothèque de traçage Python qui permet de visualiser facilement des signaux, des tableaux et des nombres complexes. Notez que bien que Python soit “plus lent” que C++ en général, la plupart des fonctions mathématiques de Python/NumPy sont implémentées en C/C++ et fortement optimisées. De même, l’API SDR que nous utilisons est simplement un ensemble de liaisons Python pour les fonctions/classes C/C++. Ceux qui ont peu d’expérience Python mais une base solide dans MATLAB, Ruby ou Perl iront probablement bien après s’être familiarisés avec la syntaxe de Python.</p>
+</div>
+<div class="section" id="contribuant">
+<h2>Contribuant<a class="headerlink" href="#contribuant" title="Permalink to this headline">¶</a></h2>
+<p>Si vous parcourez n’importe quelle quantité de ce manuel et que vous m’envoyez un e-mail à <a class="reference external" href="mailto:pysdr&#37;&#52;&#48;vt&#46;edu" rel="noopener noreferrer" target="_blank">pysdr<span>&#64;</span>vt<span>&#46;</span>edu</a> avec des questions/commentaires/suggestions, alors félicitations, vous aurez contribué à ce manuel&nbsp;!</p>
+<p>Mais à plus grande échelle, vous pouvez contribuer à ce manuel de la même manière que n’importe quel projet de logiciel open source - via Git. Ce manuel peut être sous la forme d’un site Web, mais le matériel source qu’il est généré à partir de toutes les vies sur la page GitHub du manuel &lt;<a class="reference external" href="https://github.com/777arc/textbook" rel="noopener noreferrer" target="_blank">https://github.com/777arc/textbook</a>&gt;`_. N’hésitez pas à soumettre un problème ou même une demande d’extraction (PR) avec des correctifs ou des améliorations. Ceux qui soumettent des commentaires/correctifs précieux seront ajoutés de manière permanente à la section des remerciements ci-dessous. Pas bon à Git mais avez-vous des changements à suggérer ? N’hésitez pas à m’envoyer un e-mail à <a class="reference external" href="mailto:pysdr&#37;&#52;&#48;vt&#46;edu" rel="noopener noreferrer" target="_blank">pysdr<span>&#64;</span>vt<span>&#46;</span>edu</a>.</p>
+<p>Le site Web sur lequel ce manuel est hébergé est sans publicité, car nous détestons tous les publicités. Je ne fournis pas non plus d’adresse PayPal ou Bitcoin où j’accepte les dons. Il n’y a littéralement aucun moyen pour moi d’être payé pour ce manuel. Au lieu de cela, je suggère simplement de partager ce manuel avec des collègues, des étudiants et d’autres apprenants tout au long de la vie qui pourraient être intéressés par le matériel.</p>
+</div>
+<div class="section" id="remerciements">
+<h2>Remerciements<a class="headerlink" href="#remerciements" title="Permalink to this headline">¶</a></h2>
+<p>Merci à tous ceux qui ont lu une partie de ce manuel et fourni des commentaires, et en particulier à:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://github.com/duggabe" rel="noopener noreferrer" target="_blank">Barry Duggan</a></li>
+<li>Matthew Hannon</li>
+<li>James Hayek</li>
+<li><a class="reference external" href="http://kd9qgl.wordpress.com/" rel="noopener noreferrer" target="_blank">Deidre Stuffer</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="../index-fr.html" title="Previous document">PySDR: A Guide to SDR and DSP using Python (French)</a>
+        </li>
+        <li>
+          <a href="frequency_domain.html" title="Next document"><span class="section-number">2. </span>Domaine Fréquentiel</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2022, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
