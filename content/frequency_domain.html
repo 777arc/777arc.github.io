@@ -161,10 +161,10 @@
 <p>To understand how we can break down a signal into sine waves, or sinusoids, we need to first review the three attributes of a sine wave:</p>
 <ol class="arabic simple">
 <li>Amplitude</li>
-<li>Phase</li>
 <li>Frequency</li>
+<li>Phase</li>
 </ol>
-<p><strong>Amplitude</strong> indicates the “strength” of the wave, while <strong>phase</strong> is used to represent how the sine wave is shifted in time, anywhere from 0 to 360 degrees (or 0 to <img class="math" src="../_images/math/bf50b56b21d67ede45fc1ec5b8213871824fe365.svg" alt="2\pi"/>).  <strong>Frequency</strong> is the number of waves per second.</p>
+<p><strong>Amplitude</strong> indicates the “strength” of the wave, while <strong>frequency</strong> is the number of waves per second.  <strong>Phase</strong> is used to represent how the sine wave is shifted in time, anywhere from 0 to 360 degrees (or 0 to <img class="math" src="../_images/math/bf50b56b21d67ede45fc1ec5b8213871824fe365.svg" alt="2\pi"/>), but it must be relative to something to have any meaning, such as two signals with the same frequency being 30 degrees out of phase with each other.</p>
 <a class="reference external image-reference" href="../_images/amplitude_phase_period.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/amplitude_phase_period.svg" class="align-center" src="../_images/amplitude_phase_period.svg" /></a>
 <p>At this point you may have realized that a “signal” is essentially just a function, usually represented “over time” (i.e., the x-axis). Another attribute that is easy to remember is <strong>period</strong>, which is the inverse of <strong>frequency</strong>. The <strong>period</strong> of a sinusoid is the amount of time, in seconds, for the wave to finish one cycle.  Thus, the unit of frequency is 1/seconds, or Hz.</p>
 <p>When we decompose a signal into a summation of sine waves, each one will have a certain <strong>amplitude</strong>, <strong>phase</strong>, and <strong>frequency</strong>.  Each sine wave’s <strong>amplitude</strong> will tell us how strong the <strong>frequency</strong> existed in the original signal.  Don’t worry too much about <strong>phase</strong> for now, other than realizing that the only difference between sin() and cos() is a phase shift (time shift).</p>
@@ -269,17 +269,17 @@
 </div>
 <div class="section" id="negative-frequencies">
 <h2>Negative Frequencies<a class="headerlink" href="#negative-frequencies" title="Permalink to this headline">¶</a></h2>
-<p>What in the world is a negative frequency?  For now, just know that they have to do with using complex numbers (imaginary numbers)–there isn’t really such thing as a “negative frequency”, it’s just a representation we use.  Here’s an intuitive way to think about it.  Consider we tell our SDR to tune to 100 MHz (the FM radio band) and sample at a rate of 10 MHz.  In other words, we will view the spectrum from 95 MHz to 105 MHz.  Perhaps there are three signals present:</p>
+<p>What in the world is a negative frequency?  For now, just know that they have to do with using complex numbers (imaginary numbers)–there isn’t really such thing as a “negative frequency” when it comes to transmitting/receiving RF signals, it’s just a representation we use.  Here’s an intuitive way to think about it.  Consider we tell our SDR to tune to 100 MHz (the FM radio band) and sample at a rate of 10 MHz.  In other words, we will view the spectrum from 95 MHz to 105 MHz.  Perhaps there are three signals present:</p>
 <a class="reference external image-reference" href="../_images/negative-frequencies2.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/negative-frequencies2.svg" class="align-center" src="../_images/negative-frequencies2.svg" /></a>
 <p>Now, when the SDR gives us the samples, it will appear like this:</p>
 <a class="reference external image-reference" href="../_images/negative-frequencies3.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/negative-frequencies3.svg" class="align-center" src="../_images/negative-frequencies3.svg" /></a>
-<p>Remember that we tuned the SDR to 100 MHz.  So the signal that was at about 97.5 MHz shows up at -2.5 MHz, which is a negative frequency.  In reality it’s just a frequency lower than the center frequency.  It will make more sense when we learn more about sampling and use our SDRs.</p>
+<p>Remember that we tuned the SDR to 100 MHz.  So the signal that was at about 97.5 MHz shows up at -2.5 MHz when we represent it digitally, which is technically a negative frequency.  In reality it’s just a frequency lower than the center frequency.  This will make more sense when we learn more about sampling and obtain experience using our SDRs.</p>
 </div>
 <div class="section" id="order-in-time-doesn-t-matter">
 <h2>Order in Time Doesn’t Matter<a class="headerlink" href="#order-in-time-doesn-t-matter" title="Permalink to this headline">¶</a></h2>
 <p>One last property before we jump into FFTs.  The FFT function sort of “mixes around” the input signal to form the output, which has a different scale and units. We are no longer in the time domain after all.  A good way to internalize this difference between domains is realizing that changing the order things happen in the time domain doesn’t change the frequency components in the signal.  I.e., the FFT of the following two signals will both have the same two spikes because the signal is just two sine waves at different frequencies.  Changing the order the sine waves occur doesn’t change the fact that they are two sine waves at different frequencies.</p>
 <a class="reference internal image-reference" href="../_images/fft_signal_order.png"><img alt="../_images/fft_signal_order.png" class="align-center" src="../_images/fft_signal_order.png" style="width: 634.0px; height: 224.0px;" /></a>
-<p>Technically, the phase of the FFT will change because of the time-shift of the sinusoids; however, 99% of the time we are only concerned with the magnitude of the FFT, as we will learn shortly.</p>
+<p>Technically, the phase of the FFT values will change because of the time-shift of the sinusoids.  However, for the first several chapters of this textbook we will mostly be concerned with the magnitude of the FFT.</p>
 </div>
 <div class="section" id="fft-in-python">
 <h2>FFT in Python<a class="headerlink" href="#fft-in-python" title="Permalink to this headline">¶</a></h2>
