@@ -311,8 +311,8 @@ We must do the following six operations to calculate PSD:</p>
 <ol class="arabic simple">
 <li>Take the FFT of our samples.  If we have x samples, the FFT size will be the length of x by default. Let’s use the first 1024 samples as an example to create a 1024-size FFT.  The output will be 1024 complex floats.</li>
 <li>Take the magnitude of the FFT output, which provides us 1024 real floats.</li>
-<li>Normalize: divide by the FFT size (<img class="math" src="../_images/math/24ca8296258e6d43d10327cf05e8d5b650662803.svg" alt="N"/>, or 1024 in this case).</li>
 <li>Square the resulting magnitude to get power.</li>
+<li>Normalize: divide by the FFT size (<img class="math" src="../_images/math/24ca8296258e6d43d10327cf05e8d5b650662803.svg" alt="N"/>) and sample rate (<img class="math" src="../_images/math/698739a98aaea30ace3093c2b58fb2a59e22c981.svg" alt="Fs"/>).</li>
 <li>Convert to dB using <img class="math" src="../_images/math/f4455b0aaee830c84338328975fa7b9956463d04.svg" alt="10 \log_{10}()"/>; we always view PSDs in log scale.</li>
 <li>Perform an FFT shift, covered in the previous chapter, to move “0 Hz” in the center and negative frequencies to the left of center.</li>
 </ol>
@@ -321,7 +321,7 @@ We must do the following six operations to calculate PSD:</p>
 <span class="c1"># assume x contains your array of IQ samples</span>
 <span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">N</span><span class="p">]</span> <span class="c1"># we will only take the FFT of the first 1024 samples, see text below</span>
-<span class="n">PSD</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">PSD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="n">Fs</span><span class="p">)</span>
 <span class="n">PSD_log</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PSD</span><span class="p">)</span>
 <span class="n">PSD_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">PSD_log</span><span class="p">)</span>
 </pre></div>
@@ -363,7 +363,7 @@ Alternatively, if you know your signal is not changing fast, it’s adequate to 
 <span class="n">noise_power</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">noise_power</span><span class="p">)</span>
 
-<span class="n">PSD</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">PSD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="n">Fs</span><span class="p">)</span>
 <span class="n">PSD_log</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PSD</span><span class="p">)</span>
 <span class="n">PSD_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">PSD_log</span><span class="p">)</span>
 
