@@ -315,10 +315,10 @@ Si votre signal a une moyenne approximativement nulle - ce qui est généralemen
 <p>Dans le chapitre précédent, nous avons appris que nous pouvions convertir un signal dans le domaine des fréquences à l’aide d’une FFT, et que le résultat était appelé densité spectrale de puissance (DSP), qu’on notera par la suite PSD (pour <em>Power Spectral Density</em>) et eviter ainsi toute confusion avec DSP de <em>Digitl Signal Processing</em>.</p>
 <p>Mais pour trouver réellement la PSD d’un lot d’échantillons et la tracer, nous ne nous contentons pas d’effectuer une FFT. Nous devons effectuer les six opérations suivantes:</p>
 <ol class="arabic simple">
-<li>Prenez la FFT de nos échantillons.  Si nous avons x échantillons, la taille de la FFT sera la longueur de x par défaut. Utilisons les 1024 premiers échantillons comme exemple pour créer une FFT de taille 1024. La sortie sera de 1024 flottants complexes.</li>
-<li>Prenez le module de la sortie de la FFT, ce qui nous donne 1024 flottants réels.</li>
-<li>Normalisez: divisez par la taille de la FFT (<img class="math" src="../_images/math/24ca8296258e6d43d10327cf05e8d5b650662803.svg" alt="N"/>, ou 1024 dans ce cas).</li>
-<li>Elevez au carré le module résultante pour obtenir la puissance.</li>
+<li>Prenez la FFT de nos échantillons.  Si nous avons x échantillons, la taille de la FFT sera la longueur de x par défaut. Utilisons les 1024 premiers échantillons comme exemple pour créer une FFT de taille 1024.  La sortie sera de 1024 flottants complexes.</li>
+<li>Prenez la magnitude de la sortie de la FFT, ce qui nous donne 1024 flottants réels.</li>
+<li>Élevez au carré la magnitude résultante pour obtenir la puissance.</li>
+<li>Normaliser: diviser par la taille de la FFT (<img class="math" src="../_images/math/24ca8296258e6d43d10327cf05e8d5b650662803.svg" alt="N"/>) et le taux d’échantillonnage (<img class="math" src="../_images/math/698739a98aaea30ace3093c2b58fb2a59e22c981.svg" alt="Fs"/>).</li>
 <li>Convertissez en dB en utilisant <img class="math" src="../_images/math/f4455b0aaee830c84338328975fa7b9956463d04.svg" alt="10 \log_{10}()"/> ; nous considérons toujours les PSD en échelle logarithmique.</li>
 <li>Effectuez un décalage FFT, abordé dans le chapitre précédent, pour déplacer ” 0 Hz ” au centre et les fréquences négatives à gauche du centre.</li>
 </ol>
@@ -327,7 +327,7 @@ Si votre signal a une moyenne approximativement nulle - ce qui est généralemen
 <span class="c1"># supposez que x contient votre tableau d&#39;échantillons de QI</span>
 <span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">N</span><span class="p">]</span> <span class="c1"># nous ne prendrons que la FFT des 1024 premiers échantillons, voir le texte ci-dessous</span>
-<span class="n">PSD</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">PSD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="n">Fs</span><span class="p">)</span>
 <span class="n">PSD_log</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PSD</span><span class="p">)</span>
 <span class="n">PSD_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">PSD_log</span><span class="p">)</span>
 </pre></div>
@@ -340,7 +340,7 @@ Si votre signal a une moyenne approximativement nulle - ce qui est généralemen
 <p>Pour tracer cette PSD, nous devons connaître les valeurs de l’axe des abscisses.
 Comme nous l’avons appris au chapitre précédent, lorsque nous échantillonnons un signal, nous ne “voyons” que le spectre compris entre -Fs/2 et Fs/2, Fs étant notre fréquence d’échantillonnage.
 La résolution que nous obtenons dans le domaine fréquentiel dépend de la taille de notre FFT, qui par défaut est égale au nombre d’échantillons sur lesquels nous effectuons l’opération de FFT.
-Dans ce cas, notre axe des x est constitué de 1024 points équidistants entre -0,5 MHz et 0,5 MHz.
+Dans ce cas, notre axe x est constitué de 1024 points équidistants entre -0.5 MHz et 0.5 MHz.
 Si nous avions réglé notre SDR sur 2.4 GHz, notre fenêtre d’observation serait comprise entre 2.3995 GHz et 2.4005 GHz.
 En Python, le déplacement de la fenêtre d’observation ressemblera à ceci :</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">center_freq</span> <span class="o">=</span> <span class="mf">2.4e9</span> <span class="c1"># fréquence sur laquelle nous avons réglé notre SDR.</span>
@@ -369,7 +369,7 @@ Alternativement, si vous savez que votre signal ne change pas rapidement, il est
 <span class="n">noise_power</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">noise_power</span><span class="p">)</span>
 
-<span class="n">PSD</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">/</span><span class="n">N</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">PSD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="n">Fs</span><span class="p">)</span>
 <span class="n">PSD_log</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PSD</span><span class="p">)</span>
 <span class="n">PSD_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">PSD_log</span><span class="p">)</span>
 
