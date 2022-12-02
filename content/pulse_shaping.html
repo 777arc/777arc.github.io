@@ -169,7 +169,9 @@
 </div><p>To split a filter in half you can take the square root of the frequency response.</p>
 <div class="math">
 <p><img src="../_images/math/7e7d6f2cb6946f45a7252e5229da937c2571556b.svg" alt="X(f) = X_H(f) X_H(f) \quad \mathrm{where} \quad X_H(f) = \sqrt{X(f)}"/></p>
-</div></div>
+</div><p>Below shows a simplified diagram of a transmit and receive chain, with a Raised Cosine (RC) filter being split into two Root Raised Cosine (RRC) filters; the one on the transmit side is the pulse shaping filter, and the one on the received side is the matched filter.  Together, they cause the pulses at the demodulator to appear as if they had been pulse shaped with a single RRC filter.</p>
+<a class="reference external image-reference" href="../_images/splitting_rc_filter.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/splitting_rc_filter.svg" class="align-center" src="../_images/splitting_rc_filter.svg" /></a>
+</div>
 <div class="section" id="specific-pulse-shaping-filters">
 <h2>Specific Pulse Shaping Filters<a class="headerlink" href="#specific-pulse-shaping-filters" title="Permalink to this headline">¶</a></h2>
 <p>We know that we want to:</p>
@@ -264,7 +266,7 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_shaped</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_symbols</span><span class="p">):</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">i</span><span class="o">*</span><span class="n">sps</span><span class="o">+</span><span class="n">num_taps</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="o">*</span><span class="n">sps</span><span class="o">+</span><span class="n">num_taps</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_shaped</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">sps</span><span class="o">+</span><span class="n">num_taps</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">i</span><span class="o">*</span><span class="n">sps</span><span class="o">+</span><span class="n">num_taps</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">i</span><span class="o">*</span><span class="n">sps</span><span class="o">+</span><span class="n">num_taps</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_shaped</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">sps</span><span class="o">+</span><span class="n">num_taps</span><span class="o">//</span><span class="mi">2</span><span class="p">]])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>

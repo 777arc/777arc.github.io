@@ -142,16 +142,16 @@
 <p>In this chapter we learn how to use the UHD Python API to control and receive/transmit signals with a <a class="reference external" href="https://www.ettus.com/" rel="noopener noreferrer" target="_blank">USRP</a> which is a series of SDRs made by Ettus Research (now part of NI).  We will discuss transmitting and receiving on the USRP in Python, and dive into USRP-specific topics including stream args, subdevices, channels, 10 MHz and PPS synchronization.</p>
 <div class="section" id="software-drivers-install">
 <h2>Software/Drivers Install<a class="headerlink" href="#software-drivers-install" title="Permalink to this headline">¶</a></h2>
-<p>While the Python code provided in this textbook should work under Windows, Mac, and Linux, we will only be providing driver/API install instructions specific to Ubuntu 20 (although the instructions below should work on most Debian-based distributions).  We will start by creating an Ubuntu 20 VirtualBox VM; feel free to skip the VM portion if you already have your OS ready to go.</p>
-<div class="section" id="setting-up-an-ubuntu-20-vm">
-<h3>Setting Up an Ubuntu 20 VM<a class="headerlink" href="#setting-up-an-ubuntu-20-vm" title="Permalink to this headline">¶</a></h3>
+<p>While the Python code provided in this textbook should work under Windows, Mac, and Linux, we will only be providing driver/API install instructions specific to Ubuntu 22 (although the instructions below should work on most Debian-based distributions).  We will start by creating an Ubuntu 22 VirtualBox VM; feel free to skip the VM portion if you already have your OS ready to go.  Alternatively, if you’re on Windows 11, Windows Subsystem for Linux (WSL) using Ubuntu 22 tends to run fairly well and supports graphics out-of-the-box.</p>
+<div class="section" id="setting-up-an-ubuntu-22-vm">
+<h3>Setting Up an Ubuntu 22 VM<a class="headerlink" href="#setting-up-an-ubuntu-22-vm" title="Permalink to this headline">¶</a></h3>
 <p>(Optional)</p>
 <ol class="arabic simple">
-<li>Download Ubuntu 20.04 Desktop .iso- <a class="reference external" href="https://ubuntu.com/download/desktop" rel="noopener noreferrer" target="_blank">https://ubuntu.com/download/desktop</a></li>
+<li>Download Ubuntu 22.04 Desktop .iso- <a class="reference external" href="https://ubuntu.com/download/desktop" rel="noopener noreferrer" target="_blank">https://ubuntu.com/download/desktop</a></li>
 <li>Install and open <a class="reference external" href="https://www.virtualbox.org/wiki/Downloads" rel="noopener noreferrer" target="_blank">VirtualBox</a>.</li>
 <li>Create a new VM.  For memory size, I recommend using 50% of your computer’s RAM.</li>
 <li>Create the virtual hard disk, choose VDI, and dynamically allocate size.  15 GB should be enough. If you want to be really safe you can use more.</li>
-<li>Start the VM. It will ask you for installation media. Choose the Ubuntu 20 desktop .iso file.  Choose “install ubuntu”, use default options, and a pop up will warn you about the changes you are about to make. Hit continue.  Choose name/password and then wait for the VM to finish initializing.  After finishing the VM will restart, but you should power off the VM after the restart.</li>
+<li>Start the VM. It will ask you for installation media. Choose the Ubuntu 22 desktop .iso file.  Choose “install ubuntu”, use default options, and a pop up will warn you about the changes you are about to make. Hit continue.  Choose name/password and then wait for the VM to finish initializing.  After finishing the VM will restart, but you should power off the VM after the restart.</li>
 <li>Go into the VM settings (the gear icon).</li>
 <li>Under system &gt; processor &gt; choose at least 3 CPUs.  If you have an actual video card then in display &gt; video memory &gt; choose something much higher.</li>
 <li>Start up your VM.</li>
