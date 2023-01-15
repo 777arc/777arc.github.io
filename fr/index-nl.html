@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PySDR: Een handleiding voor SDRs en digitale signaalbewerking met Python &#8212; PySDR: A Guide to SDR and DSP using Python</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TGRQK1JJYD');
+</script>
+
+<!-- French/English Chooser, couldnt get it working with local URLs -->
+<div style="float: right; padding-bottom: 0;">
+  <select onchange="location = this.value;">
+    <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
+    <option value="https://pysdr.org/fr/index-fr.html">French</option>
+  </select>
+</div>
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="index-fr.html">
+    <img class="logo" src="_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/frequency_domain.html">2. Domaine fréquentiel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/sampling.html">3. échantillonnage IQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/digital_modulation.html">4. Modulation numérique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/pluto.html">5. PlutoSDR en Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/usrp.html">6. USRP en Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/noise.html">7. le Bruit et les dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/filters.html">8. Filtres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/link_budgets.html">9. Bilans de liaison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/channel_coding.html">10. Codage Canal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/iq_files.html">11. Fichiers IQ et SigMF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/multipath_fading.html">12. Evanouissement par Multi-Trajets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/pulse_shaping.html">13. Mise en Forme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/sync.html">14. Synchronisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/rds.html">15. Exemple bout en bout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content-fr/about_author.html">16. A propos de l’auteur</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index-fr.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="pysdr-een-handleiding-voor-sdrs-en-digitale-signaalbewerking-met-python">
+<h1>PySDR: Een handleiding voor SDRs en digitale signaalbewerking met Python<a class="headerlink" href="#pysdr-een-handleiding-voor-sdrs-en-digitale-signaalbewerking-met-python" title="Permalink to this headline">¶</a></h1>
+<p>door <a class="reference internal" href="content-nl/about_author.html#author-chapter"><span class="std std-ref">Dr. Marc Lichtman</span></a></p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/intro.html">1. Introductie</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/intro.html#doel-en-doelgroep">Doel en doelgroep</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/intro.html#meehelpen">Meehelpen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/intro.html#erkenning">Erkenning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/intro.html#nederlandse-vertaling">Nederlandse vertaling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/frequency_domain.html">2. Het Frequentiedomein</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/frequency_domain.html#fourierreeks">Fourierreeks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/frequency_domain.html#tijd-frequentie-paren">Tijd-Frequentie paren</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/frequency_domain.html#fouriertransformatie">Fouriertransformatie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/frequency_domain.html#tijd-frequentie-eigenschappen">Tijd-Frequentie Eigenschappen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/frequency_domain.html#fast-fourier-transform-fft">Fast Fourier Transform (FFT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/frequency_domain.html#negatieve-frequenties">Negatieve Frequenties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/frequency_domain.html#volgorde-in-de-tijd-maakt-niet-uit">Volgorde in de tijd maakt niet uit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/frequency_domain.html#fft-in-python">FFT in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/frequency_domain.html#vensterfunctie">Vensterfunctie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/frequency_domain.html#fft-grootte">FFT grootte</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/frequency_domain.html#spectrogram-waterval">Spectrogram/Waterval</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/sampling.html">3. IQ-sampling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#basis-van-samplen">Basis van samplen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#nyquist-samplen">Nyquist samplen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#kwadratuursamplen">Kwadratuursamplen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#complexe-getallen">Complexe Getallen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#complexe-getallen-bij-ffts">Complexe getallen bij FFTs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#ontvangende-kant">Ontvangende kant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#draaggolven-en-frequentieverschuiving">Draaggolven en frequentieverschuiving</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#architectuur-van-ontvangers">Architectuur van ontvangers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#basisband-en-banddoorlaatsignalen">Basisband- en Banddoorlaatsignalen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#dc-piek">DC Piek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#samplen-met-onze-sdr">samplen met onze SDR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#gemiddelde-vermogen-berekenen">Gemiddelde Vermogen Berekenen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#power-spectral-density-berekenen">Power Spectral Density berekenen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sampling.html#extra-leesmateriaal">Extra Leesmateriaal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/digital_modulation.html">4. Digitale Modulatie</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/digital_modulation.html#symbolen">Symbolen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/digital_modulation.html#draadloze-symbolen">Draadloze Symbolen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/digital_modulation.html#amplitude-shift-keying-ask">Amplitude Shift Keying (ASK)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/digital_modulation.html#phase-shift-keying-psk">Phase Shift Keying (PSK)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/digital_modulation.html#iq-diagrammen-constellaties">IQ Diagrammen/Constellaties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/digital_modulation.html#quadrature-amplitude-modulation-qam">Quadrature Amplitude Modulation (QAM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/digital_modulation.html#frequency-shift-keying-fsk">Frequency Shift Keying (FSK)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/digital_modulation.html#differentiele-codering">Differentiële Codering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/digital_modulation.html#python-voorbeeld">Python Voorbeeld</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/digital_modulation.html#extra-leesmateriaal">Extra Leesmateriaal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/pluto.html">5. PlutoSDR in Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pluto.html#software-drivers-installatie">Software/Drivers Installatie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pluto.html#ontvangen">Ontvangen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pluto.html#zenden">Zenden</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pluto.html#tegelijk-zenden-en-ontvangen">Tegelijk zenden en ontvangen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pluto.html#referentie-api">Referentie API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pluto.html#python-oefeningen">Python Oefeningen</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/usrp.html">6. USRP in Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/usrp.html#software-drivers-install">Software/Drivers Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/usrp.html#receiving">Receiving</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/usrp.html#transmitting">Transmitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/usrp.html#transmitting-and-receiving-simultaneously">Transmitting and Receiving Simultaneously</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/usrp.html#subdevice-channels-and-antennas">Subdevice, Channels, and Antennas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/usrp.html#syncing-to-10-mhz-and-pps">Syncing to 10 MHz and PPS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/noise.html">7. Ruis en dB</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/noise.html#gaussische-ruis">Gaussische Ruis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/noise.html#decibellen-db">Decibellen (dB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/noise.html#ruis-in-het-frequentiedomein">Ruis in het frequentiedomein</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/noise.html#complexe-ruis">Complexe Ruis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/noise.html#awgn">AWGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/noise.html#snr-en-sinr">SNR en SINR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/noise.html#extra-leesmateriaal">Extra leesmateriaal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/filters.html">8. Filters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/filters.html#basis-van-filters">Basis van Filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/filters.html#filter-opbouw">Filter opbouw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/filters.html#filterimplementatie">Filterimplementatie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/filters.html#filterontwerptools">Filterontwerptools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/filters.html#convolutie">Convolutie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/filters.html#filterontwerp-in-python">Filterontwerp in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/filters.html#introductie-tot-pulse-shaping">Introductie tot Pulse Shaping</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/link_budgets.html">9. Link Budgets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/link_budgets.html#introductie">Introductie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/link_budgets.html#signaalvermogensbudget">Signaalvermogensbudget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/link_budgets.html#ruisvermogen">Ruisvermogen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/link_budgets.html#snr">SNR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/link_budgets.html#voorbeeld-budget-ads-b">Voorbeeld budget: ADS-B</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/channel_coding.html">10. Kanaalcodering</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/channel_coding.html#waarom-we-kanaalcodering-nodig-hebben">Waarom we kanaalcodering nodig hebben</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/channel_coding.html#typen-codes">Typen Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/channel_coding.html#code-snelheid">Code-snelheid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/channel_coding.html#modulatie-en-codering">Modulatie en codering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/channel_coding.html#hamming-code">Hamming Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/channel_coding.html#soft-vs-hard-decodering">Soft vs Hard Decodering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/channel_coding.html#shannon-limiet">Shannon Limiet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/channel_coding.html#state-of-the-art-codes">State of the Art Codes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/iq_files.html">11. IQ Files and SigMF</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/iq_files.html#binary-files">Binary Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/iq_files.html#python-examples">Python Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/iq_files.html#visually-analyzing-an-rf-file">Visually Analyzing an RF File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/iq_files.html#max-values-and-saturation">Max Values and Saturation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/iq_files.html#sigmf-and-annotating-iq-files">SigMF and Annotating IQ Files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/multipath_fading.html">12. Multipath Fading</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/multipath_fading.html#multipath">Multipath</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/multipath_fading.html#fading">Fading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/multipath_fading.html#simulating-rayleigh-fading">Simulating Rayleigh Fading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/multipath_fading.html#mitigating-multipath-fading">Mitigating Multipath Fading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/pulse_shaping.html">13. Pulse Shaping</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pulse_shaping.html#inter-symbool-interferentie-isi">Inter-Symbool-Interferentie (ISI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pulse_shaping.html#matched-filter">Matched Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pulse_shaping.html#een-filter-opsplitsen">Een filter opsplitsen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pulse_shaping.html#specifieke-pulsvormende-filters">Specifieke pulsvormende filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pulse_shaping.html#roll-off-factor">Roll-Off Factor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/pulse_shaping.html#python-oefeningen">Python Oefeningen</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/sync.html">14. Synchronisatie</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sync.html#introductie">Introductie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sync.html#draadloos-kanaal-simuleren">Draadloos kanaal simuleren</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sync.html#tijdsynchronisatie">Tijdsynchronisatie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sync.html#tijdsynchronisatie-met-interpolatie">Tijdsynchronisatie met interpolatie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sync.html#grove-frequentiesynchronisatie">Grove Frequentiesynchronisatie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sync.html#fine-frequency-synchronization">Fine Frequency Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/sync.html#frame-synchronisatie">Frame-synchronisatie</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/rds.html">15. Compleet voorbeeld</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#introductie-fm-radio-en-rds">Introductie FM Radio en RDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#the-rds-signal">The RDS Signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#acquiring-a-signal">Acquiring a Signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#fm-demodulation">FM Demodulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#frequency-shift">Frequency Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#filter-to-isolate-rds">Filter to Isolate RDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#decimate-by-10">Decimate by 10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#resample-to-19-khz">Resample to 19 kHz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#band-pass-filter">Band-Pass Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#time-synchronization-symbol-level">Time Synchronization (Symbol-Level)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#fine-frequency-synchronization">Fine Frequency Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#demodulate-the-bpsk">Demodulate the BPSK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#differential-decoding">Differential Decoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#rds-decoding">RDS Decoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#rds-parsing">RDS Parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#wrap-up-and-final-code">Wrap-Up and Final Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#acknowledgments">Acknowledgments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="content-nl/rds.html#further-reading">Further Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="content-nl/about_author.html">16. About the Author</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2023, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

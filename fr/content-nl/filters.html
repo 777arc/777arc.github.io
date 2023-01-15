@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>8. Filters &#8212; PySDR: A Guide to SDR and DSP using Python</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TGRQK1JJYD');
+</script>
+
+<!-- French/English Chooser, couldnt get it working with local URLs -->
+<div style="float: right; padding-bottom: 0;">
+  <select onchange="location = this.value;">
+    <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
+    <option value="https://pysdr.org/fr/index-fr.html">French</option>
+  </select>
+</div>
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index-fr.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/frequency_domain.html">2. Domaine fréquentiel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/sampling.html">3. échantillonnage IQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/digital_modulation.html">4. Modulation numérique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/pluto.html">5. PlutoSDR en Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/usrp.html">6. USRP en Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/noise.html">7. le Bruit et les dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/filters.html">8. Filtres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/link_budgets.html">9. Bilans de liaison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/channel_coding.html">10. Codage Canal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/iq_files.html">11. Fichiers IQ et SigMF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/multipath_fading.html">12. Evanouissement par Multi-Trajets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/pulse_shaping.html">13. Mise en Forme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/sync.html">14. Synchronisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/rds.html">15. Exemple bout en bout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/about_author.html">16. A propos de l’auteur</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index-fr.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="filters">
+<span id="filters-chapter"></span><h1><span class="section-number">8. </span>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h1>
+<p>We gaan in dit hoofdstuk over digitale filters in Python leren.
+We zullen de type filters behandelen (FIR/IIR en laagdoorlaat/hoogdoorlaat/banddoorlaat/bandstop), hoe ze digitaal eruit zien, en hoe ze ontworpen worden.
+Als laatste zullen we eindigen met een introductie over ‘pulse shaping’ (Nederlands: pulsvorming), wat zal worden uitgediept in het <a class="reference internal" href="pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Pulse Shaping</span></a> hoofdstuk.</p>
+<div class="section" id="basis-van-filters">
+<h2>Basis van Filters<a class="headerlink" href="#basis-van-filters" title="Permalink to this headline">¶</a></h2>
+<p>Veel disciplines maken gebruik van filters.
+Beeldverwerking maakt bijvoorbeeld uitvoerig gebruik van 2D filters waarbij de in- en uitgangen figuren betreft.
+Wellicht gebruik je elke morgen een koffiefilter om de vaste en vloeibare stoffen te scheiden.
+Maar in digitale signaalbewerking worden filters voornamelijk toegepast voor het:</p>
+<ol class="arabic simple">
+<li>Scheiden van gecombineerde signalen (dus het gewenste signaal extraheren)</li>
+<li>Verwijderen van overbodige ruis na ontvangst van een signaal</li>
+<li>Herstellen van signalen die zijn vervormd (een audio equalizer is bijv. een filter)</li>
+</ol>
+<p>Natuurlijk zijn er nog meer toepassingen, maar de bedoeling van dit hoofdstuk is om het concept te introduceren in plaats van alle filtertoepassingen.</p>
+<p>Misschien denk je dat we alleen geïnteresseerd zijn in digitale filters; het is ten slotte een DSP boek.
+Het is echter belangrijk om te begrijpen dat veel filters analoog zullen zijn, zoals de filters die in jouw SDR voor de ADC’s zijn gezet.
+Het volgende figuur plaatst een schema van een analoog filter tegenover het schematisch ontwerp van een digitaal filter.</p>
+<p>DSP’s hebben signalen als in- en uitgangen. Een filter heeft een ingangssignaal en een uitgangssignaal:</p>
+<p>Je kunt niet twee verschillende signalen in een enkel filter stoppen zonder ze eerst samen te voegen of een andere operatie uit te voeren.
+Op dezelfde manier zal de uitgang altijd een signaal betreffen, bijv. een 1D array van getallen.</p>
+<p>Er zijn vier basistypen filters: laagdoorlaat, hoogdoorlaat, banddoorlaat en bandstop (of sper).
+Elke type bewerkt signalen zodanig dat de focus op verschillende gebieden aan frequenties ligt.
+De onderstaande grafieken laten voor elk van de typen zien hoe de frequenties worden gefilterd.
+We merken op dat onderstaande figuren ook de negatieve frequenties tonen. Zolang de filters “reëel” zijn, zullen de filters gespiegeld zijn rondom 0 Hz.</p>
+<table><tbody><tr><td></td><td></td><td></td><td></td></tr></tbody></table><p>Elk filter laat bepaalde frequenties in een signaal door terwijl het andere frequenties blokkeert.
+Het bereik aan frequenties wat wordt doorgelaten heet de “doorlaatband”, en wat wordt geblokkeerd heet de “stopband”.
+In het geval van een laagdoorlaatfilter worden lage frequenties doorgelaten en hoge frequenties geblokkeerd, dus 0Hz zal altijd in de doorlaatband vallen.
+Bij hoog- en banddoorlaatfilters bevindt 0 Hz zich altijd in de stopband.</p>
+<p>Verwar deze filtertypes niet met de implementatietypes (dus IIR en FIR).
+Omdat we regelmatig signalen in de basisband gebruiken, wordt het laag-doorlaat filter (LPF) veruit het meeste gebruikt.
+Een LPF staat ons toe om alles “rond” ons signaal, zoals ruis en andere signalen, weg te filteren.</p>
+</div>
+<div class="section" id="filter-opbouw">
+<h2>Filter opbouw<a class="headerlink" href="#filter-opbouw" title="Permalink to this headline">¶</a></h2>
+<p>De meeste digitale filters die we tegen zullen komen (zoals FIR) kunnen we beschrijven met een array van floating point getallen.
+Filters die in het frequentiedomein symmetrisch zijn, bestaan uit (meestal een oneven aantal) reële getallen (i.p.v. complex).
+We noemen deze array van getallen “coëfficiënten” of in het Engels “taps”.
+Meestal gebruiken we <img class="math" src="../_images/math/2475529ef4582ec92a0ef0ee2a266a22d98ba80d.svg" alt="h"/> als symbool voor deze filter coëfficiënten/taps.
+Hier zijn een aantal voorbeeld coëfficiënten van een enkel filter:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">h</span> <span class="o">=</span>  <span class="p">[</span> <span class="mf">9.92977939e-04</span>  <span class="mf">1.08410297e-03</span>  <span class="mf">8.51595307e-04</span>  <span class="mf">1.64604862e-04</span>
+ <span class="o">-</span><span class="mf">1.01714338e-03</span> <span class="o">-</span><span class="mf">2.46268845e-03</span> <span class="o">-</span><span class="mf">3.58236429e-03</span> <span class="o">-</span><span class="mf">3.55412543e-03</span>
+ <span class="o">-</span><span class="mf">1.68583512e-03</span>  <span class="mf">2.10562324e-03</span>  <span class="mf">6.93100252e-03</span>  <span class="mf">1.09302641e-02</span>
+  <span class="mf">1.17766532e-02</span>  <span class="mf">7.60955496e-03</span> <span class="o">-</span><span class="mf">1.90555639e-03</span> <span class="o">-</span><span class="mf">1.48306750e-02</span>
+ <span class="o">-</span><span class="mf">2.69313236e-02</span> <span class="o">-</span><span class="mf">3.25659606e-02</span> <span class="o">-</span><span class="mf">2.63400086e-02</span> <span class="o">-</span><span class="mf">5.04184562e-03</span>
+  <span class="mf">3.08099470e-02</span>  <span class="mf">7.64264738e-02</span>  <span class="mf">1.23536693e-01</span>  <span class="mf">1.62377258e-01</span>
+  <span class="mf">1.84320776e-01</span>  <span class="mf">1.84320776e-01</span>  <span class="mf">1.62377258e-01</span>  <span class="mf">1.23536693e-01</span>
+  <span class="mf">7.64264738e-02</span>  <span class="mf">3.08099470e-02</span> <span class="o">-</span><span class="mf">5.04184562e-03</span> <span class="o">-</span><span class="mf">2.63400086e-02</span>
+ <span class="o">-</span><span class="mf">3.25659606e-02</span> <span class="o">-</span><span class="mf">2.69313236e-02</span> <span class="o">-</span><span class="mf">1.48306750e-02</span> <span class="o">-</span><span class="mf">1.90555639e-03</span>
+  <span class="mf">7.60955496e-03</span>  <span class="mf">1.17766532e-02</span>  <span class="mf">1.09302641e-02</span>  <span class="mf">6.93100252e-03</span>
+  <span class="mf">2.10562324e-03</span> <span class="o">-</span><span class="mf">1.68583512e-03</span> <span class="o">-</span><span class="mf">3.55412543e-03</span> <span class="o">-</span><span class="mf">3.58236429e-03</span>
+ <span class="o">-</span><span class="mf">2.46268845e-03</span> <span class="o">-</span><span class="mf">1.01714338e-03</span>  <span class="mf">1.64604862e-04</span>  <span class="mf">8.51595307e-04</span>
+  <span class="mf">1.08410297e-03</span>  <span class="mf">9.92977939e-04</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="voorbeeldtoepassing">
+<h3>Voorbeeldtoepassing<a class="headerlink" href="#voorbeeldtoepassing" title="Permalink to this headline">¶</a></h3>
+<p>Om te leren hoe onze filters worden gebruikt gaan we kijken naar een voorbeeld waarin we onze SDR afstemmen op een frequentie van een bestaand signaal. Rondom dat signaal zijn andere signalen die we weg willen halen.
+Vergeet niet dat, terwijl we onze SDR afstemmen op een RF-frequentie, de samples die de SDR teruggeeft in de basisband zitten. Dit betekent dat het signaal dus gecentreerd zal zijn rond de 0 Hz.
+We moeten zelf onthouden op welke frequentie we de SDR hadden ingesteld.
+Dit zouden we dan kunnen ontvangen:</p>
+<p>We weten dat we een laagdoorlaatfilter nodig hebben omdat ons signaal al rond DC (0 Hz) is gecentreerd.
+We moeten de “kantelfrequentie” (Engels “cutoff”) kiezen waar de doorlaatband overgaat in de stopband.
+De kantelfrequentie wordt altijd in Hz gegeven.
+In dit voorbeeld lijkt 3 kHz wel een goede waarde:</p>
+<p>Maar, gezien hoe de meeste laagdoorlaatfilters werken, zal de negatieve kantelfrequentie ook op (-)3 kHz liggen.
+Het is dus symmetrisch rond DC (later zien we waarom).
+Onze kantelfrequenties zien er dan ongeveer zo uit (de doorlaatband ligt tussen):</p>
+<p>Na het maken en toepassen van een filter met een kantelfrequentie van 3 kHz krijgen we:</p>
+<a class="reference internal image-reference" href="../_images/filter_use_case4.png"><img alt="../_images/filter_use_case4.png" class="align-center" src="../_images/filter_use_case4.png" style="width: 451.49999999999994px; height: 330.4px;" /></a>
+<p>Dit gefilterde signaal ziet er misschien verwarrend uit totdat je beseft dat de ruisvloer rond de groene lijn <em>zat</em> op -70 dB.
+Ook al zien we het signaal rond de 10 kHz nog steeds, het is <em>sterk</em> in vermogen afgenomen.
+Het is zelfs zwakker geworden dan de oude ruisvloer!
+Daarnaast hebben we dus ook de meeste ruis in de stopband verwijdert.</p>
+<p>Een andere belangrijke instelling van ons laagdoorlaatfilter, naast de kantelfrequentie, is de transitiebreedte (Engels: “Transition width”).
+Dit wordt uitgedrukt in Hz en vertelt het filter hoe <em>snel</em> het moet overgaan van de doorlaatband naar de stopband, want een directe overgang is onmogelijk.</p>
+<p>Laten we de transitiebreedte bekijken.
+In het onderstaande figuur laat de <span class="green">groene</span> lijn de ideale filterresponsie zien met een transitiebreedte van 0 Hz.
+De <span class="red">rode</span> lijn laat een realistisch filter zien, met een golvend gedrag in de doorlaat- en stopband en met een bepaalde transitiebreedte.
+De frequentie in dit figuur is genormaliseerd met de sample-frequentie.</p>
+<a class="reference internal image-reference" href="../_images/realistic_filter.png"><img alt="../_images/realistic_filter.png" class="align-center" src="../_images/realistic_filter.png" style="width: 526.0px; height: 315.0px;" /></a>
+<p>Nu vraag je je misschien af waarom we niet gewoon een zo’n kleine transitiebreedte als mogelijk kiezen.
+De voornaamste reden is dat een kleinere breedte tot meer coëfficiënten zal leiden, en hoe meer coëfficiënten hoe intensiever het wordt om te berekenen.
+Een filter met 50 coëfficiënten kan heel de dag draaien en nog geen 1% de CPU belasten op een RaspberryPi, terwijl een filter met 50000 coëfficiënten de CPU doet ontploffen!
+Meestal gebruiken we een filterontwerpprogramma om te zien over hoe veel coëfficiënten het gaat. Als dit veel te veel is (bijv. meer dan 100) dan verbreden we de transitie.
+Natuurlijk hangt dit allemaal af van de toepassing en de hardware waarop het filter draait.</p>
+<p>In het filtervoorbeeld hierboven hebben we een kantelfrequentie van 3 kHz en een transitiebreedte van 1 kHz gebruikt. Het resulterende filter gebruikte 77 coëfficiënten.</p>
+<p>Terug naar filteropbouw.
+Ook al gebruiken we een lijst van coëfficiënten voor een filter, meestal visualiseren we een filter in het frequentiedomein.
+Dit wordt de frequentieresponsie van het filter genoemd en laat het gedrag in frequentie zien.
+Hier is de frequentieresponsie van het filter dat we zojuist gebruikten:</p>
+<a class="reference internal image-reference" href="../_images/filter_use_case5.png"><img alt="../_images/filter_use_case5.png" class="align-center" src="../_images/filter_use_case5.png" style="width: 575.0px; height: 275.0px;" /></a>
+<p>Let op dat wat hier getoond wordt <em>niet</em> een signaal is, het is de frequentieresponsie van het filter.
+Misschien is het moeilijk om je vinger hierop te leggen, terwijl we voorbeelden en programma’s bekijken zal het duidelijker worden.</p>
+<p>Een filter heeft ook een tijddomein-versie; dit heet de “impulsrespons” van het filter. Dit heet zo omdat een impuls aan de ingang deze responsie aan de uitgang geeft. Google de “dirac delta functie” voor meer informatie over zo’n impuls.
+Voor een geven FIR-filter is de impulsresponsie gelijk aan de coëfficiënten zelf.
+Voor dat filter met 77 coëfficiënten van eerder is dat:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">h</span> <span class="o">=</span>  <span class="p">[</span><span class="o">-</span><span class="mf">0.00025604525581002235</span><span class="p">,</span> <span class="mf">0.00013669139298144728</span><span class="p">,</span> <span class="mf">0.0005385575350373983</span><span class="p">,</span>
+<span class="mf">0.0008378280326724052</span><span class="p">,</span> <span class="mf">0.000906112720258534</span><span class="p">,</span> <span class="mf">0.0006353431381285191</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">9.884083502996931e-19</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0008822851814329624</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0017323142383247614</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.0021665366366505623</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0018335371278226376</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0005912294145673513</span><span class="p">,</span>
+<span class="mf">0.001349081052467227</span><span class="p">,</span> <span class="mf">0.0033936649560928345</span><span class="p">,</span> <span class="mf">0.004703888203948736</span><span class="p">,</span>
+<span class="mf">0.004488115198910236</span><span class="p">,</span> <span class="mf">0.0023609865456819534</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0013707970501855016</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.00564080523326993</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.008859002031385899</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.009428252466022968</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.006394983734935522</span><span class="p">,</span> <span class="mf">4.76480351940553e-18</span><span class="p">,</span> <span class="mf">0.008114570751786232</span><span class="p">,</span>
+<span class="mf">0.015200719237327576</span><span class="p">,</span> <span class="mf">0.018197273835539818</span><span class="p">,</span> <span class="mf">0.01482443418353796</span><span class="p">,</span>
+<span class="mf">0.004636279307305813</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.010356673039495945</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.025791890919208527</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.03587324544787407</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.034922562539577484</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.019146423786878586</span><span class="p">,</span>
+<span class="mf">0.011919975280761719</span><span class="p">,</span> <span class="mf">0.05478153005242348</span><span class="p">,</span> <span class="mf">0.10243935883045197</span><span class="p">,</span>
+<span class="mf">0.1458890736103058</span><span class="p">,</span> <span class="mf">0.1762896478176117</span><span class="p">,</span> <span class="mf">0.18720689415931702</span><span class="p">,</span>
+<span class="mf">0.1762896478176117</span><span class="p">,</span> <span class="mf">0.1458890736103058</span><span class="p">,</span> <span class="mf">0.10243935883045197</span><span class="p">,</span>
+<span class="mf">0.05478153005242348</span><span class="p">,</span> <span class="mf">0.011919975280761719</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.019146423786878586</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.034922562539577484</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03587324544787407</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.025791890919208527</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.010356673039495945</span><span class="p">,</span> <span class="mf">0.004636279307305813</span><span class="p">,</span> <span class="mf">0.01482443418353796</span><span class="p">,</span>
+<span class="mf">0.018197273835539818</span><span class="p">,</span> <span class="mf">0.015200719237327576</span><span class="p">,</span> <span class="mf">0.008114570751786232</span><span class="p">,</span>
+<span class="mf">4.76480351940553e-18</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.006394983734935522</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.009428252466022968</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.008859002031385899</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.00564080523326993</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0013707970501855016</span><span class="p">,</span>
+<span class="mf">0.0023609865456819534</span><span class="p">,</span> <span class="mf">0.004488115198910236</span><span class="p">,</span> <span class="mf">0.004703888203948736</span><span class="p">,</span>
+<span class="mf">0.0033936649560928345</span><span class="p">,</span> <span class="mf">0.001349081052467227</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0005912294145673513</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.0018335371278226376</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0021665366366505623</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0017323142383247614</span><span class="p">,</span>
+<span class="o">-</span><span class="mf">0.0008822851814329624</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.884083502996931e-19</span><span class="p">,</span> <span class="mf">0.0006353431381285191</span><span class="p">,</span>
+<span class="mf">0.000906112720258534</span><span class="p">,</span> <span class="mf">0.0008378280326724052</span><span class="p">,</span> <span class="mf">0.0005385575350373983</span><span class="p">,</span>
+<span class="mf">0.00013669139298144728</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.00025604525581002235</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Ook al hebben we nog niets geleerd over filterontwerp, hieronder kun je de code van dat filter vinden:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">num_taps</span> <span class="o">=</span> <span class="mi">51</span> <span class="c1"># aantal coëfficiënten</span>
+<span class="n">cut_off</span> <span class="o">=</span> <span class="mi">3000</span> <span class="c1"># kantelfrequentie in Hz</span>
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="mi">32000</span> <span class="c1"># Hz</span>
+
+<span class="c1"># laag-doorlaatfilter</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">firwin</span><span class="p">(</span><span class="n">num_taps</span><span class="p">,</span> <span class="n">cut_off</span><span class="p">,</span> <span class="n">nyq</span><span class="o">=</span><span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># impulsrespons weergeven</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Wanneer we deze coëfficiënten in de tijd weergeven dan krijgen we de impulsrespons:</p>
+<a class="reference internal image-reference" href="../_images/impulse_response.png"><img alt="../_images/impulse_response.png" class="align-center" src="../_images/impulse_response.png" style="width: 562.0px; height: 283.0px;" /></a>
+<p>De code om de frequentieresponsie van eerder te genereren wordt hieronder getoond.
+Dit is iets ingewikkelder omdat we een x-as voor de frequenties moeten opzetten.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Frequentieresponsie</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="mi">1024</span><span class="p">))</span> <span class="c1"># neem een 1024-punten FFT met modulus</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">H</span><span class="p">)</span> <span class="c1"># frequenties op juiste plek zetten</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">))</span> <span class="c1"># x-as</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="reele-versus-complexe-filters">
+<h3>Reële versus Complexe filters<a class="headerlink" href="#reele-versus-complexe-filters" title="Permalink to this headline">¶</a></h3>
+<p>Voor zover hebben de filters reële coëfficiënten, maar de coëfficiënten kunnen ook complex zijn.
+Of de coëfficiënten reëel of complex zijn heeft niets te maken met de ingang, je kunt een reëel signaal in een complex filter stoppen en andersom.
+Wanneer de coëfficiënten reëel zijn dan is de frequentieresponsie symmetrisch rondom DC (0Hz).
+We gebruiken complexe coëfficiënten alleen wanneer we een asymmetrisch filter willen, wat niet vaak het geval is.</p>
+<p>Als een voorbeeld voor complexe coëfficiënten nemen het eerdere spectrum, maar deze keer zullen we het andere signaal proberen te ontvangen zonder de SDR opnieuw in te stellen.
+Dit betekent dat we een (niet symmetrisch) banddoorlaatfilter willen gebruiken.
+We willen alleen de frequenties rond 7 tot 13 kHz gebruiken, maar niet de frequenties van -13 tot -7 kHz:</p>
+<a class="reference internal image-reference" href="../_images/filter_use_case6.png"><img alt="../_images/filter_use_case6.png" class="align-center" src="../_images/filter_use_case6.png" style="width: 418.59999999999997px; height: 310.09999999999997px;" /></a>
+<p>Een manier om dit filter te maken is om een laagdoorlaatfilter te nemen met een kantelfrequentie van 3 kHz en daarna op te schuiven in frequentie.
+We kunnen een frequentieverschuiving aan x(t) (tijddomein) geven door het te vermenigvuldigen met <img class="math" src="../_images/math/96dfb45b25ce9d4a2fd55cf9e8da4f3886436897.svg" alt="e^{j2\pi f_0t}"/>.
+In dit geval moet dan <img class="math" src="../_images/math/da647bd66569f61d6a3f16c3c2e09085c351a343.svg" alt="f_0"/> 10 kHz zijn wat het filter 10 kHz zou opschuiven.
+In het bovenstaande voorbeeld beschreef <img class="math" src="../_images/math/2475529ef4582ec92a0ef0ee2a266a22d98ba80d.svg" alt="h"/> de coëfficiënten van het laagdoorlaatfilter.
+Dus om ons banddoorlaatfilter te maken zullen we de coëfficiënten moeten vermenigvuldigen met <img class="math" src="../_images/math/96dfb45b25ce9d4a2fd55cf9e8da4f3886436897.svg" alt="e^{j2\pi f_0t}"/>, dit houdt in dat we aan elk sample (coëfficiënt) de juiste tijd moeten koppelen (de inverse van onze sample-frequentie):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># (h staat in eerder gegeven code)</span>
+
+<span class="c1"># Verschuif het filter in frequentie door te vermenigvuldigen met exp(j*2*pi*f0*t)</span>
+<span class="n">f0</span> <span class="o">=</span> <span class="mf">10e3</span> <span class="c1"># we verschuiven 10k</span>
+<span class="n">Ts</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">sample_rate</span> <span class="c1"># sample-frequentie</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">Ts</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">Ts</span><span class="p">)</span> <span class="c1"># vector met tijden van samples. (start, stop, stap)</span>
+<span class="n">exponential</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f0</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="c1"># dit is een complexe sinus</span>
+
+<span class="n">h_band_pass</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">exponential</span> <span class="c1"># verschuiving uitvoeren</span>
+
+<span class="c1"># impulsresponsie weergeven</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;impulse&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">h_band_pass</span><span class="p">),</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">h_band_pass</span><span class="p">),</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;real&#39;</span><span class="p">,</span> <span class="s1">&#39;imag&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># frequentieresponsie weergeven</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">h_band_pass</span><span class="p">,</span> <span class="mi">1024</span><span class="p">))</span> <span class="c1"># 1024-punts FFT met modulus</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">H</span><span class="p">)</span> <span class="c1"># frequenties op juiste plek zetten</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">))</span> <span class="c1"># x-as</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;freq&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency [Hz]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>De impuls- en frequentieresponsie worden hieronder weergeven:</p>
+<p>Omdat ons filter niet rond 0 Hz symmetrisch is, moeten we complexe coëfficiënten gebruiken en hebben we twee lijnen nodig om het te weergeven.
+Wat aan de linkerkant van het bovenstaande figuur te zien is, is deze complexe impulsresponsie.
+De rechterkant valideert dat we inderdaad het gewenste filter hebben verkregen; het filtert alles weg, behalve de frequenties rondom 10 kHz.
+Let nogmaals op dat het bovenstaande figuur <em>geen</em> signaal is, maar de responsie van het filter.
+Dit kan lastig zijn om te vatten want we passen het filter toe op een signaal en weergeven de uitgang in het frequentiedomein, wat in veel gevallen bijna overeenkomt met de frequentieresponsie van het filter.</p>
+<p>Maak je geen zorgen als dit stuk nog meer verwarring heeft veroorzaakt, 99% van de tijd gebruiken we alleen laagdoorlaatfilters met reële coëfficiënten.</p>
+</div>
+</div>
+<div class="section" id="filterimplementatie">
+<h2>Filterimplementatie<a class="headerlink" href="#filterimplementatie" title="Permalink to this headline">¶</a></h2>
+<p>We zullen niet te diep in de stof van filterimplementatie duiken.
+Ik leg liever de nadruk op filterontwerp (je kunt toch bruikbare implementaties vinden voor elke taal).
+Voor nu draait het om een ding: Om een signaal met een FIR-filter te filteren voer je convolutie uit tussen de impulsresponsie (de coëfficiënten) en het ingangssignaal.
+In de discrete wereld gebruiken we digitale convolutie (voorbeeld hieronder).</p>
+<p>De driehoeken met een <img class="math" src="../_images/math/81b5d161fa0cebdbc764cddfa1faadf622269a6c.svg" alt="b_x"/> ernaast zijn de coëfficiënten en de driehoeken met <img class="math" src="../_images/math/4ab963b7331cae46b916c29afa4dc9f2831023fa.svg" alt="z^{-1}"/> geven een vertraging aan van 1 tijdstap.</p>
+<a class="reference internal image-reference" href="../_images/discrete_convolution.png"><img alt="../_images/discrete_convolution.png" class="align-center" src="../_images/discrete_convolution.png" style="width: 385.6px; height: 152.8px;" /></a>
+<p>Je ziet nu misschien wel waarom de coëfficiënten in het Engels “taps” worden genoemd, dit komt voort uit hoe het filter wordt geïmplementeerd.</p>
+<div class="section" id="fir-vs-iir">
+<h3>FIR vs IIR<a class="headerlink" href="#fir-vs-iir" title="Permalink to this headline">¶</a></h3>
+<p>Er zijn grofweg twee verschillende typen filters: FIR en IIR</p>
+<ol class="arabic simple">
+<li>Finite impulse response (FIR)</li>
+<li>Infinite impulse response (IIR)</li>
+</ol>
+<p>We zullen niet te diep op theorie ingaan maar onthoud voor nu dat FIR filters gemakkelijker te ontwerpen zijn en alles kunnen doen als er maar genoeg coëfficiënten worden gegeven.
+IIR-filters zijn efficiënter en zouden hetzelfde kunnen bereiken met minder coëfficiënten maar met het risico dat het filter instabiel wordt en niet goed werkt.
+Als een lijst coëfficiënten wordt gegeven, dan is dit over het algemeen voor een FIR-filter.
+Als er wordt gesproken over “polen” dan betreft het een IIR-filter.
+In dit boek zullen we het bij FIR-filters houden.</p>
+<p>Het onderstaande figuur laat het verschil zien tussen een FIR en IIR-filter. Ze hebben hetzelfde gedrag maar het FIR-filter gebruikt 50 coëfficiënten en het IIR filter maar 12. Toch hebben ze beiden ongeveer dezelfde transitiebreedte.</p>
+<a class="reference internal image-reference" href="../_images/FIR_IIR.png"><img alt="../_images/FIR_IIR.png" class="align-center" src="../_images/FIR_IIR.png" style="width: 529.9px; height: 459.2px;" /></a>
+<p>Wat je hieruit kunt leren is dat het FIR-filter veel meer computerkracht vereist dan een IIR-filter voor hetzelfde gedrag.</p>
+<p>Hieronder staan wat voorbeelden van FIR en IIR-filters die je misschien in het echt al hebt gebruikt.</p>
+<p>Wanneer je een “moving average” (voortschrijdend gemiddelde) filter over een lijst getallen toepast, dan is dat gewoon een FIR-filter met coëfficiënten van 1.</p>
+<p>Vragen: Het is ook een laagdoorlaatfilter; waarom? Wat is het verschil tussen coëfficiënten van alleen 1’en of coëfficiënten die richting 0 vervallen?</p>
+<details>
+<summary>Antwoorden</summary><p>Een “moving average” filter is een laagdoorlaatfilter omdat het snelle veranderingen uitsmeert, de reden waarom mensen het willen gebruiken.
+Een reden om coëfficiënten te gebruiken die aan beide kanten richting 0 gaan is om plotselinge verandering aan de uitgang te voorkomen, zoals zou gebeuren als de ingang een tijd nul is en dan plotseling omhoog springt.</p>
+</details><p>Voor een IIR-voorbeeld. Als je zoiets hebt gedaan:</p>
+<blockquote>
+<div>x = x*0.99 + nieuwe_waarde*0.01</div></blockquote>
+<p>Waar de 0.99 en 0.01 de snelheid aangeven waarmee de waarde verandert.
+Dit is een handige manier om een variabele te veranderen zonder de vorige waarden te onthouden.
+Dit is een laagdoorlaat IIR-filter.
+Hopelijk kun je zien waarom dit minder stabiel is. De waarden zullen nooit volledig verdwijnen!</p>
+</div>
+</div>
+<div class="section" id="filterontwerptools">
+<h2>Filterontwerptools<a class="headerlink" href="#filterontwerptools" title="Permalink to this headline">¶</a></h2>
+<p>In de praktijk gebruiken de meeste mensen een design tool of een functie om het filter te ontwerpen.
+Er zijn veel van zulk soort tools maar de studenten raad ik aan om deze gemakkelijke web app te gebruiken: <a class="reference external" href="http://t-filter.engineerjs.com" rel="noopener noreferrer" target="_blank">http://t-filter.engineerjs.com</a>. Het is gemaakt door Peter Isza en laat je de impuls- en frequentieresponsie zien.
+Op het moment van schrijven is de tool standaard ingesteld op een laagdoorlaatfilter met een doorlaatband van 0 tot 400 Hz en een stopband van 500 Hz en hoger.
+De sample-frequentie staat ingesteld op 2 kHz, dus de maximaal “zichtbare” frequentie is 1 kHz.</p>
+<a class="reference internal image-reference" href="../_images/filter_designer1.png"><img alt="../_images/filter_designer1.png" class="align-center" src="../_images/filter_designer1.png" style="width: 659.4px; height: 156.79999999999998px;" /></a>
+<p>Klik op de “Design Filter” knop om de coëfficiënten te genereren en de frequentieresponsie te weergeven.</p>
+<a class="reference internal image-reference" href="../_images/filter_designer2.png"><img alt="../_images/filter_designer2.png" class="align-center" src="../_images/filter_designer2.png" style="width: 970.9px; height: 401.79999999999995px;" /></a>
+<p>Klik op de “Impulse Response” link boven de grafiek om de impulsresponsie te zien, wat een weergave is van de coëfficiënten omdat dit een FIR filter betreft.</p>
+<a class="reference internal image-reference" href="../_images/filter_designer3.png"><img alt="../_images/filter_designer3.png" class="align-center" src="../_images/filter_designer3.png" style="width: 798.0px; height: 388.5px;" /></a>
+<p>De app kan zelfs de C broncode genereren waarmee je dit filter kunt implementeren en gebruiken.
+De app heeft geen manier om een IIR-filter te implementeren omdat deze over het algemeen veel lastiger zijn om te ontwerpen.</p>
+</div>
+<div class="section" id="convolutie">
+<h2>Convolutie<a class="headerlink" href="#convolutie" title="Permalink to this headline">¶</a></h2>
+<p>We nemen een korte omleiding om de convolutie operatie te introduceren.
+Voel je vrij deze sectie over te slaan als je er al bekend mee bent.</p>
+<p>Een manier om twee signalen samen te voegen is door ze op te tellen.
+In het <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Het Frequentiedomein</span></a> hoofdstuk hebben we ontdekt hoe lineariteit geldt wanneer we twee signalen optellen.
+Convolutie is een andere manier om twee signalen te combineren, maar het is compleet anders dan optellen.
+Convolutie van twee signalen is alsof je ze over elkaar schuift en dan integreert.
+Het lijkt <em>enorm</em> op kruiscorrelatie, als je daar bekend mee bent.
+Het is in veel gevallen eigenlijk hetzelfde als kruiscorrelatie.</p>
+<p>Ik ben overtuigd dat je convolutie het beste leert met hulp van voorbeelden.
+In dit eerste voorbeeld convolueren we twee blokgolven met elkaar.</p>
+<a class="reference internal image-reference" href="../_images/convolution_animation1.gif"><img alt="../_images/convolution_animation1.gif" class="align-center" src="../_images/convolution_animation1.gif" style="width: 480.0px; height: 360.0px;" /></a>
+<p>Omdat het gewoon schuivende integratie is, is het resultaat een driehoek met zijn maximum op het punt waar de twee golven perfect overlappen.
+Laten we eens kijken wat er gebeurt wanneer we convolutie uitvoeren op een vierkant- en een driehoeksignaal:</p>
+<a class="reference internal image-reference" href="../_images/convolution_animation2.gif"><img alt="../_images/convolution_animation2.gif" class="align-center" src="../_images/convolution_animation2.gif" style="width: 639.0px; height: 349.5px;" /></a>
+<p>In beide voorbeeld hebben we twee ingangssignalen (rood en blauw) en het resultaat van de convolutie.
+Je ziet dat de uitgang gelijk is aan de integratie van de twee signalen terwijl ze over elkaar schuiven.
+Vanwege dit geschuif is de lengte van de uitgang groter dan de ingang.
+Als het ene signaal <code class="code docutils literal notranslate"><span class="pre">M</span></code> samples heeft en het ander signaal <code class="code docutils literal notranslate"><span class="pre">N</span></code> samples, dan geeft de convolutie van de twee signalen <code class="code docutils literal notranslate"><span class="pre">N+M-1</span></code> samples.
+Desalniettemin hebben functies zoals <code class="code docutils literal notranslate"><span class="pre">numpy.convolve()</span></code> een manier om aan te geven of je de volledige uitgang (<code class="code docutils literal notranslate"><span class="pre">max(M,</span> <span class="pre">N)</span></code> samples) wilt hebben, of alleen de samples waar de signalen overlapten(<code class="code docutils literal notranslate"><span class="pre">max(M,</span> <span class="pre">N)</span> <span class="pre">-</span> <span class="pre">min(M,</span> <span class="pre">N)</span> <span class="pre">+</span> <span class="pre">1</span></code> als je nieuwsgierig was).
+Geen reden om in deze details verstrikt te raken.
+Probeer hieruit op te pikken dat de uitgang van een convolutie niet de lengte heeft van de ingangen.</p>
+<p>En waarom is convolutie interessant in digitale signaalbewerking?
+Om te beginnen, om een signaal te filteren, kunnen we simpelweg de impulsresponsie van het filter nemen en convolueren met het signaal. Een FIR-filter voert dus convolutie uit.</p>
+<a class="reference internal image-reference" href="../_images/filter_convolve.png"><img alt="../_images/filter_convolve.png" class="align-center" src="../_images/filter_convolve.png" style="width: 502.59999999999997px; height: 275.79999999999995px;" /></a>
+<p>Dit is misschien verwarrend gezien we eerder zeiden dat convolutie twee ingangen en een uitgang heeft.
+De convolutie voert een wiskundige actie uit op twee 1D arrays. Een van die 1D arrays is de impulsresponsie van het filter, de andere 1D array kan een stuk van het ingangssignaal zijn, en de uitgang is dan de gefilterde versie van de ingang.</p>
+<p>Laten we naar nog een voorbeeld kijken om dit duidelijk te maken. In het onderstaande voorbeeld stelt de driehoek de impulsresponsie van ons filter voor. Het <span class="green">groene</span> signaal is het signaal wat gefilterd wordt.</p>
+<a class="reference internal image-reference" href="../_images/convolution.gif"><img alt="../_images/convolution.gif" class="align-center" src="../_images/convolution.gif" style="width: 347.2px; height: 226.79999999999998px;" /></a>
+<p>De <span class="red">rode</span> uitgang is het gefilterde signaal.</p>
+<p>Vraag: wat voor type filter was de driehoek?</p>
+<details>
+<summary>Antwoord:</summary><p>Het heeft de hoge frequentiecomponenten van het groen signaal gladgestreken (de scherpe overgangen van het vierkant) dus het gedraagt zich als een laagdoorlaatfilter.</p>
+</details><p>Nu dat je convolutie begint te begrijpen zal ik de wiskundige vergelijking ervan geven. De asterisk (*) wordt normaal gebruikt om convolutie aan te geven:</p>
+<div class="math">
+<p><img src="../_images/math/ef8e9cf9b5e1ed3093ee71fd9b8d1d4c92726693.svg" alt="(f * g)(t) = \int f(\tau) g(t - \tau) d\tau"/></p>
+</div><p>In de bovenstaande vergelijking is <img class="math" src="../_images/math/cbb9334036d822d51e4eac3510e2186f3bdfbbdf.svg" alt="g(t)"/> een van de twee signalen, het wordt omgedraaid en over <img class="math" src="../_images/math/90b2784922f8eb4c71fae53b32ce51593054e5a4.svg" alt="f(t)"/> heen geschoven. Je kunt <img class="math" src="../_images/math/cbb9334036d822d51e4eac3510e2186f3bdfbbdf.svg" alt="g(t)"/> en <img class="math" src="../_images/math/90b2784922f8eb4c71fae53b32ce51593054e5a4.svg" alt="f(t)"/> omwisselen zonder gevolgen, het blijft dezelfde vergelijking.
+Meestal wordt het kortere signaal gebruikt als zijnde <img class="math" src="../_images/math/cbb9334036d822d51e4eac3510e2186f3bdfbbdf.svg" alt="g(t)"/>.
+Convolutie staat gelijk aan de kruiscorrelatie, <img class="math" src="../_images/math/49a7dd0e8b56496ace0c96543c01ab2bff092755.svg" alt="\int f(\tau) g(t+\tau)"/>, in het geval dat <img class="math" src="../_images/math/cbb9334036d822d51e4eac3510e2186f3bdfbbdf.svg" alt="g(t)"/> symmetrisch is, dus wanneer het omdraaien geen effect heeft.</p>
+</div>
+<div class="section" id="filterontwerp-in-python">
+<h2>Filterontwerp in Python<a class="headerlink" href="#filterontwerp-in-python" title="Permalink to this headline">¶</a></h2>
+<p>Nu gaan we een manier bekijken om in Python FIR-filters te ontwerpen.
+Er zijn vele manieren om een filter te ontwerpen, wij zullen in het frequentiedomein starten en terugwerken naar de impulsresponsie. Uiteindelijk wordt het filter ook zo beschreven (in coëfficiënten).</p>
+<p>Je begint met het plaatsen van jouw gewenste frequentieresponsie in een vector.
+Dus laten we een willekeurig laagdoorlaatfilter maken zoals hieronder:</p>
+<a class="reference internal image-reference" href="../_images/filter_design1.png"><img alt="../_images/filter_design1.png" class="align-center" src="../_images/filter_design1.png" style="width: 525.6999999999999px; height: 213.5px;" /></a>
+<p>De code waarmee dit filter gemaakt wordt is vrij simpel:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">20</span><span class="p">)))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Je kunt arrays aan elkaar plakken met bijv. de <code class="code docutils literal notranslate"><span class="pre">hstack()</span></code> functie.
+We weten dat dit zal leiden tot een filter met complexe coëfficiënten. Waarom?</p>
+<details>
+<summary>Antwoord:</summary><p>Het is niet symmetrisch rondom 0 Hz.</p>
+</details><p>Ons doel is om de coëfficiënten van dit filter te vinden zodat we het kunnen implementeren.
+Hoe krijgen we de coëfficiënten uit deze frequentieresponsie?
+Nou, hoe zetten we het frequentiedomein terug naar het tijddomein?
+Met de geïnverteerde FFT (IFFT)!
+De IFFT-functie is vrijwel gelijk aan de FFT functie.
+We zullen eerst een IFFTshift moeten uitvoeren op ons gewenste frequentieresponsie voor de IFFT, en nog een IFFTshift na de IFFT (Nee, dit heft elkaar niet op, probeer maar).
+Dit lijkt een verwarrend proces, maar onthoud dat je altijd een FFTshift na een FFT en een IFFTshift na een IFFT moet uitvoeren.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">H</span><span class="p">)))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;real&#39;</span><span class="p">,</span><span class="s1">&#39;imag&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/filter_design2.png"><img alt="../_images/filter_design2.png" class="align-center" src="../_images/filter_design2.png" style="width: 503.1px; height: 306.90000000000003px;" /></a>
+<p>We gebruiken de bovenstaande coëfficiënten voor ons filter.
+We weten ook dat de impulsresponsie en coëfficiënten hetzelfde zijn, dus wat we hierboven zien <em>is</em> onze impulsresponsie.
+Laten we een FFT op onze coëfficiënten uitvoeren om te zien hoe het frequentiedomein eruit zou zien.
+We nemen een 1024-punten FFT om een hoge resolutie te krijgen:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">H_fft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">H_fft</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/filter_design3.png"><img alt="../_images/filter_design3.png" class="align-center" src="../_images/filter_design3.png" style="width: 806.4px; height: 240.79999999999998px;" /></a>
+<p>De frequentieresponsie is niet zo recht…. het komt niet echt overeen met het origineel, als je bedenkt wat voor vorm we hadden gemaakt.
+Een belangrijke reden hiervoor is omdat onze impulsresponsie nog niet was uitgedoofd, dus de linker- en rechterkant gaan niet naar nul.
+Er zijn twee opties om dit wel voor elkaar te krijgen:</p>
+<p><strong>Optie 1:</strong> We passen een “venster” op de impulsresponsie toe, zodanig dat beide kanten naar 0 aflopen. Dit komt neer op een “vensterfunctie”, dat begint en eindigt bij 0, vermenigvuldigen met onze impulsresponsie.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Na h aangemaakt te hebben in het vorige stuk code</span>
+<span class="c1"># het venster maken en toepassen</span>
+<span class="n">window</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">window</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/filter_design4.png"><img alt="../_images/filter_design4.png" class="align-center" src="../_images/filter_design4.png" style="width: 770.0px; height: 226.1px;" /></a>
+<p><strong>Optie 2:</strong> We maken een nieuwe impulsresponsie die wel tijd heeft om naar 0 te gaan.
+We zullen de originele frequentieresponsie in resolutie moeten doen toenemen (dit heet interpoleren).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">200</span><span class="p">)))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="c1"># (de rest van de code blijft hetzelfde)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/filter_design5.png"><img alt="../_images/filter_design5.png" class="align-center" src="../_images/filter_design5.png" style="width: 465.59999999999997px; height: 296.4px;" /></a>
+<a class="reference internal image-reference" href="../_images/filter_design6.png"><img alt="../_images/filter_design6.png" class="align-center" src="../_images/filter_design6.png" style="width: 695.0999999999999px; height: 210.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/filter_design7.png"><img alt="../_images/filter_design7.png" class="align-center" src="../_images/filter_design7.png" style="width: 503.0px; height: 286.0px;" /></a>
+<p>Beide versies werken. Welke zou jij kiezen?
+De tweede methode resulteerde in meer coëfficiënten, maar de eerste methode resulteerde in een frequentieresponsie die niet zo scherp of steil was.
+Er zijn vele manieren om een filter te ontwerpen, elk met zijn eigen afwegingen.
+Veel mensen beschouwen filterontwerp als een kunst.</p>
+</div>
+<div class="section" id="introductie-tot-pulse-shaping">
+<h2>Introductie tot Pulse Shaping<a class="headerlink" href="#introductie-tot-pulse-shaping" title="Permalink to this headline">¶</a></h2>
+<p>We zullen kort een interessant onderwerp binnen de DSP introduceren, pulse shaping, of pulsvorming in het Nederlands.
+In een later hoofdstuk zullen we dit onderwerp beter bestuderen, zie <a class="reference internal" href="pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Pulse Shaping</span></a>.
+Wat wel handig is om te benoemen is dat pulsvorming uiteindelijk ook een type filter is, voor een specifiek doel, met specifieke eigenschappen.</p>
+<p>Zoals we hebben geleerd, gebruiken digitale signalen symbolen, om een of meerdere bits aan informatie aan te geven.
+We gebruiken modulatieschema’s zoals ASK, PSK, QAM, FSK, etc., om een draaggolf te moduleren zodat deze informatie draadloos verzonden kan worden.
+Toen we in het <a class="reference internal" href="digital_modulation.html#modulation-chapter"><span class="std std-ref">Digitale Modulatie</span></a> hoofdstuk QPSK simuleerden, gebruikten we alleen 1 sample per symbool.
+In de praktijk gebruiken we meerdere samples per symbool en dat heeft te maken met filters.</p>
+<p>We gebruiken filters om onze symbolen te “vormen” in het tijddomein, want dit beïnvloedt de vorm in het frequentiedomein.
+Het frequentiedomein laat zien hoeveel spectrum ons signaal in beslag neemt, en dit is iets wat we gewoonlijk willen minimaliseren.
+Hierbij is het belangrijk om te beseffen dat de spectrale eigenschappen (frequentiedomein) van het signaal in de basisband niet zullen veranderen wanneer we een draaggolf ermee moduleren; het verschuift de basisband naar een hogere frequentie, maar de vorm, en bandbreedte, blijven hetzelfde.
+Wanneer we een enkele sample per symbool gebruiken is het alsof we een blokgolf versturen.
+In het geval van BPSK met 1 sample per symbool <em>is</em> het ook echt een blokgolf van 1’en en -1’en:</p>
+<a class="reference external image-reference" href="../_images/bpsk.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/bpsk.svg" class="align-center" src="../_images/bpsk.svg" /></a>
+<p>Maar zoals we eerder hebben geleerd, zijn blokgolven niet efficiënt want ze gebruiken een overbodige hoeveelheid van het spectrum:</p>
+<img alt="../_images/square-wave.svg" class="align-center" src="../_images/square-wave.svg" /><p>Dus wat we doen is de blokkige symbolen “vormgeven” (dus pulse shaping) zodanig dat ze minder ruimte van het frequentiedomein innemen.
+We passen “pulse shaping” toe wanneer we een laagdoorlaatfilter gebruiken, want dit gooit de hogere frequentiecomponenten in onze symbolen weg.
+Hieronder is een voorbeeld te zien van een signaal met symbolen in de tijd (boven) en frequentie (onder), voor en na het vormgevende filter is toegepast.</p>
+<a class="reference internal image-reference" href="../_images/pulse_shaping.png"><img alt="../_images/pulse_shaping.png" class="align-center" src="../_images/pulse_shaping.png" style="width: 613.1999999999999px; height: 179.89999999999998px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<a class="reference internal image-reference" href="../_images/pulse_shaping_freq.png"><img alt="../_images/pulse_shaping_freq.png" class="align-center" src="../_images/pulse_shaping_freq.png" style="width: 628.2px; height: 315.0px;" /></a>
+<p>Kijk eens hoeveel sneller het signaal zakt in het frequentiedomein.
+De lobben aan de zijkant zijn ~30 dB zwakker na de pulsvorming; dat is 1000x minder!
+Nog belangrijker is dat de middelste lobbe smaller is, dus er wordt minder van het spectrum gebruikt voor dezelfde hoeveelheid bits per seconde.</p>
+<p>De meest gebruikte filters om pulsvorming te realiseren zijn:</p>
+<ol class="arabic simple">
+<li>Raised-cosine filter</li>
+<li>Root raised-cosine filter</li>
+<li>Sinc filter</li>
+<li>Gaussian filter</li>
+</ol>
+<p>Deze filters hebben over het algemeen een parameter die je kunt instellen om de gebruikte bandbreedte te verminderen.
+Hieronder zie je een voorbeeld wat het tijd- en frequentiedomein laat zien van een raised-cosine filter met verschillende waarden voor <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/>, de parameter die bepaalt hoe steil het filter afloopt.</p>
+<a class="reference internal image-reference" href="../_images/pulse_shaping_rolloff.png"><img alt="../_images/pulse_shaping_rolloff.png" class="align-center" src="../_images/pulse_shaping_rolloff.png" style="width: 707.2px; height: 202.8px;" /></a>
+<p>Hier is te zien dat een lagere waarde van <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> het gebruikte spectrum vermindert (voor dezelfde hoeveelheid data).
+Maar, wanneer deze waarde te klein wordt dan zullen de tijddomein symbolen meer tijd nodig hebben om naar 0 te vervallen.
+En wanneer <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> 0 is zullen de symbolen nooit naar 0 gaan wat inhoudt dat we dit in de praktijk niet kunnen versturen. Een waarde van 0.35 is normaal voor <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/>.</p>
+<p>Je leert nog een hoop meer over pulsvorming, inclusief speciale eigenschappen waaraan de filters moeten voldoen, in het <a class="reference internal" href="pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Pulse Shaping</span></a> hoofdstuk.</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2023, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

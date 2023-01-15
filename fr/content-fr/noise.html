@@ -6,14 +6,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>7. le Bruit et les dB &#8212; PySDR: A Guide to SDR and DSP using Python</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="8. Filtres" href="filters.html" />
@@ -32,6 +31,7 @@
 <div style="float: right; padding-bottom: 0;">
   <select onchange="location = this.value;">
     <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
     <option value="https://pysdr.org/fr/index-fr.html">French</option>
   </select>
 </div>
@@ -108,7 +108,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -175,7 +175,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="p">(</span><span class="n">x_db</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Ne vous laissez pas prendre par la formule, car il y a un concept clé à retenir ici. En DSP, nous traitons à la fois de très grands et de très petits nombres (par exemple, la force d’un signal par rapport à la force du bruit). L’échelle logarithmique en dB nous permet d’avoir une plus grande plage dynamique lorsque nous exprimons des nombres ou les traçons. Elle offre également certaines commodités, comme la possibilité d’additionner alors qu’on multiplierait normalement (comme nous le verrons dans le chapitre <a class="reference internal" href="link_budgets.html#link-budgets-chapter"><span class="std std-ref">Bilans de liaison</span></a>).</p>
+<p>Ne vous laissez pas prendre par la formule, car il y a un concept clé à retenir ici. En DSP, nous traitons à la fois de très grands et de très petits nombres (par exemple, la force d’un signal par rapport à la force du bruit). L’échelle logarithmique en dB nous permet d’avoir une plus grande plage dynamique lorsque nous exprimons des nombres ou les traçons. Elle offre également certaines commodités, comme la possibilité d’additionner alors qu’on multiplierait normalement (comme nous le verrons dans le chapitre <a class="reference internal" href="../content-nl/link_budgets.html#link-budgets-chapter"><span class="std std-ref">Link Budgets</span></a>).</p>
 <p>Les erreurs les plus courantes que les gens rencontrent lorsqu’ils sont novices en matière de dB sont les suivantes :</p>
 <ol class="arabic simple">
 <li>Utiliser le log naturel au lieu du log base 10 car la fonction log() de la plupart des langages de programmation est en fait le log naturel.</li>
@@ -267,7 +267,7 @@
 </div>
 <div class="section" id="bruit-dans-le-domaine-frequentiel">
 <h2>Bruit dans le Domaine Fréquentiel<a class="headerlink" href="#bruit-dans-le-domaine-frequentiel" title="Permalink to this headline">¶</a></h2>
-<p>Dans le chapitre <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Domaine fréquentiel</span></a>, nous avons abordé la correspondance temps-fréquence de la transformée de Fourier, c’est-à-dire ce à quoi ressemble un certain signal dans le domaine temporel dans le domaine fréquentiel. Et bien, à quoi ressemble un bruit gaussien dans le domaine des fréquences?  Les graphiques suivants montrent un certain bruit simulé dans le domaine temporel (en haut) et un tracé de la densité spectrale de puissance (DSP) de ce bruit (en bas).  Ces graphiques sont tirés de GNU Radio.</p>
+<p>Dans le chapitre <a class="reference internal" href="../content-nl/frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Het Frequentiedomein</span></a>, nous avons abordé la correspondance temps-fréquence de la transformée de Fourier, c’est-à-dire ce à quoi ressemble un certain signal dans le domaine temporel dans le domaine fréquentiel. Et bien, à quoi ressemble un bruit gaussien dans le domaine des fréquences?  Les graphiques suivants montrent un certain bruit simulé dans le domaine temporel (en haut) et un tracé de la densité spectrale de puissance (DSP) de ce bruit (en bas).  Ces graphiques sont tirés de GNU Radio.</p>
 <a class="reference internal image-reference" href="../_images/noise_freq.png"><img alt="../_images/noise_freq.png" class="align-center" src="../_images/noise_freq.png" style="width: 599.5px; height: 506.00000000000006px;" /></a>
 <p>Nous pouvons voir qu’il a à peu près la même apparence sur toutes les fréquences et qu’il est assez plat.  Il s’avère que le bruit gaussien dans le domaine temporel est également un bruit gaussien dans le domaine fréquentiel.  Alors pourquoi les deux graphiques ci-dessus ne sont-ils pas identiques?  C’est parce que le graphique du domaine fréquentiel montre l’amplitude de la FFT, donc il n’y aura que des nombres positifs. Il est important de noter qu’il utilise une échelle logarithmique, c’est-à-dire qu’il indique l’amplitude en dB.  Sinon, ces graphiques se ressembleraient.  Nous pouvons le prouver par nous-mêmes en générant un peu de bruit (dans le domaine temporel) dans Python, puis en prenant la FFT.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -381,7 +381,7 @@
     <div class="clearer"></div>
   </div>
     <div class="footer">
-      &copy;2022, Marc Lichtman.
+      &copy;2023, Marc Lichtman.
       
     </div>
 

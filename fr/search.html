@@ -6,16 +6,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search &#8212; PySDR: A Guide to SDR and DSP using Python</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css" />
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="#" />
   <script src="searchindex.js" defer></script>
@@ -34,6 +34,7 @@
 <div style="float: right; padding-bottom: 0;">
   <select onchange="location = this.value;">
     <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
     <option value="https://pysdr.org/fr/index-fr.html">French</option>
   </select>
 </div>
@@ -112,26 +113,35 @@
           <div class="body" role="main">
             
   <h1 id="search-documentation">Search</h1>
-  <div id="fallback" class="admonition warning">
-  <script>$('#fallback').hide();</script>
+  
+  <noscript>
+  <div class="admonition warning">
   <p>
     Please activate JavaScript to enable the search
     functionality.
   </p>
   </div>
+  </noscript>
+  
+  
   <p>
     Searching for multiple words only shows matches that contain
     all words.
   </p>
+  
+  
   <form action="" method="get">
-    <input type="text" name="q" aria-labelledby="search-documentation" value="" />
+    <input type="text" name="q" aria-labelledby="search-documentation" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
     <input type="submit" value="search" />
     <span id="search-progress" style="padding-left: 10px"></span>
   </form>
   
+  
+  
   <div id="search-results">
   
   </div>
+  
 
           </div>
               <div class="related bottom">
@@ -147,7 +157,7 @@
     <div class="clearer"></div>
   </div>
     <div class="footer">
-      &copy;2022, Marc Lichtman.
+      &copy;2023, Marc Lichtman.
       
     </div>
 

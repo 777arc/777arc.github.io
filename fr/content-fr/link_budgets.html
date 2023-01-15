@@ -6,14 +6,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>9. Bilans de liaison &#8212; PySDR: A Guide to SDR and DSP using Python</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="10. Codage Canal" href="channel_coding.html" />
@@ -32,6 +31,7 @@
 <div style="float: right; padding-bottom: 0;">
   <select onchange="location = this.value;">
     <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
     <option value="https://pysdr.org/fr/index-fr.html">French</option>
   </select>
 </div>
@@ -106,7 +106,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -191,7 +191,7 @@
 <div class="section" id="gains-d-antenne-g-t-et-g-r">
 <h3>Gains d’antenne <img class="math" src="../_images/math/e0f7304cdb99ea359bbc929960a7a833f191c718.svg" alt="G_{t}"/> et <img class="math" src="../_images/math/531b8cf40e58aff3e483b2f2a9407be30a04b2e6.svg" alt="G_{r}"/><a class="headerlink" href="#gains-d-antenne-g-t-et-g-r" title="Permalink to this headline">¶</a></h3>
 <p>Les gains d’antenne d’émission et de réception sont cruciaux pour le calcul des bilans de liaison. Qu’est-ce que le gain d’antenne, me direz-vous?  Il indique la directivité de l’antenne.  Vous pouvez y faire référence en tant que gain de puissance de l’antenne, mais ne vous y trompez pas, la seule façon pour une antenne d’avoir un gain plus élevé est de diriger l’énergie dans une région plus ciblée.</p>
-<p>Les gains seront représentés en dB (sans unité) ; n’hésitez pas à apprendre ou à vous rappeler pourquoi le dB est sans unité pour notre scénario dans le chapitre <a class="reference internal" href="noise.html#noise-chapter"><span class="std std-ref">le Bruit et les dB</span></a>.  Généralement, les antennes sont soit omnidirectionnelles, ce qui signifie que leur puissance rayonne dans toutes les directions, soit directionnelles, ce qui signifie que leur puissance rayonne dans une direction spécifique.  Si elles sont omnidirectionnelles, leur gain sera de 0 dB à 3 dB.  Une antenne directionnelle aura un gain plus élevé, généralement 5 dB ou plus, et jusqu’à 60 dB environ.</p>
+<p>Les gains seront représentés en dB (sans unité) ; n’hésitez pas à apprendre ou à vous rappeler pourquoi le dB est sans unité pour notre scénario dans le chapitre <a class="reference internal" href="../content-nl/noise.html#noise-chapter"><span class="std std-ref">Ruis en dB</span></a>.  Généralement, les antennes sont soit omnidirectionnelles, ce qui signifie que leur puissance rayonne dans toutes les directions, soit directionnelles, ce qui signifie que leur puissance rayonne dans une direction spécifique.  Si elles sont omnidirectionnelles, leur gain sera de 0 dB à 3 dB.  Une antenne directionnelle aura un gain plus élevé, généralement 5 dB ou plus, et jusqu’à 60 dB environ.</p>
 <a class="reference internal image-reference" href="../_images/antenna_gain_patterns.png"><img alt="../_images/antenna_gain_patterns.png" class="align-center" src="../_images/antenna_gain_patterns.png" style="width: 829.6px; height: 283.2px;" /></a>
 <p>Lorsqu’une antenne directionnelle est utilisée, elle doit être soit installée dans la bonne direction, soit fixée à un cardan mécanique. Il peut également s’agir d’un réseau phasé, qui peut être piloté électroniquement (c’est-à-dire par un logiciel).</p>
 <a class="reference internal image-reference" href="../_images/antenna_steering.png"><img alt="../_images/antenna_steering.png" class="align-center" src="../_images/antenna_steering.png" style="width: 665.6px; height: 308.0px;" /></a>
@@ -283,7 +283,7 @@
 </div>
 <div class="section" id="snr">
 <h2>SNR<a class="headerlink" href="#snr" title="Permalink to this headline">¶</a></h2>
-<p>Maintenant que nous avons les deux nombres, nous pouvons prendre le rapport pour trouver le SNR, (voir le chapitre <a class="reference internal" href="noise.html#noise-chapter"><span class="std std-ref">le Bruit et les dB</span></a> pour plus d’informations sur le SNR):</p>
+<p>Maintenant que nous avons les deux nombres, nous pouvons prendre le rapport pour trouver le SNR, (voir le chapitre <a class="reference internal" href="../content-nl/noise.html#noise-chapter"><span class="std std-ref">Ruis en dB</span></a> pour plus d’informations sur le SNR):</p>
 <div class="math">
 <p><img src="../_images/math/3e9b8cd22fc4f57fbbacb0034bb8d0b4fe690a89.svg" alt="\mathrm{SNR} = \frac{P_{signal}}{P_{bruit}}"/></p>
 </div><div class="math">
@@ -377,7 +377,7 @@
     <div class="clearer"></div>
   </div>
     <div class="footer">
-      &copy;2022, Marc Lichtman.
+      &copy;2023, Marc Lichtman.
       
     </div>
 

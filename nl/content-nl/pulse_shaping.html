@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>13. Pulse Shaping &#8212; PySDR: A Guide to SDR and DSP using Python</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="14. Synchronisatie" href="sync.html" />
+    <link rel="prev" title="12. Multipath Fading" href="multipath_fading.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TGRQK1JJYD');
+</script>
+
+<!-- French/English Chooser, couldnt get it working with local URLs -->
+<div style="float: right; padding-bottom: 0;">
+  <select onchange="location = this.value;">
+    <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
+    <option value="https://pysdr.org/fr/index-fr.html">French</option>
+  </select>
+</div>
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index-nl.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: Een handleiding voor SDR en DSP met Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introductie</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Het Frequentiedomein</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ-sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digitale Modulatie</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usrp.html">6. USRP in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Ruis en dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Kanaalcodering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files and SigMF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">13. Pulse Shaping</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#inter-symbool-interferentie-isi">Inter-Symbool-Interferentie (ISI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matched-filter">Matched Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#een-filter-opsplitsen">Een filter opsplitsen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#specifieke-pulsvormende-filters">Specifieke pulsvormende filters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#roll-off-factor">Roll-Off Factor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-oefeningen">Python Oefeningen</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronisatie</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rds.html">15. Compleet voorbeeld</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index-nl.html">Documentation overview</a><ul>
+      <li>Previous: <a href="multipath_fading.html" title="previous chapter"><span class="section-number">12. </span>Multipath Fading</a></li>
+      <li>Next: <a href="sync.html" title="next chapter"><span class="section-number">14. </span>Synchronisatie</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="multipath_fading.html" title="Previous document"><span class="section-number">12. </span>Multipath Fading</a>
+        </li>
+        <li>
+          <a href="sync.html" title="Next document"><span class="section-number">14. </span>Synchronisatie</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="pulse-shaping">
+<span id="pulse-shaping-chapter"></span><h1><span class="section-number">13. </span>Pulse Shaping<a class="headerlink" href="#pulse-shaping" title="Permalink to this headline">¶</a></h1>
+<p>Dit hoofdstuk gaat over pulsvorming, inter-symbool-interferentie, matched filters, en raised-cosine filters.
+We zullen uiteindelijk Python gebruiken om pulsvorming toe te passen op BPSK-symbolen.
+Je kunt dit hoofdstuk als deel 2 van het Filters hoofdstuk opvatten, waarin we een duik nemen in het vormgeven van pulsen.</p>
+<div class="section" id="inter-symbool-interferentie-isi">
+<h2>Inter-Symbool-Interferentie (ISI)<a class="headerlink" href="#inter-symbool-interferentie-isi" title="Permalink to this headline">¶</a></h2>
+<p>In het <a class="reference internal" href="filters.html#filters-chapter"><span class="std std-ref">Filters</span></a> hoofdstuk hebben we geleerd dat blokvormige symbolen/pulsen een groot deel van het spectrum gebruiken, en dat we het gebruik van het spectrum drastisch kunnen verminderen door het <em>vormgeven</em> van onze pulsen.
+Maar, je kunt niet zomaar elk laagdoorlaatfilter toepassen want dan krijg je last van inter-symbool-interferentie (ISI). Dit is wanneer symbolen elkaar storen en overlappen.</p>
+<p>Wanneer we digitale symbolen versturen, dan versturen we ze zij-aan-zij (i.t.t. een bepaalde tijd te wachten tussen pulsen). Wanneer je een pulsvormend filter toepast worden deze pulsen uitgerekt in het tijddomein (om het samen te drukken in frequentie), waardoor aangrenzende symbolen elkaar in de tijd overlappen. Dit overlappen is niet erg zolang het pulsvormende filter aan een eis voldoet: alle pulsen behalve een, moeten optellen tot 0 op elke veelvoud van de symboolperiode <img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/>. Dit is het beste te begrijpen door een figuur:</p>
+<a class="reference external image-reference" href="../_images/pulse_train.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/pulse_train.svg" class="align-center" src="../_images/pulse_train.svg" /></a>
+<p>Zoals je ziet is op elke interval van <img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/> er maar een puls hoog, terwijl alle andere pulsen 0 zijn en de x-as kruisen. Wanneer de ontvanger het signaal sampled doet het dit op het perfecte moment (wanner de puls het hoogst is), dus alleen dat moment in tijd is belangrijk. Meestal vindt er nog een vorm van symboolsynchronisatie plaats bij de ontvanger om ervoor te zorgen dat de symbolen inderdaad bij de toppen wordt gesampled.</p>
+</div>
+<div class="section" id="matched-filter">
+<h2>Matched Filter<a class="headerlink" href="#matched-filter" title="Permalink to this headline">¶</a></h2>
+<p>Een truc dat in draadloze communicatie wordt toegepast heet matched filters (op elkaar afgestemde filters).
+Om deze afstemming van filters te begrijpen zul je eerste deze twee punten moeten snappen:</p>
+<ol class="arabic simple">
+<li>De besproken pulsen hoeven <em>alleen bij de ontvanger</em> voor het samplen perfect te zijn uitgelijnd. Tot dat punt maakt het niet uit of er ISI plaatsvindt, de signalen kunnen met ISI zonder problemen door het luchtruim vliegen.</li>
+<li>We willen een laagdoorlaatfilter bij de zender om te voorkomen dat ons signaal te veel van het spectrum gebruikt. De ontvanger heeft echter ook een laagdoorlaatfilter nodig om zoveel mogelijk ruis/interferentie op on signaal weg te filteren. Dit resulteert in een laagdoorlaatfilter bij de zender (Tx) alsmede de ontvanger (Rx). De ontvanger sampled het signaal dan na beide filters (en natuurlijk de effecten van het draadloze kanaal).</li>
+</ol>
+<p>Wat we in moderne communicatie doen, is het opsplitsen van het vormgevende filter tussen Tx en Rx. Ze <em>moeten</em> niet identiek zijn, maar, theoretisch gezien, is het <em>optimaal</em> om identieke filters te gebruiken bij de aanwezigheid van AWGN, om de SNR te maximaliseren. Deze vorm van filteren heet het “matched filter” concept.</p>
+<p>Een andere manier om hierover na te denken is dat de ontvanger het signaal correleert met een bekend signaal. Dit bekende signaal is in wezen de pulsen die worden verzonden, ongeacht de fase- en amplitudeverschuivingen die erop zijn toegepast. Bedenk dat filteren een convolutie actie is, wat in feite gewoon correlatie is (ze geven wiskundig gezien hetzelfde wanneer het voorbeeldsignaal symmetrisch is).
+Dit correleren van het ontvangen is signaal met het voorbeeld geeft ons de beste kans om echt te ontvangen wat is verzonden, daarom is het optimaal.
+Als analogie kun je denken aan een beeldherkenningssysteem dat gezichten zoekt aan de hand van een sjabloon- of voorbeeldgezicht en deze correleert (2D) met een figuur:</p>
+<a class="reference internal image-reference" href="../_images/face_template.png"><img alt="../_images/face_template.png" class="align-center" src="../_images/face_template.png" style="width: 451.49999999999994px; height: 175.7px;" /></a>
+</div>
+<div class="section" id="een-filter-opsplitsen">
+<h2>Een filter opsplitsen<a class="headerlink" href="#een-filter-opsplitsen" title="Permalink to this headline">¶</a></h2>
+<p>Hoe splitsen we eigenlijk een filter in tweeën? Convolutie is associatief, dit betekend:</p>
+<div class="math">
+<p><img src="../_images/math/d373bec11aacfd8b57d59338616e3f13e472dfaf.svg" alt="(f * g) * h = f * (g * h)"/></p>
+</div><p>Stel dat <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> onze ingang is, en <img class="math" src="../_images/math/1566fe953af0c667c8521ad1ab00cf9841c047f7.svg" alt="g"/> en <img class="math" src="../_images/math/2475529ef4582ec92a0ef0ee2a266a22d98ba80d.svg" alt="h"/> de filters.  Nu maakt het niet uit of we eerst <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> filteren met <img class="math" src="../_images/math/1566fe953af0c667c8521ad1ab00cf9841c047f7.svg" alt="g"/> en daarna met <img class="math" src="../_images/math/2475529ef4582ec92a0ef0ee2a266a22d98ba80d.svg" alt="h"/>, of <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> filteren met een enkel filter gelijk aan <img class="math" src="../_images/math/5973aeb55a9c71c8f90a8e7c22d47ed0c89d0575.svg" alt="g * h"/>.</p>
+<p>Als je nu ook bedenkt dat convolutie in het tijddomein gelijk is aan vermenigvuldigen in het frequentiedomein:</p>
+<div class="math">
+<p><img src="../_images/math/8a8b0e64b50fef46c755559f57ed84fdade537e8.svg" alt="g(t) * h(t) \leftrightarrow G(f)H(f)"/></p>
+</div><p>Dan komen we tot de conclusie dat we simpelweg de wortel kunnen nemen in het frequentiedomein om het filter op te splitsen.</p>
+<div class="math">
+<p><img src="../_images/math/7e7d6f2cb6946f45a7252e5229da937c2571556b.svg" alt="X(f) = X_H(f) X_H(f) \quad \mathrm{where} \quad X_H(f) = \sqrt{X(f)}"/></p>
+</div><p>Hieronder zie je weer een simpel diagram van een zend- en ontvangstketen waarbij de een Raised-Cosine (RC) filter in tweeën is gesplitst tot twee Root Raised Cosine (RRC) filters; het filter van de zender dient om het signaal te vormen en bandbreedte te beperken, het filter bij de ontvanger dient om ruis- en interferentie te beperken. Samen zorgen ze ervoor dat het signaal bij de demodulator gevormd lijkt te zijn door een enkel RC-filter.</p>
+<a class="reference external image-reference" href="../_images/splitting_rc_filter.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/splitting_rc_filter.svg" class="align-center" src="../_images/splitting_rc_filter.svg" /></a>
+</div>
+<div class="section" id="specifieke-pulsvormende-filters">
+<h2>Specifieke pulsvormende filters<a class="headerlink" href="#specifieke-pulsvormende-filters" title="Permalink to this headline">¶</a></h2>
+<p>We weten nu dat we:</p>
+<ol class="arabic simple">
+<li>een filter willen ontwerpen dat de bandbreedte beperkt en dat alle pulsen (behalve een) optellen tot nul bij elke symboolperiode;</li>
+<li>het filter willen opsplitsen en een helft bij de zender en de andere helft bij de ontvanger willen plaatsen.</li>
+</ol>
+<p>Laten we eens kijken naar wat specifieke filters die aan deze eisen voldoen:</p>
+<div class="section" id="raised-cosine-filter">
+<h3>Raised-Cosine Filter<a class="headerlink" href="#raised-cosine-filter" title="Permalink to this headline">¶</a></h3>
+<p>Het meest populaire pulsvormende filter lijkt het “raised-cosine” filter te zijn. Het is inderdaad een goed laagdoorlaatfilter en tegelijkertijd somt het inderdaad op tot 0 bij elke interval van <img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/>.</p>
+<a class="reference external image-reference" href="images/raised_cosine.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/raised_cosine.svg" class="align-center" src="../_images/raised_cosine.svg" /></a>
+<p>Het bovenstaande figuur laat de impulsresponsie van het filter zien.
+Met <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> kun je de steilheid van het filter instellen in het tijddomein, en dus ook omgekeerd evenredig de steilheid in het frequentiedomein:</p>
+<a class="reference external image-reference" href="images/raised_cosine_freq.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/raised_cosine_freq.svg" class="align-center" src="../_images/raised_cosine_freq.svg" /></a>
+<p>Het wordt een raised-cosine filter genoemd omdat bij een <img class="math" src="../_images/math/0040a7a4498259b598de08f9b9e149998ad4ea07.svg" alt="\beta=1"/> het frequentiedomein een halve cosinus laat zien, raised (opgeduwd) tot boven de x-as.</p>
+<p>De impulsresponsie van het filter kun je beschrijven met:</p>
+<div class="math">
+<p><img src="../_images/math/3a84ae15bf1462dbad48595c4ce62d7c9e2f5f5a.svg" alt="h(t) = \frac{1}{T} \mathrm{sinc}\left( \frac{t}{T} \right) \frac{\cos\left(\frac{\pi\beta t}{T}\right)}{1 - \left( \frac{2 \beta t}{T}   \right)^2}"/></p>
+</div><p>Je kunt <cite>hier &lt;https://en.wikipedia.org/wiki/Sinc_function&gt;`_meer lezen over de :math:</cite>mathrm{sinc}()` functie.</p>
+<p>Dit is het raised-cosine filter. Die gaan we echter in tweeën splitsen en dan krijgen we het Root Raised Cosine (RRC) filter!</p>
+</div>
+<div class="section" id="root-raised-cosine-filter">
+<h3>Root Raised-Cosine Filter<a class="headerlink" href="#root-raised-cosine-filter" title="Permalink to this headline">¶</a></h3>
+<p>Bij de zender en ontvanger plaatsen we dus een RRC-filter. Zoals besproken vormen die samen weer een RC-filter.
+Helaas wordt de impulsresponsie een rommel omdat we de wortel hebben genomen in het (complexe) frequentiedomein:</p>
+<a class="reference internal image-reference" href="../_images/rrc_filter.png"><img alt="../_images/rrc_filter.png" class="align-center" src="../_images/rrc_filter.png" style="width: 494.2px; height: 181.29999999999998px;" /></a>
+<p>Gelukkig wordt het filter zoveel toegepast dat er vele implementaties van te vinden zijn, zelfs <a class="reference external" href="https://commpy.readthedocs.io/en/latest/generated/commpy.filters.rrcosfilter.html" rel="noopener noreferrer" target="_blank">in Python</a>.</p>
+</div>
+<div class="section" id="andere-pulsvormende-filters">
+<h3>Andere pulsvormende filters<a class="headerlink" href="#andere-pulsvormende-filters" title="Permalink to this headline">¶</a></h3>
+<p>Een ander filter wat aan de eisen voldoet is het Gaussische filter, met een impulsresponsie dat op een Gaussische functie lijkt.
+Er is ook nog een sinc filter, een subset van het RC filter met <img class="math" src="../_images/math/4f3447a0acb350996ffd4de1145f4b22132893f0.svg" alt="\beta=0"/>. Dit is in feite de ideale vorm met een oneindige impulsresponsie en dus ook een filterovergang van praktisch 0 Hz in het frequentiedomein.</p>
+</div>
+</div>
+<div class="section" id="roll-off-factor">
+<h2>Roll-Off Factor<a class="headerlink" href="#roll-off-factor" title="Permalink to this headline">¶</a></h2>
+<p>Laten we <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> wat beter gaan bekijken.
+Het is een getal tussen de 0 en 1 en wordt de “roll-off”, of soms “excess bandwith”, factor genoemd. Dit bepaalt hoe snel het filter afzakt naar nul in het tijddomein. Om het als een filter te kunnen gebruiken moet de impulsresponsie naar 0 gaan aan beide kanten:</p>
+<a class="reference external image-reference" href="images/rrc_rolloff.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/rrc_rolloff.svg" class="align-center" src="../_images/rrc_rolloff.svg" /></a>
+<p>Als resultaat heeft het filter dus meer coëfficiënten nodig naargelang <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> lager wordt.
+Wanneer <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> nul bereikt zal de impulsresponsie nooit meer afzwakken naar 0, dus in de praktijk proberen we <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> zo dicht mogelijk bij de nul te krijgen, zonder andere problemen te veroorzaken.
+Hoe langzamer de impulsresponsie afzwakt, hoe smaller de bandbreedte van het signaal voor een gegeven symboolsnelheid, wat natuurlijk altijd erg belangrijk is.</p>
+<p>Je kunt de bandbreedte in Hz met deze veel gebruikte vergelijking vinden:</p>
+<div class="math">
+<p><img src="../_images/math/b523dad49a1eeb78bddd0fb3c4fe2d5756d570f8.svg" alt="\mathrm{BW} = R_S(\beta + 1)"/></p>
+</div><p><img class="math" src="../_images/math/4841008ae7293fefd4baf0734e5079d4dae06dea.svg" alt="R_S"/> is de symboolsnelheid in Hz.
+Voor draadloze communicatie willen we meestal een “roll-off” tussen de 0.2 en 0.5 gebruiken.
+Een goede vuistregel is dat een signaal met een snelheid van <img class="math" src="../_images/math/9c09fb3c3d1033d1e410b01a5a79230b9e87a556.svg" alt="R_s"/> Hz slecht een beetje meer dan <img class="math" src="../_images/math/9c09fb3c3d1033d1e410b01a5a79230b9e87a556.svg" alt="R_s"/> aan spectrum zal innemen.
+Dus wanneer we met QPSK een miljoen symbolen per seconde (MSps) versturen, zal het rond de 1.3 MHz aan bandbreedte innemen.
+In geval van QPSK (2 bits per symbool) levert dat dan een doorvoersnelheid op van 2 Mbps, inclusief de overhead van kanaalcodering en pakketinformatie.</p>
+</div>
+<div class="section" id="python-oefeningen">
+<h2>Python Oefeningen<a class="headerlink" href="#python-oefeningen" title="Permalink to this headline">¶</a></h2>
+<p>Laten we eens met Python wat pulsen gaan vormgeven. We zullen hiervoor BPSK-symbolen gebruiken omdat dit reële symbolen zijn en we dus alleen het I-deel hoeven te weergeven, wat iets makkelijker is om te volgen.</p>
+<p>We gaan 8 samples per symbool toepassen. In plaats van een blokgolf die varieert tussen 1 en -1 zullen we een rij aan pulsen gebruiken. Wanneer je een impuls in een filter stopt zul je de impulsresponsie eruit krijgen. Dus, als je een rij aan pulsen wilt hebben dan zul je het moeten opvullen met nullen zodat je niet een blokgolf krijgt.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
+
+<span class="n">num_symbols</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">sps</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="n">bits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">num_symbols</span><span class="p">)</span> <span class="c1"># De te verzenden bits</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+<span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">bits</span><span class="p">:</span>
+    <span class="n">pulse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sps</span><span class="p">)</span>
+    <span class="n">pulse</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">bit</span><span class="o">*</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span> <span class="c1"># alleen eerste waarde gelijk aan bitwaarde</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">pulse</span><span class="p">))</span> <span class="c1"># de 8 samples toevoegen aan x</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/pulse_shaping_python1.png"><img alt="../_images/pulse_shaping_python1.png" class="align-center" src="../_images/pulse_shaping_python1.png" style="width: 717.6px; height: 221.60000000000002px;" /></a>
+<p>Op dit moment bestaan onze symbolen nog uit 1’en en -1’en.
+Raak niet verstrikt in het feit dat we impulsen gebruiken, het is waarschijnlijk makkelijker om het te zien als een array:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bits</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">BPSK</span> <span class="n">symbolen</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="mi">8</span> <span class="n">samples</span> <span class="n">per</span> <span class="n">symbool</span> <span class="n">toepassen</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We zullen een RC-filter bouwen met een <img class="math" src="../_images/math/3e8f4c4ef388379d55238ac81372a404ab28bcc2.svg" alt="\beta"/> van 0.35 en 101 coëfficiënten zodat het signaal genoeg tijd heeft om naar 0 te gaan.
+De RC vergelijking vraagt om een periodetijd met een tijdvector, maar voor het gemak zullen we uitgaan van een periodetijd van 1 seconde.
+Dit betekent dat onze symboolperiode <img class="math" src="../_images/math/21946dc2539b19b0c0fec887e16d11ca970c217f.svg" alt="T_s"/> dan 8 is omdat we 8 samples per symbool hebben gebruikt.
+Onze tijdvector zal dan gewoon een oplopende lijst van gehele getalen zijn.
+Met de manier waarop de filtervergelijking werkt willen we het tijdstip 0 in het midden hebben. De 101 coëfficiënten zullen dan starten bij -51 en eindigen bij +52.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># het RC filter bouwen</span>
+<span class="n">num_taps</span> <span class="o">=</span> <span class="mi">101</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">0.35</span>
+<span class="n">Ts</span> <span class="o">=</span> <span class="n">sps</span> <span class="c1"># sample rate is 1 Hz, periodetijd is 1, *symbool*periodetijd is 8</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">51</span><span class="p">,</span> <span class="mi">52</span><span class="p">)</span> <span class="c1"># neemt laatste nummer niet mee</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">sps</span><span class="o">/</span><span class="n">Ts</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sinc</span><span class="p">(</span><span class="n">t</span><span class="o">/</span><span class="n">Ts</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">beta</span><span class="o">*</span><span class="n">t</span><span class="o">/</span><span class="n">Ts</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="o">*</span><span class="n">t</span><span class="o">/</span><span class="n">Ts</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/pulse_shaping_python2.png"><img alt="../_images/pulse_shaping_python2.png" class="align-center" src="../_images/pulse_shaping_python2.png" style="width: 418.40000000000003px; height: 285.6px;" /></a>
+<p>De uitgang zakt zeker naar 0 aan beide kanten. De hoeveelheid samples per symbool bepaalt hoe smal dit filter lijkt en hoe snel het naar 0 afzwakt.
+De bovenstaande impulsresponsie lijkt op een typisch laagdoorlaatfilter. Er is vrijwel geen onderscheid te maken tussen een vormgevend filter en een algemeen laagdoorlaatfilter.</p>
+<p>Nu zullen we het filter toepassen op ons signaal <img class="math" src="../_images/math/1907afd3cc2000b5af26022e2cf2c0ee820b13a7.svg" alt="x"/> en het resultaat bestuderen.
+De for-loop tekent alleen wat extra lijntjes in het figuur, maak je hier niet druk om.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># signaal x filteren.</span>
+<span class="n">x_shaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_shaped</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="c1">#wat lijntjes toevoegen op de juiste momenten</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_symbols</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">i</span><span class="o">*</span><span class="n">sps</span><span class="o">+</span><span class="n">num_taps</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">i</span><span class="o">*</span><span class="n">sps</span><span class="o">+</span><span class="n">num_taps</span><span class="o">//</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_shaped</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">sps</span><span class="o">+</span><span class="n">num_taps</span><span class="o">//</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference external image-reference" href="../_images/pulse_shaping_python3.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/pulse_shaping_python3.svg" class="align-center" src="../_images/pulse_shaping_python3.svg" /></a>
+<p>Het resultaat is een opsomming van alle impulsresponsies waarbij ongeveer de helft met -1 is vermenigvuldigd. Het ziet er ingewikkeld uit dus we zullen er samen doorheen lopen.</p>
+<p>Als eerste zie je samples voor en achter de data vanwege hoe convolutie werkt. De extra samples worden wel meegestuurd, maar bevatten geen ‘pieken’ van de impulsen.</p>
+<p>Als tweede zijn de verticale lijnen aangebracht voor de uitleg. Ze laten zien waar elk samplemoment <img class="math" src="../_images/math/21946dc2539b19b0c0fec887e16d11ca970c217f.svg" alt="T_s"/> plaatsvindt.
+Het zijn de momenten waarop de ontvanger het signaal moet samplen.
+Op elk samplemoment is het signaal precies 1.0 of -1.0: het ideale tijdstip om te samplen.</p>
+<p>Zouden we dit signaal moduleren op een draaggolf en verzenden, dan moet de ontvanger zelf bepalen waar de samplemomenten vallen met bijvoorbeeld een symboolsynchronisatie-algoritme. Mocht de ontvanger net te vroeg of te laat samples nemen dan krijgen we waarden die door ISI een beetje afwijken, mochten we veel te vroeg of laat samplen dan krijgen we alleen een boel rare getallen.</p>
+<p>Hieronder laten we in een IQ-diagram zien hoe het op tijd (of niet) samplen eruitziet.</p>
+<a class="reference internal image-reference" href="../_images/symbol_sync1.png"><img alt="../_images/symbol_sync1.png" class="align-center" src="../_images/symbol_sync1.png" style="width: 562.5px; height: 241.5px;" /></a>
+<p>Onderstaande diagram laat de ideale samplemomenten zien:</p>
+<a class="reference internal image-reference" href="../_images/symbol_sync2.png"><img alt="../_images/symbol_sync2.png" class="align-center" src="../_images/symbol_sync2.png" style="width: 667.6px; height: 194.8px;" /></a>
+<p>Vergelijk dat eens met de slechtste samplemomenten. We zien nu 3 clusters aan samples in het IQ-diagram. Doordat we midden elk symbool samplen krijgen we totaal verkeerde samples binnen.</p>
+<a class="reference internal image-reference" href="../_images/symbol_sync3.png"><img alt="../_images/symbol_sync3.png" class="align-center" src="../_images/symbol_sync3.png" style="width: 676.4000000000001px; height: 195.60000000000002px;" /></a>
+<p>En hier is nog een voorbeeld, ergens tussen bovenstaande voorbeelden in. Nu hebben we vier clusters. Met een hoge SNR zou deze timing net voldoende kunnen zijn, maar het wordt niet aangeraden.</p>
+<a class="reference internal image-reference" href="../_images/symbol_sync4.png"><img alt="../_images/symbol_sync4.png" class="align-center" src="../_images/symbol_sync4.png" style="width: 676.8000000000001px; height: 193.60000000000002px;" /></a>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="multipath_fading.html" title="Previous document"><span class="section-number">12. </span>Multipath Fading</a>
+        </li>
+        <li>
+          <a href="sync.html" title="Next document"><span class="section-number">14. </span>Synchronisatie</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2023, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -6,14 +6,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>4. Modulation numérique &#8212; PySDR: A Guide to SDR and DSP using Python</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="5. PlutoSDR en Python" href="pluto.html" />
@@ -32,6 +31,7 @@
 <div style="float: right; padding-bottom: 0;">
   <select onchange="location = this.value;">
     <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
     <option value="https://pysdr.org/fr/index-fr.html">French</option>
   </select>
 </div>
@@ -110,7 +110,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -170,7 +170,7 @@
 <p>Question : Pourquoi ne pouvons-nous pas transmettre directement le signal Ethernet illustré dans la figure ci-dessus?  Il y a de nombreuses raisons, les deux plus importantes étant :</p>
 <ol class="arabic simple">
 <li>Les basses fréquences nécessitent des antennes <em>énormes</em>.</li>
-<li>Les ondes carrées prennent une quantité excessive de spectre pour les bits par seconde - rappelez-vous du chapitre <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Domaine fréquentiel</span></a> que les changements brusques dans le domaine temporel utilisent une grande quantité de bande/spectre :</li>
+<li>Les ondes carrées prennent une quantité excessive de spectre pour les bits par seconde - rappelez-vous du chapitre <a class="reference internal" href="../content-nl/frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Het Frequentiedomein</span></a> que les changements brusques dans le domaine temporel utilisent une grande quantité de bande/spectre :</li>
 </ol>
 <a class="reference external image-reference" href="../_images/square-wave.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/square-wave.svg" class="align-center" src="../_images/square-wave.svg" /></a>
 <p>Pour les signaux sans fil, nous commençons par une porteuse, qui est juste une sinusoïde.  Par exemple, la radio FM utilise une porteuse comme 101,1 MHz ou 100,3 MHz.  Nous modulons cette porteuse d’une manière ou d’une autre (il y en a plusieurs).  Pour la radio FM, il s’agit d’une modulation analogique, et non numérique, mais c’est le même concept que la modulation numérique.</p>
@@ -211,7 +211,7 @@
 </div>
 <div class="section" id="diagrammes-iq-constellations">
 <h2>Diagrammes IQ/Constellations<a class="headerlink" href="#diagrammes-iq-constellations" title="Permalink to this headline">¶</a></h2>
-<p>Vous avez déjà vu des diagrammes IQ dans la sous-section sur les nombres complexes du chapitre <a class="reference internal" href="sampling.html#sampling-chapter"><span class="std std-ref">échantillonnage IQ</span></a>, mais maintenant nous allons les utiliser d’une manière nouvelle et amusante.  Pour un symbole donné, nous pouvons montrer l’amplitude et la phase sur un diagramme IQ.  Pour l’exemple BPSK, nous avons dit que nous avions des phases de 0 et 180 degrés. Traçons ces deux points sur le diagramme IQ. Nous supposerons que l’amplitude est de 1. Dans la pratique, l’amplitude utilisée n’a pas vraiment d’importance; une valeur plus élevée signifie un signal plus puissant, mais vous pouvez également augmenter le gain de l’amplificateur.</p>
+<p>Vous avez déjà vu des diagrammes IQ dans la sous-section sur les nombres complexes du chapitre <a class="reference internal" href="../content-nl/sampling.html#sampling-chapter"><span class="std std-ref">IQ-sampling</span></a>, mais maintenant nous allons les utiliser d’une manière nouvelle et amusante.  Pour un symbole donné, nous pouvons montrer l’amplitude et la phase sur un diagramme IQ.  Pour l’exemple BPSK, nous avons dit que nous avions des phases de 0 et 180 degrés. Traçons ces deux points sur le diagramme IQ. Nous supposerons que l’amplitude est de 1. Dans la pratique, l’amplitude utilisée n’a pas vraiment d’importance; une valeur plus élevée signifie un signal plus puissant, mais vous pouvez également augmenter le gain de l’amplificateur.</p>
 <a class="reference internal image-reference" href="../_images/bpsk_iq.png"><img alt="../_images/bpsk_iq.png" class="align-center" src="../_images/bpsk_iq.png" style="width: 384.0px; height: 316.0px;" /></a>
 <p>Le diagramme IQ ci-dessus montre ce que nous allons transmettre, ou plutôt l’ensemble des symboles à partir desquels nous allons transmettre.  Il ne montre pas la porteuse, vous pouvez donc considérer qu’il représente les symboles en bande de base.  Lorsque nous montrons l’ensemble des symboles possibles pour un schéma de modulation donné, nous l’appelons la “constellation”.  De nombreux schémas de modulation peuvent être définis par leur constellation.</p>
 <p>Pour recevoir et décoder la BPSK, nous pouvons utiliser l’échantillonnage IQ, comme nous l’avons appris au chapitre précédent, et examiner où les points aboutissent sur le diagramme IQ.  Cependant, il y aura une rotation de phase aléatoire due au canal sans fil car le signal aura un certain retard aléatoire lorsqu’il passe dans l’air entre les antennes.  La rotation de phase aléatoire peut être inversée à l’aide de diverses méthodes que nous verrons plus tard.  Voici un exemple de différentes façons dont un signal BPSK peut apparaître dans le récepteur (sans tenir compte du bruit) :</p>
@@ -266,7 +266,7 @@
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">]</span>  <span class="c1"># après le codage différentiel (ce que nous transmettons)</span>
 </pre></div>
 </div>
-<p>Le gros inconvénient de l’utilisation du codage différentiel est que si vous avez une erreur de bit, cela entraînera deux erreurs de bit.  L’alternative à l’utilisation du codage différentiel pour la BPSK est d’ajouter périodiquement des symboles pilotes, qui sont des symboles déjà connus du récepteur, et celui-ci peut utiliser les valeurs connues pour non seulement déterminer quel cluster est 1 et lequel est 0, mais aussi inverser les trajets multiples causés par le canal.  Un problème avec les symboles pilotes est que le canal sans fil peut changer très rapidement, de l’ordre de dizaines ou de centaines de symboles s’il s’agit d’un récepteur et/ou d’un émetteur en mouvement, de sorte qu’il faudrait des symboles pilotes suffisamment fréquents pour refléter l’évolution du canal.  Ainsi, si un protocole sans fil met l’accent sur la réduction de la complexité du récepteur, comme le RDS que nous étudions dans le chapitre <a class="reference internal" href="rds.html#rds-chapter"><span class="std std-ref">Exemple bout en bout</span></a>, il peut choisir d’utiliser le codage différentiel.</p>
+<p>Le gros inconvénient de l’utilisation du codage différentiel est que si vous avez une erreur de bit, cela entraînera deux erreurs de bit.  L’alternative à l’utilisation du codage différentiel pour la BPSK est d’ajouter périodiquement des symboles pilotes, qui sont des symboles déjà connus du récepteur, et celui-ci peut utiliser les valeurs connues pour non seulement déterminer quel cluster est 1 et lequel est 0, mais aussi inverser les trajets multiples causés par le canal.  Un problème avec les symboles pilotes est que le canal sans fil peut changer très rapidement, de l’ordre de dizaines ou de centaines de symboles s’il s’agit d’un récepteur et/ou d’un émetteur en mouvement, de sorte qu’il faudrait des symboles pilotes suffisamment fréquents pour refléter l’évolution du canal.  Ainsi, si un protocole sans fil met l’accent sur la réduction de la complexité du récepteur, comme le RDS que nous étudions dans le chapitre <a class="reference internal" href="../content-nl/rds.html#rds-chapter"><span class="std std-ref">Compleet voorbeeld</span></a>, il peut choisir d’utiliser le codage différentiel.</p>
 </div>
 <div class="section" id="exemple-python">
 <h2>Exemple Python<a class="headerlink" href="#exemple-python" title="Permalink to this headline">¶</a></h2>
@@ -306,7 +306,7 @@
 <a class="reference external image-reference" href="../_images/phase_jitter.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/phase_jitter.svg" class="align-center" src="../_images/phase_jitter.svg" /></a>
 <p>Vous pourriez même combiner le bruit de phase avec l’AWGN pour obtenir l’expérience complète:</p>
 <a class="reference external image-reference" href="../_images/phase_jitter_awgn.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/phase_jitter_awgn.svg" class="align-center" src="../_images/phase_jitter_awgn.svg" /></a>
-<p>Nous allons nous arrêter à ce point.  Si nous voulions voir à quoi ressemble le signal QPSK dans le domaine temporel, nous devrions générer plusieurs échantillons par symbole (dans cet exercice, nous avons juste fait un échantillon par symbole). Vous apprendrez pourquoi vous devez générer plusieurs échantillons par symbole lorsque nous aborderons la mise en forme des impulsions.  L’exercice Python du chapitre <a class="reference internal" href="pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Mise en Forme</span></a> reprendra là où nous nous sommes arrêtés ici.</p>
+<p>Nous allons nous arrêter à ce point.  Si nous voulions voir à quoi ressemble le signal QPSK dans le domaine temporel, nous devrions générer plusieurs échantillons par symbole (dans cet exercice, nous avons juste fait un échantillon par symbole). Vous apprendrez pourquoi vous devez générer plusieurs échantillons par symbole lorsque nous aborderons la mise en forme des impulsions.  L’exercice Python du chapitre <a class="reference internal" href="../content-nl/pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Pulse Shaping</span></a> reprendra là où nous nous sommes arrêtés ici.</p>
 </div>
 </div>
 
@@ -333,7 +333,7 @@
     <div class="clearer"></div>
   </div>
     <div class="footer">
-      &copy;2022, Marc Lichtman.
+      &copy;2023, Marc Lichtman.
       
     </div>
 

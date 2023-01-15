@@ -6,14 +6,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>13. Mise en Forme &#8212; PySDR: A Guide to SDR and DSP using Python</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="14. Synchronisation" href="sync.html" />
@@ -32,6 +31,7 @@
 <div style="float: right; padding-bottom: 0;">
   <select onchange="location = this.value;">
     <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
     <option value="https://pysdr.org/fr/index-fr.html">French</option>
   </select>
 </div>
@@ -107,7 +107,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -141,7 +141,7 @@
 <p>Ce chapitre traite de la mise en forme, des interférences inter-symboles, du filtrage adapté et des filtres à cosinus surélevé.  À la fin, nous utilisons Python pour ajouter la mise en forme aux symboles BPSK.  Vous pouvez considérer cette section comme la deuxième partie du chapitre sur les filtres, où nous approfondissons les mises en forme.</p>
 <div class="section" id="interference-inter-symboles-isi">
 <h2>Interférence inter-symboles (ISI)<a class="headerlink" href="#interference-inter-symboles-isi" title="Permalink to this headline">¶</a></h2>
-<p>Dans le chapitre <a class="reference internal" href="filters.html#filters-chapter"><span class="std std-ref">Filtres</span></a>, nous avons appris que les symboles/impulsions en forme de blocs utilisent une quantité excessive de spectre, et que nous pouvons réduire considérablement la quantité de spectre utilisée en ” façonnant ” nos impulsions.  Cependant, vous ne pouvez pas utiliser n’importe quel filtre passe-bas, sinon vous risquez d’obtenir des interférences inter-symboles (ISI), où les symboles se mélangent et interfèrent les uns avec les autres.</p>
+<p>Dans le chapitre <a class="reference internal" href="../content-nl/filters.html#filters-chapter"><span class="std std-ref">Filters</span></a>, nous avons appris que les symboles/impulsions en forme de blocs utilisent une quantité excessive de spectre, et que nous pouvons réduire considérablement la quantité de spectre utilisée en ” façonnant ” nos impulsions.  Cependant, vous ne pouvez pas utiliser n’importe quel filtre passe-bas, sinon vous risquez d’obtenir des interférences inter-symboles (ISI), où les symboles se mélangent et interfèrent les uns avec les autres.</p>
 <p>Lorsque nous transmettons des symboles numériques, nous les transmettons dos à dos (au lieu d’attendre un certain temps entre eux).  Lorsque vous appliquez un filtre de mise en forme, il allonge l’impulsion dans le domaine temporel (afin de la condenser en fréquence), ce qui entraîne un chevauchement des symboles adjacents.  Ce chevauchement n’est pas un problème, à condition que votre filtre de mise en forme réponde à un critère: la somme de toutes les impulsions doit être égale à zéro à chaque multiple de notre période de symbole <img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/>, sauf pour l’une des impulsions. L’idée est mieux comprise grâce à la visualisation suivante:</p>
 <a class="reference external image-reference" href="../_images/pulse_train.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/pulse_train.svg" class="align-center" src="../_images/pulse_train.svg" /></a>
 <p>Comme vous pouvez le voir, à chaque intervalle de <img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/>, il y a un pic d’une impulsion tandis que le reste des impulsions sont à 0 (elles traversent l’axe des x). Lorsque le récepteur échantillonne le signal, il le fait au moment parfait (au pic des impulsions), ce qui signifie que c’est le seul point dans le temps qui compte. Il existe généralement un bloc de synchronisation des symboles au niveau du récepteur qui garantit que les symboles sont échantillonnés aux pics.</p>
@@ -309,7 +309,7 @@
     <div class="clearer"></div>
   </div>
     <div class="footer">
-      &copy;2022, Marc Lichtman.
+      &copy;2023, Marc Lichtman.
       
     </div>
 

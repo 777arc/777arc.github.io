@@ -6,14 +6,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>10. Codage Canal &#8212; PySDR: A Guide to SDR and DSP using Python</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="11. Fichiers IQ et SigMF" href="iq_files.html" />
@@ -32,6 +31,7 @@
 <div style="float: right; padding-bottom: 0;">
   <select onchange="location = this.value;">
     <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
     <option value="https://pysdr.org/fr/index-fr.html">French</option>
   </select>
 </div>
@@ -109,7 +109,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -143,7 +143,7 @@
 <p>Dans ce chapitre, nous présentons les bases du codage de canal, c’est-à-dire les codes correcteurs d’erreur (FEC pour <em>Forward Error Correction</em> en anglais), la limite de Shannon, les codes de Hamming, les turbo-codes et les codes LDPC.  Le codage de canal est un domaine énorme dans les communications sans fil, et est une branche de la “théorie de l’information”, qui est l’étude de la quantification, du stockage et de la communication de l’information.</p>
 <div class="section" id="pourquoi-nous-avons-besoin-du-codage-des-canaux">
 <h2>Pourquoi nous avons besoin du codage des canaux<a class="headerlink" href="#pourquoi-nous-avons-besoin-du-codage-des-canaux" title="Permalink to this headline">¶</a></h2>
-<p>Comme nous l’avons appris dans le chapitre <a class="reference internal" href="noise.html#noise-chapter"><span class="std std-ref">le Bruit et les dB</span></a>, les canaux sans fil sont bruyants, et nos symboles numériques n’atteindront pas parfaitement le récepteur.  Si vous avez suivi un cours des réseaux, vous connaissez peut-être déjà les contrôles de redondance cyclique (CRC pour <em>cyclic redundancy checks</em> en anglais), qui <strong>détectent</strong> les erreurs au niveau de la réception. L’objectif du codage de canal est de détecter <strong>et de corriger</strong> les erreurs au niveau du récepteur.  Si nous laissons une certaine marge d’erreur, nous pouvons transmettre avec un système de modulation d’ordre supérieur par exemple, sans que la liaison soit rompue.  À titre d’exemple visuel, considérez les constellations suivantes montrant une QPSK (à gauche) et une 16QAM (à droite) avec la même quantité de bruit.  La QPSK fournit 2 bits par symbole, tandis que la 16QAM offre un débit deux fois plus élevé avec 4 bits par symbole.  Mais notez comment dans la constellation QPSK, les symboles ont tendance à ne pas dépasse pas les frontières de décision des symboles, ou l’axe des x et l’axe des y, ce qui signifie que les symboles seront reçus correctement.  En revanche, dans le tracé de la constellation 16QAM, il y a un chevauchement des groupes de points et, par conséquent, de nombreux symboles seront mal reçus.</p>
+<p>Comme nous l’avons appris dans le chapitre <a class="reference internal" href="../content-nl/noise.html#noise-chapter"><span class="std std-ref">Ruis en dB</span></a>, les canaux sans fil sont bruyants, et nos symboles numériques n’atteindront pas parfaitement le récepteur.  Si vous avez suivi un cours des réseaux, vous connaissez peut-être déjà les contrôles de redondance cyclique (CRC pour <em>cyclic redundancy checks</em> en anglais), qui <strong>détectent</strong> les erreurs au niveau de la réception. L’objectif du codage de canal est de détecter <strong>et de corriger</strong> les erreurs au niveau du récepteur.  Si nous laissons une certaine marge d’erreur, nous pouvons transmettre avec un système de modulation d’ordre supérieur par exemple, sans que la liaison soit rompue.  À titre d’exemple visuel, considérez les constellations suivantes montrant une QPSK (à gauche) et une 16QAM (à droite) avec la même quantité de bruit.  La QPSK fournit 2 bits par symbole, tandis que la 16QAM offre un débit deux fois plus élevé avec 4 bits par symbole.  Mais notez comment dans la constellation QPSK, les symboles ont tendance à ne pas dépasse pas les frontières de décision des symboles, ou l’axe des x et l’axe des y, ce qui signifie que les symboles seront reçus correctement.  En revanche, dans le tracé de la constellation 16QAM, il y a un chevauchement des groupes de points et, par conséquent, de nombreux symboles seront mal reçus.</p>
 <a class="reference internal image-reference" href="../_images/qpsk_vs_16qam.png"><img alt="../_images/qpsk_vs_16qam.png" class="align-center" src="../_images/qpsk_vs_16qam.png" style="width: 591.3000000000001px; height: 217.8px;" /></a>
 <p>Un échec du CRC entraîne généralement une retransmission, du moins lorsqu’on utilise un protocole comme TCP.  Si Alice envoie un message à Bob, il est préférable que Bob n’ait pas à renvoyer un message à Alice pour demander à nouveau l’information.  Le but du codage de canal est de transmettre des informations <strong>redondantes</strong>. La redondance est une sécurité qui réduit le nombre de paquets erronés, de retransmissions ou de données perdues.</p>
 <p>Nous avons vu pourquoi nous avons besoin du codage de canal, voyons donc où il intervient dans la chaîne de transmission-réception :</p>
@@ -263,7 +263,7 @@
     <div class="clearer"></div>
   </div>
     <div class="footer">
-      &copy;2022, Marc Lichtman.
+      &copy;2023, Marc Lichtman.
       
     </div>
 

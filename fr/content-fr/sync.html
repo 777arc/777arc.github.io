@@ -6,14 +6,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>14. Synchronisation &#8212; PySDR: A Guide to SDR and DSP using Python</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="15. Exemple bout en bout" href="rds.html" />
@@ -32,6 +31,7 @@
 <div style="float: right; padding-bottom: 0;">
   <select onchange="location = this.value;">
     <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
     <option value="https://pysdr.org/fr/index-fr.html">French</option>
   </select>
 </div>
@@ -108,7 +108,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -214,7 +214,7 @@
 </div>
 <div class="section" id="synchronisation-du-temps">
 <h2>Synchronisation du temps<a class="headerlink" href="#synchronisation-du-temps" title="Permalink to this headline">¶</a></h2>
-<p>Lorsque nous transmettons un signal sans fil, il arrive au récepteur avec un déphasage aléatoire dû au temps parcouru.  Nous ne pouvons pas simplement commencer à échantillonner les symboles à notre débit de symboles car il est peu probable que nous l’échantillonnions au bon endroit dans l’impulsion, comme nous l’avons vu à la fin du chapitre <a class="reference internal" href="pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Mise en Forme</span></a>.  Revoyez les trois figures à la fin de ce chapitre si vous ne suivez pas.</p>
+<p>Lorsque nous transmettons un signal sans fil, il arrive au récepteur avec un déphasage aléatoire dû au temps parcouru.  Nous ne pouvons pas simplement commencer à échantillonner les symboles à notre débit de symboles car il est peu probable que nous l’échantillonnions au bon endroit dans l’impulsion, comme nous l’avons vu à la fin du chapitre <a class="reference internal" href="../content-nl/pulse_shaping.html#pulse-shaping-chapter"><span class="std std-ref">Pulse Shaping</span></a>.  Revoyez les trois figures à la fin de ce chapitre si vous ne suivez pas.</p>
 <p>La plupart des techniques de synchronisation prennent la forme d’une boucle à verrouillage de phase (ou PLL en anglais pour <em>phase locked loop</em>). Nous n’étudierons pas les PLL ici, mais il est important de connaître ce terme et vous pouvez vous documenter sur le sujet si vous êtes intéressé.  Les PLL sont des systèmes en boucle fermée qui utilisent la rétroaction pour ajuster continuellement un paramètre; dans notre cas, un décalage temporel nous permet d’échantillonner au pic des symboles numériques.</p>
 <p>Vous pouvez vous représenter la récupération du temps comme un bloc dans le récepteur, qui accepte un flux d’échantillons et sort un autre flux d’échantillons (similaire à un filtre).  Nous programmons ce bloc de récupération du temps avec des informations sur notre signal, la plus importante étant le nombre d’échantillons par symbole (ou notre meilleure estimation de celui-ci, si nous ne sommes pas sûrs à 100 % de ce qui a été transmis).  Ce bloc agit comme un “décimateur”, c’est-à-dire que notre échantillon de sortie sera une fraction du nombre d’échantillons d’entrée.  Nous voulons un échantillon par symbole numérique, donc le taux de décimation est simplement les échantillons par symbole.  Si l’émetteur transmet à 1M symboles par seconde et que nous échantillonnons à 16 Msps, nous recevrons 16 échantillons par symbole.  Ce sera le taux d’échantillonnage entrant dans le bloc de synchronisation.  Le taux d’échantillonnage sortant du bloc sera de 1 Msps car nous voulons un échantillon par symbole numérique.</p>
 <p>La plupart des méthodes de récupération du temps reposent sur le fait que nos symboles numériques montent puis descendent, et que la crête est le point auquel nous voulons échantillonner le symbole. En d’autres termes, nous échantillonnons le point maximum après avoir pris la valeur absolue :</p>
@@ -306,7 +306,7 @@
 </div><p>Pour notre cas de BPSK, nous avons un schéma de modulation d’ordre 2, nous utiliserons donc l’équation suivante pour notre synchronisation grossière de la fréquence:</p>
 <div class="math">
 <p><img src="../_images/math/9ec5450b2123e5d0e20fd6f35232f3310e662e5f.svg" alt="r^2(t) = s^2(t) e^{j4\pi f_o t}"/></p>
-</div><p>Nous avons découvert ce qui arrive à la partie <img class="math" src="../_images/math/f7732f55dfe0207d534c035f09daf8d2ab5ff9c4.svg" alt="s(t)"/> de l’équation, mais qu’en est-il de la partie sinusoïde (alias exponentielle complexe)?  Comme on peut le voir, on ajoute le terme <img class="math" src="../_images/math/24ca8296258e6d43d10327cf05e8d5b650662803.svg" alt="N"/>, ce qui la rend équivalente à une sinusoïde à une fréquence de <img class="math" src="../_images/math/04194ee8a94a5914d95f7166a63d9eeef0a33a45.svg" alt="Nf_o"/> au lieu de <img class="math" src="../_images/math/0c8e13216427d3fcc928d732f6a1b2ead245a9f7.svg" alt="f_o"/>.  Une méthode simple pour déterminer <img class="math" src="../_images/math/5b4d646bd637804d0898d428de76fe15564bfd0f.svg" alt="nf_o"/> est de prendre la FFT du signal après l’avoir élevé au carré N fois et de voir où le pic se produit.  Faisons une simulation en Python.  Nous allons retourner à la génération de notre signal BPSK, et au lieu de lui appliquer un retard fractionnel, nous allons appliquer un décalage de fréquence en multipliant le signal par <img class="math" src="../_images/math/226b304dd210bb038b11265f241851a89755b42b.svg" alt="e^{j2\pi f_o t}"/> comme nous l’avons fait dans le chapitre <a class="reference internal" href="filters.html#filters-chapter"><span class="std std-ref">Filtres</span></a> pour convertir un filtre passe-bas en un filtre passe-haut.</p>
+</div><p>Nous avons découvert ce qui arrive à la partie <img class="math" src="../_images/math/f7732f55dfe0207d534c035f09daf8d2ab5ff9c4.svg" alt="s(t)"/> de l’équation, mais qu’en est-il de la partie sinusoïde (alias exponentielle complexe)?  Comme on peut le voir, on ajoute le terme <img class="math" src="../_images/math/24ca8296258e6d43d10327cf05e8d5b650662803.svg" alt="N"/>, ce qui la rend équivalente à une sinusoïde à une fréquence de <img class="math" src="../_images/math/04194ee8a94a5914d95f7166a63d9eeef0a33a45.svg" alt="Nf_o"/> au lieu de <img class="math" src="../_images/math/0c8e13216427d3fcc928d732f6a1b2ead245a9f7.svg" alt="f_o"/>.  Une méthode simple pour déterminer <img class="math" src="../_images/math/5b4d646bd637804d0898d428de76fe15564bfd0f.svg" alt="nf_o"/> est de prendre la FFT du signal après l’avoir élevé au carré N fois et de voir où le pic se produit.  Faisons une simulation en Python.  Nous allons retourner à la génération de notre signal BPSK, et au lieu de lui appliquer un retard fractionnel, nous allons appliquer un décalage de fréquence en multipliant le signal par <img class="math" src="../_images/math/226b304dd210bb038b11265f241851a89755b42b.svg" alt="e^{j2\pi f_o t}"/> comme nous l’avons fait dans le chapitre <a class="reference internal" href="../content-nl/filters.html#filters-chapter"><span class="std std-ref">Filters</span></a> pour convertir un filtre passe-bas en un filtre passe-haut.</p>
 <p>En utilisant le code du début de ce chapitre, appliquez un décalage de fréquence de +13 kHz à votre signal numérique.  Cela peut se produire juste avant ou juste après l’ajout du retard fractionné; cela n’a pas d’importance. Quoi qu’il en soit, cela doit se faire <em>après</em> l’impulsion de mise en forme, mais avant d’effectuer toute fonction côté réception, comme la synchronisation temporelle.</p>
 <p>Maintenant que nous avons un signal avec un décalage de fréquence de 13kHz, traçons la FFT avant et après la mise au carré, pour voir ce qui se passe. Vous devriez maintenant savoir comment effectuer une FFT, y compris les opérations abs() et fftshift(). Pour cet exercice, peu importe que vous preniez ou non le logarithme ou que vous éleviez au carré le signal après avoir effectué l’opération abs().</p>
 <p>Regardez d’abord le signal avant de l’élever au carré (juste une FFT normale):</p>
@@ -445,7 +445,7 @@
     <div class="clearer"></div>
   </div>
     <div class="footer">
-      &copy;2022, Marc Lichtman.
+      &copy;2023, Marc Lichtman.
       
     </div>
 

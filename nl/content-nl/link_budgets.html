@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>9. Link Budgets &#8212; PySDR: A Guide to SDR and DSP using Python</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="10. Kanaalcodering" href="channel_coding.html" />
+    <link rel="prev" title="8. Filters" href="filters.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TGRQK1JJYD');
+</script>
+
+<!-- French/English Chooser, couldnt get it working with local URLs -->
+<div style="float: right; padding-bottom: 0;">
+  <select onchange="location = this.value;">
+    <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
+    <option value="https://pysdr.org/fr/index-fr.html">French</option>
+  </select>
+</div>
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index-nl.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: Een handleiding voor SDR en DSP met Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introductie</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Het Frequentiedomein</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ-sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digitale Modulatie</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usrp.html">6. USRP in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Ruis en dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">9. Link Budgets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introductie">Introductie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#signaalvermogensbudget">Signaalvermogensbudget</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ruisvermogen">Ruisvermogen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#snr">SNR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#voorbeeld-budget-ads-b">Voorbeeld budget: ADS-B</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Kanaalcodering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files and SigMF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronisatie</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rds.html">15. Compleet voorbeeld</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index-nl.html">Documentation overview</a><ul>
+      <li>Previous: <a href="filters.html" title="previous chapter"><span class="section-number">8. </span>Filters</a></li>
+      <li>Next: <a href="channel_coding.html" title="next chapter"><span class="section-number">10. </span>Kanaalcodering</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="filters.html" title="Previous document"><span class="section-number">8. </span>Filters</a>
+        </li>
+        <li>
+          <a href="channel_coding.html" title="Next document"><span class="section-number">10. </span>Kanaalcodering</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="link-budgets">
+<span id="link-budgets-chapter"></span><h1><span class="section-number">9. </span>Link Budgets<a class="headerlink" href="#link-budgets" title="Permalink to this headline">¶</a></h1>
+<p>In dit hoofdstuk gaan we het hebben over “link budgetten”. Een groot deel hiervan is het begrip van zend- en ontvangstvermogen, transmissieverlies, antenneversterking, ruis en signaal-ruisverhouding (SNR). We zullen eindigen met een voorbeeldbudget voor ADS-B, een signaal wat door commerciële vliegtuigen wordt uitgezonden om hun positie en overige informatie door te geven.</p>
+<div class="section" id="introductie">
+<h2>Introductie<a class="headerlink" href="#introductie" title="Permalink to this headline">¶</a></h2>
+<p>Een “link” budget is een opsomming van alle winsten en verliezen tussen de zender en ontvanger van een communicatiesysteem.
+Het beschrijft een richting van een draadloos kanaal.
+De meeste communicatiesystemen zijn echter bi directioneel en hebben dus aparte up- en downlink budgetten.
+Het resultaat van zo’n budget geeft je een grove inschatting van de signaal-ruisverhouding (SNR) die je kunt verwachten bij de ontvanger.
+Na verdere analyse kun je dan besluiten of de SNR hoog genoeg is voor jouw doel.</p>
+<p>We bestuderen linkbudgetten niet zodat je er zelf een op kunt stellen, maar meer om een beeld te krijgen van draadloze communicatie op systeemniveau.</p>
+<p>Eerst zullen we het budget van het ontvangen signaal beschouwen, dan het ruisvermogensbudget en als laatste zullen we die combineren om de SNR te vinden (Signaalvermogen gedeeld door ruisvermogen).</p>
+</div>
+<div class="section" id="signaalvermogensbudget">
+<h2>Signaalvermogensbudget<a class="headerlink" href="#signaalvermogensbudget" title="Permalink to this headline">¶</a></h2>
+<p>Hieronder zie je het meest simpele diagram wat je zou kunnen opstellen voor een algemene draadloze keten.
+In dit hoofdstuk zullen we een richting behandelen, namelijk vanaf de zender (Tx) naar ontvanger (Rx).
+We weten voor een gegeven systeem wat het zendvermogen is; dit is meestal een instelling bij de zender.
+Maar hoe bepalen we het vermogen wat aankomt bij de ontvanger?</p>
+<div class="figure" style="text-align: center"><p><img width="80%" src="../_images/tikz-15ca49c95ca4c1a3e79f8b2a51bfe6126b817f1f.svg" alt="Figure made with TikZ" /></p>
+</div><p>We hebben vier systeemparameters nodig om het ontvangen vermogen te bepalen. Deze zijn hieronder opgesomd samen met de meest gebruikte (Engelstalige) afkortingen.
+We zullen ieder apart behandelen in dit hoofdstuk.</p>
+<ul class="simple">
+<li><strong>Pt</strong> - Vermogen van zender (Power transmitter)</li>
+<li><strong>Gt</strong> - Antenneversterking zender (Gain transmitter)</li>
+<li><strong>Gr</strong> - Antenneversterking ontvanger (Gain receiver)</li>
+<li><strong>Lt</strong> - Afstand tussen zender en ontvanger dus hoeveelheid transmissieverlies (Path Loss)</li>
+</ul>
+<div class="figure" style="text-align: center"><p><img width="100%" src="../_images/tikz-51c329379cd87fd53a75f47107d813374e758c25.svg" alt="Figure made with TikZ" /></p>
+</div><div class="section" id="zendvermogen">
+<h3>Zendvermogen<a class="headerlink" href="#zendvermogen" title="Permalink to this headline">¶</a></h3>
+<p>Zendvermogen is vrij simpel; het is uitgedrukt in Watt, dBW or dBm (dBm is een afkorting voor dBmW).
+Elke zender heeft een of meerdere versterkers,  het zendvermogen is voornamelijk een eigenschap van die versterkers.
+Een analogie voor zendvermogen is het vermogen van een lamp: hoe meer vermogen in Watt, hoe meer licht wordt uitgezonden door de lamp.
+Hieronder staan wat gemiddelde vermogens van verschillende technologieën:</p>
+<table border="1" class="docutils align-default">
+<colgroup>
+<col width="60%" />
+<col width="17%" />
+<col width="23%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td></td>
+<td colspan="2">Power</td>
+</tr>
+<tr class="row-even"><td>Bluetooth</td>
+<td>10 mW</td>
+<td>-20 dBW</td>
+</tr>
+<tr class="row-odd"><td>WiFi</td>
+<td>100mW</td>
+<td>-10 dBW</td>
+</tr>
+<tr class="row-even"><td>LTE station</td>
+<td>1W</td>
+<td>0 dBW</td>
+</tr>
+<tr class="row-odd"><td>FM station</td>
+<td>10kW</td>
+<td>40 dBW</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="antenneversterking">
+<h3>Antenneversterking<a class="headerlink" href="#antenneversterking" title="Permalink to this headline">¶</a></h3>
+<p>De antenneversterking van zend- en ontvangstantennes zijn een cruciaal onderdeel van linkbudgetten.
+Maar wat is antenneversterking?
+Het is een indicatie van de richtingskarakteristiek.
+Soms wordt het vermogensversterking genoemd, maar laat je niet misleiden, de enige manier voor een antenne om een hogere versterking te hebben is door de energie/straling te bundelen in een kleiner gebied.</p>
+<p>Versterkingsfactoren worden uitgedrukt in dB (zonder eenheid), zie het <a class="reference internal" href="noise.html#noise-chapter"><span class="std std-ref">Ruis en dB</span></a> hoofdstuk voor een opfriscursus.
+Antennes zijn of omnidirectioneel (omni-antenne), dus het vermogen straalt in alle richtingen, of directioneel (richtantenne), het vermogen straalt een specifieke kant op.
+Omni-antennes hebben een versterking tussen 0 dB en 3 dB.
+Een richtantenne heeft een hogere versterking van 5 dB tot ongeveer 60 dB.</p>
+<a class="reference internal image-reference" href="../_images/antenna_gain_patterns.png"><img alt="../_images/antenna_gain_patterns.png" class="align-center" src="../_images/antenna_gain_patterns.png" style="width: 829.6px; height: 283.2px;" /></a>
+<p>Wanneer een richtantenne wordt toegepast zal het de juiste kant op moeten wijzen.
+Als het een fase gestuurde antenne is dan kan het ook elektronisch worden gericht (dus met software).</p>
+<a class="reference internal image-reference" href="../_images/antenna_steering.png"><img alt="../_images/antenna_steering.png" class="align-center" src="../_images/antenna_steering.png" style="width: 665.6px; height: 308.0px;" /></a>
+<p>Wanneer er geen specifieke richting is, worden omni-antennes toegepast, zoals voor een mobiele telefoon of laptop.
+Bij 5G kan een telefoon op hogere frequentiebanden werken zoals 26 GHz met een array van antennes en het elektronisch regelen van de bundelrichting.</p>
+<p>Bij het opstellen van een linkbudget moeten we ervan uit gaan dat een richtantenne (zender of ontvanger) de juiste richting op wijst.
+Als het niet de juiste kant op wijst dan is ons budget niet precies en vindt er verlies van communicatie plaats (wanneer bijvoorbeeld de tv-schotel verdraait door een bal).
+Over het algemeen gaat ons linkbudget van een ideale situatie uit terwijl we de verliezen van zoveel mogelijke echte factoren meenemen.</p>
+</div>
+<div class="section" id="transmissieverlies-path-loss">
+<h3>Transmissieverlies (Path Loss)<a class="headerlink" href="#transmissieverlies-path-loss" title="Permalink to this headline">¶</a></h3>
+<p>Wanneer een signaal zich door de lucht (of vacuüm) beweegt, verliest het kracht.
+Stel je voor dat je een klein zonnepaneel voor een lamp houdt.
+Hoe verder je van de lamp afstaat, hoe minder energie het kan absorberen.
+In de natuur- en wiskunde wordt <strong>flux</strong> gebruikt om aan te geven hoeveel “spul door je ding” gaat.
+We willen bepalen hoeveel vermogen we kwijtraken voor een gegeven afstand.</p>
+<a class="reference internal image-reference" href="../_images/flux.png"><img alt="../_images/flux.png" class="align-center" src="../_images/flux.png" style="width: 864.0px; height: 227.20000000000002px;" /></a>
+<p>Free Space Path Loss (FSPL) of transmissieverlies in vrije ruimte geeft ons het verlies wanneer er geen obstakels tussen zender en ontvanger staan.
+In het algemeen <img class="math" src="../_images/math/bf814d621aebaba97eb1449877cb80f950ecc7e9.svg" alt="\mathrm{FSPL} = ( 4\pi d / \lambda )^2"/>.
+Google Friis transmissieformule voor meer informatie.
+(Leuk weetje: signalen ervaren 377 ohm aan impedantie wanneer ze door de vrije ruimte bewegen.)
+Bij het opstellen van ons linkbudget kunnen we dezelfde formule toepassen, maar omgezet naar dB:</p>
+<div class="math">
+<p><img src="../_images/math/dbf8ea71b418c2782288cf66c820e6ba4de2be0d.svg" alt="\mathrm{FSPL}_{dB} = 20 \log_{10} d + 20 \log_{10} f - 147.55 \left[ dB \right]"/></p>
+</div><p>Dit wordt uitgedrukt in de eenheid loze vorm dB omdat het een verlies betreft.
+<img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> is de afstand tussen zender en ontvanger in meters.
+<img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is de draaggolffrequentie in Hz.
+Er is alleen een probleem met deze vergelijking; er staan bijna altijd obstakels tussen zender en ontvanger.
+Binnenshuis stuiteren signalen ook nog eens (de meeste frequenties gaan door gipsmuren heen, maar niet (goed) door metaal of dikke baksteenmuren).
+In deze situaties worden andere modellen gebruikt.
+Een veelgebruikt model voor steden en bewoonde gebieden is het Okumura–Hata model:</p>
+<div class="math">
+<p><img src="../_images/math/14f2a692d9c7a9632a0334d816d150f76aae0695.svg" alt="L_{path} = 69.55 + 26.16 \log_{10} f - 13.82 \log_{10} h_B - C_H + \left[ 44.9 - 6.55 \log_{10} h_B \right] \log_{10} d"/></p>
+</div><p>Hierbij is <img class="math" src="../_images/math/33400e0e3a8b767999d8b77eb40a0261e8fe9548.svg" alt="L_{path}"/> het transmissieverlies in dB, <img class="math" src="../_images/math/df1bda24adad389d286c99c1a3f5a3aa122a91c8.svg" alt="h_B"/> is de hoogte van de antenne boven de grond in meters, <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is de draaggolffrequentie in MHz, <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> is de afstand tussen zender en ontvanger in km en <img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> wordt de “antenne correctiefactor” genoemd en wordt gedefinieerd aan de hand van het frequentiebereik en de grootte van de stad:</p>
+<p><img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> voor dorpen:</p>
+<div class="math">
+<p><img src="../_images/math/e6274194defe270556e489484bdc9a0a90018fef.svg" alt="C_H = 0.8 + (1.1 \log_{10} f - 0.7 ) h_M - 1.56 \log_{10} f"/></p>
+</div><p><img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> voor steden met <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> onder 200 MHz:</p>
+<div class="math">
+<p><img src="../_images/math/e3b6c9a65db4b8d97ff431814e011c044f34249a.svg" alt="C_H = 8.29 ( log_{10}(1.54 h_M))^2 - 1.1"/></p>
+</div><p><img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> voor steden met <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> tussen 200 MHz en 1.5 GHz:</p>
+<div class="math">
+<p><img src="../_images/math/dfa9f50bca1150aa6cf8dbe66c437d3e1135453c.svg" alt="C_H = 3.2 ( log_{10}(11.75 h_M))^2 - 4.97"/></p>
+</div><p>waarbij <img class="math" src="../_images/math/7e9505a347821cebd9135bdf0d277f0425ac20ed.svg" alt="h_M"/> de hoogte van de ontvangstantenne is boven de grond in meters.</p>
+<p>Maak je geen zorgen als dit allemaal verwarrend is; het wordt hier getoond om te laten zien dat het model met obstakels veel ingewikkelder is dan de simpele FSPL vergelijking. Het resultaat van deze modellen is een enkel getal dat we kunnen gebruiken in ons linkbudget. We blijven FSPL gebruiken voor de rest van dit hoofdstuk.</p>
+</div>
+<div class="section" id="overige-verliezen">
+<h3>Overige verliezen<a class="headerlink" href="#overige-verliezen" title="Permalink to this headline">¶</a></h3>
+<p>We willen ook de overige willekeurige verliezen meenemen in ons budget. We zullen deze allemaal in een term samen gooien. Het zal een waarde hebben van ergens tussen de 1 en 3 dB.
+Voorbeelden van verliezen die hieronder vallen:</p>
+<ul class="simple">
+<li>Verlies door kabels</li>
+<li>Verlies door de atmosfeer</li>
+<li>Verlies door niet perfect gerichte antennes</li>
+<li>Het weer (regen, sneeuw etc.)</li>
+</ul>
+<p>De onderstaande grafiek laat zien wat de verliezen zijn in de atmosfeer voor bepaalde frequenties, uitgedrukt in dB/km.
+Als je het figuur bestudeert zie je dat communicatie bij een afstand korter dan 1km en een frequentie kleiner dan 40 GHz er een verlies van maximaal 1 dB plaatsvindt. In dit geval negeren we vaak het verlies. Waar de atmosfeer echt invloed gaat hebben is in het geval van satellietcommunicatie, waar de signalen vele kilometers door de atmosfeer afleggen.</p>
+<a class="reference external image-reference" href="../_images/atmospheric_attenuation.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/atmospheric_attenuation.svg" class="align-center" src="../_images/atmospheric_attenuation.svg" /></a>
+</div>
+<div class="section" id="signaalvermogen">
+<h3>Signaalvermogen<a class="headerlink" href="#signaalvermogen" title="Permalink to this headline">¶</a></h3>
+<p>Het is nu tijd om het signaalvermogen (<img class="math" src="../_images/math/bc6ecef20020dde7203df6dc8f56c9e6326c2ed8.svg" alt="P_r"/>) bij de ontvanger te berekenen door alle verliezen samen te voegen:</p>
+<div class="math">
+<p><img src="../_images/math/1d7facdb46a6709bc0a384b67e2da96929a5c7e8.svg" alt="P_r = P_t + G_t + G_r - L_p - L_{misc} \quad \mathrm{dBW}"/></p>
+</div><p>Het is een vrij simpele vergelijking. We tellen alle winsten en verliezen bij elkaar op. Sommige mensen vinden dit niet eens een vergelijking.
+Meestal laten we de winsten en verliezen in een tabel zien, zoals we dat met financiën doen:</p>
+<table border="1" class="colwidths-given docutils align-default">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Pt = 1.0 W</td>
+<td>0 dBW</td>
+</tr>
+<tr class="row-even"><td>Gt = 100</td>
+<td>20.0 dB</td>
+</tr>
+<tr class="row-odd"><td>Gr = 1</td>
+<td>0 dB</td>
+</tr>
+<tr class="row-even"><td>Lp</td>
+<td>-162.0 dB</td>
+</tr>
+<tr class="row-odd"><td>Lmisc</td>
+<td>-1.0 dB</td>
+</tr>
+<tr class="row-even"><td><strong>Pr</strong></td>
+<td><strong>-143.0 dBW</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="ruisvermogen">
+<h2>Ruisvermogen<a class="headerlink" href="#ruisvermogen" title="Permalink to this headline">¶</a></h2>
+<p>Nu we het signaalvermogen hebben, gaan we overschakelen naar het ruisvermogen, we moeten immers de signaal-ruisverhouding bepalen.
+Het bepalen van het ruisvermogen gaan we op een vergelijkbare manier doen als het signaalvermogen.</p>
+<p>Het is nu een goed moment om te bespreken waar ruis ons kanaal binnenkomt. Antwoord: <strong>Bij de ontvanger</strong>!
+Het signaal wordt niet verpest door de ruis totdat we het gaan ontvangen. Het is <em>extreem</em> belangrijk om dit te begrijpen.
+Veel studenten maken dit zich niet eigen en maken daardoor domme fouten.
+Er zweeft geen ruis door de lucht.
+De ruis ontstaat doordat onze ontvanger een versterker en andere elektronica heeft die niet perfect zijn en ook niet op 0 Kelvin werken.</p>
+<p>Een populaire vergelijking voor het ruisbudget maakt gebruik van de “kTB” aanpak:</p>
+<div class="math">
+<p><img src="../_images/math/2910804c9e37ce20bd06837b74c915adb9f7ed3a.svg" alt="P_{noise} = kTB"/></p>
+</div><ul class="simple">
+<li><img class="math" src="../_images/math/30d4f39194cc2ced00937a2642c0345222fed6cd.svg" alt="k"/> – Boltzmann’s constante = 1.38 x 10-23 J/K = <strong>-228.6 dBW/K/Hz</strong>. De Bolzmann constante, voor de nieuwsgierigen onder ons, is een fysische constante wat de gemiddelde energie van deeltjes in een gas relateert aan de temperatuur van het gas.</li>
+<li><img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/> – Is de temperatuur van het systeem in Kelvin (cryocoolers anyone?), voornamelijk veroorzaakt door de versterker. Deze term is moeilijk te vinden en wordt meestal alleen benadert. Je betaalt meer voor een versterker die een lage temperatuur kan behouden voor hetzelfde vermogen.</li>
+<li><img class="math" src="../_images/math/a04d3384fedfc300642f10c4207debb695a20fce.svg" alt="B"/> – Bandbreedte waarover we de ruis berekenen. Voor een LTE signaal van 10 MHz breed gebruiken we dus 10MHz voor <img class="math" src="../_images/math/a04d3384fedfc300642f10c4207debb695a20fce.svg" alt="B"/>, of 70 dbHz.</li>
+</ul>
+<p>Het vermenigvuldigen (of optellen in dB) van kTB geeft het ruisvermogen, de noemer van de SNR breuk.</p>
+</div>
+<div class="section" id="snr">
+<h2>SNR<a class="headerlink" href="#snr" title="Permalink to this headline">¶</a></h2>
+<p>Nu we beide nummers hebben, kunnen we de signaal-ruisverhouding berekenen (Zie het <a class="reference internal" href="noise.html#noise-chapter"><span class="std std-ref">Ruis en dB</span></a> hoofdstuk voor extra informatie over ruis):</p>
+<div class="math">
+<p><img src="../_images/math/1d7c441abf7305b4cba78098f05ede71b4ea0f91.svg" alt="\mathrm{SNR} = \frac{P_{signaal}}{P_{ruis}}"/></p>
+</div><div class="math">
+<p><img src="../_images/math/3a24ad418d456684f6085c330b96f3fb5954442a.svg" alt="\mathrm{SNR_{dB}} = P_{signaal\_dB} - P_{ruis\_dB}"/></p>
+</div><p>We proberen meestal een SNR van meer dan 10 dB te halen, maar het hangt van de toepassing af.
+In de praktijk kun je de SNR bepalen door de FFT van het ontvangen signaal te bekijken, of door het vermogen te berekenen (variantie) met en zonder signaal aanwezig.
+Hoe hoger de SNR, hoe meer bits je in een symbool kan stoppen zonder teveel bitfouten (bit error rate).</p>
+</div>
+<div class="section" id="voorbeeld-budget-ads-b">
+<h2>Voorbeeld budget: ADS-B<a class="headerlink" href="#voorbeeld-budget-ads-b" title="Permalink to this headline">¶</a></h2>
+<p>Het Automatic Dependent Surveillance-Broadcast (ADS-B) protocool wordt gebruikt door vliegtuigen om hun positie en overige informatie over het vliegtuig door te sturen naar de luchtverkeersleiding en andere vliegtuigen. ADS-B werkt autonoom en gebruikt het navigatiesysteem en andere computers van het vliegtuig om de informatie te genereren. De berichten gebruiken geen encryptie (yay!).
+De ADS-B apparatuur is momenteel in het luchtruim van Australië verplicht terwijl de VS het slechts voor bepaalde vliegtuigen verplicht stelt, afhankelijk van de grootte.</p>
+<a class="reference internal image-reference" href="../_images/adsb.jpg"><img alt="../_images/adsb.jpg" class="align-center" src="../_images/adsb.jpg" style="width: 230.39999999999998px; height: 306.0px;" /></a>
+<p>De fysieke laag (PHY) van ADS-B heeft de volgende eigenschappen.</p>
+<ul class="simple">
+<li>Zendfrequentie is 1,090 MHz</li>
+<li>Signaal heeft een bandbreedte van 50 kHz (dat is erg klein)</li>
+<li>PPM modulatie</li>
+<li>Een bericht heeft 15 bytes aan data, meestal zijn er meerdere berichten nodig</li>
+<li>Er wordt voorkomen dat vliegtuigen elkaar verstoren door een willekeurige vertraging van 0.4 tot 0.6 seconden tussen elk bericht te plaatsen. Hierdoor is de kans dat berichten over elkaar heen vallen kleiner. Nu gebeurt het af en toe, wat geen probleem is.</li>
+<li>ADS-B antennes zijn verticaal gepolariseerd</li>
+<li>Zendvermogen varieert maar zit ergens rond de 100 W (20 dBW)</li>
+<li>Het is een omni-antenne maar naar beneden gericht. Antenneversterking is ongeveer 3 dB</li>
+<li>ADS-B ontvangers hebben ook een omni-antenne met een versterking van 0 dB.</li>
+</ul>
+<p>Het transmissieverlies hangt van de afstand tussen het vliegtuig en de ontvanger af.
+Stel de ontvanger staat in de Maryland universiteit (waar dit boek is ontstaan) en het vliegtuig bevindt zich boven het BWI vliegveld op een afstand van 30 km.
+We kunnen dan de FSPL voor die afstand en een frequentie van 1090 MHz berekenen:</p>
+<div class="math">
+<p><img src="../_images/math/87e4a970421b97c0beb6a25ce30e78b50c9f3b26.svg" alt="\mathrm{FSPL}_{dB} = 20 \log_{10} d + 20 \log_{10} f - 147.55  \left[ \mathrm{dB} \right]
+
+\mathrm{FSPL}_{dB} = 20 \log_{10} 30e3 + 20 \log_{10} 1090e6 - 147.55  \left[ \mathrm{dB} \right]
+
+\mathrm{FSPL}_{dB} = 122.7 \left[ \mathrm{dB} \right]"/></p>
+</div><p>We zouden ook de FSPL als functie van de afstand <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> kunnen beschrijven. Dan zouden we de maximale afstand kunnen berekenen voor een gegeven signaal-ruisverhouding.</p>
+<p>Omdat we zeker geen open ruimte hebben kunnen we 3 dB toevoegen aan de verliezen.
+We voegen nog een extra 3 dB aan de verliezen toe vanwege een imperfecte antenne, kabels en connectoren.
+Uiteindelijk ziet ons budget er zo uit:</p>
+<table border="1" class="colwidths-given docutils align-default">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Pt</td>
+<td>20 dBW</td>
+</tr>
+<tr class="row-even"><td>Gt</td>
+<td>3 dB</td>
+</tr>
+<tr class="row-odd"><td>Gr</td>
+<td>0 dB</td>
+</tr>
+<tr class="row-even"><td>Lp</td>
+<td>-122.7 dB</td>
+</tr>
+<tr class="row-odd"><td>Loverige</td>
+<td>-6 dB</td>
+</tr>
+<tr class="row-even"><td><strong>Pr</strong></td>
+<td><strong>-105.7 dBW</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Voor wat betreft het ruisbudget:</p>
+<ul class="simple">
+<li>B = 50 kHz = 50e3 = 47 dBHz</li>
+<li>T benaderen we met 300 K, dat is 24.8 dBK. Dit hangt van de kwaliteit van de ontvanger af.</li>
+<li>k is altijd -228.6 dBW/K/Hz</li>
+</ul>
+<div class="math">
+<p><img src="../_images/math/f7374fbb202051279103075b29e26a7798ec0c7f.svg" alt="P_{noise} = k + T + B = -156.8 \quad \mathrm{dBW}"/></p>
+</div><p>Dus de SNR is -105.7 - (-156.8) = <strong>51.1 dB</strong>.
+Het is geen verrassing dat dit een enorm getal is, gezien het vliegtuig maar 30 km verderop vliegt. Als het ADS-B signaal geen 30 km zou kunnen overbruggen dan zou het niet zo’n goed systeem zijn! Het demoduleren zou ook vrij makkelijk zijn omdat het puls-positiemodulatie (PPM) gebruikt, wat robuust is een niet een hoge SNR nodig heeft.
+Het is wel lastig om een ADS-B in een leslokaal te ontvangen, met een verkeerde antenne en een sterk FM-radiostation in de buurt wat extra storing geeft. Al die factoren leiden makkelijk tot 20-30 dB aan verliezen.</p>
+<p>Dit voorbeeld was eigenlijk gewoon een papieren zakdoek berekening, maar het laat de basis zien van het opstellen van een link-budget en de belangrijke parameters van een communicatiekanaal.</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="filters.html" title="Previous document"><span class="section-number">8. </span>Filters</a>
+        </li>
+        <li>
+          <a href="channel_coding.html" title="Next document"><span class="section-number">10. </span>Kanaalcodering</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2023, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

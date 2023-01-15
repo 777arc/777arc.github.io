@@ -6,14 +6,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>2. Domaine fréquentiel &#8212; PySDR: A Guide to SDR and DSP using Python</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="3. échantillonnage IQ" href="sampling.html" />
@@ -32,6 +31,7 @@
 <div style="float: right; padding-bottom: 0;">
   <select onchange="location = this.value;">
     <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
     <option value="https://pysdr.org/fr/index-fr.html">French</option>
   </select>
 </div>
@@ -112,7 +112,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -318,7 +318,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Nous devons également déterminer les valeurs/labels de l’axe des x.  Rappelez-vous que nous avons utilisé une fréquence d’échantillonnage de 1Hz pour garder les choses simples. Cela signifie que le bord gauche du graphique du domaine fréquentiel sera de -0.5Hz et le bord droit de 0.5Hz. Si cela n’a pas de sens, cela en aura après avoir lu le chapitre sur <a class="reference internal" href="sampling.html#sampling-chapter"><span class="std std-ref">échantillonnage IQ</span></a>.  Restons-en à l’hypothèse que notre fréquence d’échantillonnage était de 1Hz, et traçons la magnitude et la phase de la sortie de la FFT avec un label approprié sur l’axe des x. Voici la version finale de cet exemple Python ainsi que sa sortie:</p>
+<p>Nous devons également déterminer les valeurs/labels de l’axe des x.  Rappelez-vous que nous avons utilisé une fréquence d’échantillonnage de 1Hz pour garder les choses simples. Cela signifie que le bord gauche du graphique du domaine fréquentiel sera de -0.5Hz et le bord droit de 0.5Hz. Si cela n’a pas de sens, cela en aura après avoir lu le chapitre sur <a class="reference internal" href="../content-nl/sampling.html#sampling-chapter"><span class="std std-ref">IQ-sampling</span></a>.  Restons-en à l’hypothèse que notre fréquence d’échantillonnage était de 1Hz, et traçons la magnitude et la phase de la sortie de la FFT avec un label approprié sur l’axe des x. Voici la version finale de cet exemple Python ainsi que sa sortie:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
@@ -418,7 +418,7 @@
     <div class="clearer"></div>
   </div>
     <div class="footer">
-      &copy;2022, Marc Lichtman.
+      &copy;2023, Marc Lichtman.
       
     </div>
 

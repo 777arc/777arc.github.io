@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>1. Introductie &#8212; PySDR: A Guide to SDR and DSP using Python</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TGRQK1JJYD');
+</script>
+
+<!-- French/English Chooser, couldnt get it working with local URLs -->
+<div style="float: right; padding-bottom: 0;">
+  <select onchange="location = this.value;">
+    <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
+    <option value="https://pysdr.org/fr/index-fr.html">French</option>
+  </select>
+</div>
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index-fr.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/frequency_domain.html">2. Domaine fréquentiel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/sampling.html">3. échantillonnage IQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/digital_modulation.html">4. Modulation numérique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/pluto.html">5. PlutoSDR en Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/usrp.html">6. USRP en Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/noise.html">7. le Bruit et les dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/filters.html">8. Filtres</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/link_budgets.html">9. Bilans de liaison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/channel_coding.html">10. Codage Canal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/iq_files.html">11. Fichiers IQ et SigMF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/multipath_fading.html">12. Evanouissement par Multi-Trajets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/pulse_shaping.html">13. Mise en Forme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/sync.html">14. Synchronisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/rds.html">15. Exemple bout en bout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content-fr/about_author.html">16. A propos de l’auteur</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index-fr.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="introductie">
+<span id="intro-chapter"></span><h1><span class="section-number">1. </span>Introductie<a class="headerlink" href="#introductie" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="doel-en-doelgroep">
+<h2>Doel en doelgroep<a class="headerlink" href="#doel-en-doelgroep" title="Permalink to this headline">¶</a></h2>
+<p>Als eerste een paar belangrijke termen:</p>
+<dl class="docutils">
+<dt><strong>Software-Defined Radio (SDR):</strong></dt><dd>Of in het Nederlands een software gedefinieerde radio. Een radio dat software gebruikt om signaalbewerkingstaken uit te voeren die normaal in hardware werden gedaan</dd>
+<dt><strong>Digital signal Processing (DSP):</strong></dt><dd>Of in het Nederlands: digitale signaalbewerking. Op een digitale manier signalen bewerken, in ons geval RF-signalen</dd>
+</dl>
+<p>Dit boek dient als een praktische introductie op de gebieden van DSP, SDR en draadloze communicatie. Het is ontworpen voor iemand die:</p>
+<ol class="arabic simple">
+<li>Coole dingen wilt <em>doen</em> met SDR’s</li>
+<li>Goed kan omgaan met Python</li>
+<li>Relatief onbekend is met digitale signaalbewerking, draadloze communicatie en SDR</li>
+<li>Liever (visueel) leert door animaties dan door vergelijkingen</li>
+<li>Vergelijken beter begrijpt <em>na</em> het leren van de concepten</li>
+<li>Op zoek is naar een korte uitleg en niet een boek van 1000 pagina’s.</li>
+</ol>
+<p>Als voorbeeld een student die interesse heeft in banen die te maken hebben met draadloze communicatie, of iedereen met een beetje programmeerervaring die graag leert over SDR.
+Om deze reden bevat dit boek de benodigde theorie om DSP-technieken te begrijpen zonder de intense wiskunde dat normaal in DSP-cursussen wordt gebruikt.
+In plaats van onszelf ingraven met vergelijkingen wordt een overvloed aan figuren en animaties gebruikt om de concepten te brengen, zoals de Fourierreeks animatie hieronder.
+Ik geloof dat vergelijkingen het beste worden begrepen <em>na</em> de concepten te hebben geleerd door middel van visuele en praktische oefeningen.
+Door het zware gebruik van animaties zal PySDR ook nooit als fysiek boek verschijnen op Amazon.</p>
+<a class="reference internal image-reference" href="../_images/fft_logo_wide.gif"><img alt="../_images/fft_logo_wide.gif" class="align-center" src="../_images/fft_logo_wide.gif" style="width: 707.6999999999999px; height: 470.4px;" /></a>
+<p>Dit boek heeft als doel concepten snel en vloeiend te introduceren waardoor de lezer in staat is om DSP toe te passen en SDR’s intelligent te gebruiken.
+Het is niet bedoelt als verwijzing naar alle DSP/SDR onderwerpen; er zijn al veel geweldige boeken zoals <a class="reference external" href="https://www.analog.com/en/education/education-library/software-defined-radio-for-engineers.html" rel="noopener noreferrer" target="_blank">Analog Device’s SDR boek</a> en <a class="reference external" href="http://www.dspguide.com/" rel="noopener noreferrer" target="_blank">dspguide.com</a>.  Je kunt altijd Google gebruiken om goniometrische identiteiten of de limiet van Shannon op te zoeken. Zie dit boek als een poort tot de wereld van DSP en SDR: het is makkelijker en minder tijd en geld consumerend alternatief vergeleken met traditionele cursussen en boeken.</p>
+<p>Om de basis DSP-theorie te behandelen, is een heel semester aan “Signalen en Systemen”, een typische cursus bij elektrotechniek, samengevoegd tot een paar hoofdstukken.
+Wanneer de basis is behandeld, springen we naar SDR’s, hoewel door het boek heen DSP- en draadloze-communicatie-concepten voorbij blijven komen.</p>
+<p>De programmavoorbeelden worden gegeven in Python.
+Ze maken gebruik van NumPy, dit is de standaard bibliotheek van Python voor het gebruikt van arrays en abstracte wiskunde.
+De voorbeelden leunen ook op Matplotlib, een Python bibliotheek waarmee op een gemakkelijke manier signalen, arrays en complexe getallen gevisualiseerd kunnen worden.
+Terwijl Python “langzamer” is dan C/C++ worden bijna alle functies in Python/NumPy geïmplementeerd in C/C++ en hevig geoptimaliseerd.
+Op dezelfde manier bestaat de Python API dat we gebruiken uit functieverwijzingen naar C/C++ functies/klassen.
+Diegenen die een stevigere fundatie hebben met Matlab, Ruby of Perl dan met Python, zullen waarschijnlijk geen problemen ondervinden na het bekijken van de Python syntax.</p>
+</div>
+<div class="section" id="meehelpen">
+<h2>Meehelpen<a class="headerlink" href="#meehelpen" title="Permalink to this headline">¶</a></h2>
+<p>Als ook maar iets van dit boek hebt gelezen en je stuurt me een email (<a class="reference external" href="mailto:pysdr&#37;&#52;&#48;vt&#46;edu" rel="noopener noreferrer" target="_blank">pysdr<span>&#64;</span>vt<span>&#46;</span>edu</a>) met vragen/opmerkingen/suggesties dan, gefeliciteerd. Je hebt bijgedragen aan dit boek!</p>
+<p>Op een grotere manier kun je meehelpen aan dit boek op dezelfde manier als elk ander open-source project; door Git. Dit boek mag wel de vorm hebben van een website. Maar het bronmateriaal wordt gegenereerd op basis van de <a class="reference external" href="https://github.com/777arc/textbook" rel="noopener noreferrer" target="_blank">GitHub pagina</a> van dit boek. Voel je vrij om een issue of zelfs een Pull Request (PR) met verbeteringen of opmerkingen aan te maken. Zij die waardevolle terugkoppeling bieden zullen permanent worden toegevoegd aan de bedragenlijst hieronder. Ben je niet zo bekwaam met Git, maar je hebt wel opmerkingen? Voel je vrij mij te e-mailen op <a class="reference external" href="mailto:pysdr&#37;&#52;&#48;vt&#46;edu" rel="noopener noreferrer" target="_blank">pysdr<span>&#64;</span>vt<span>&#46;</span>edu</a>.</p>
+<p>De website en dit boek worden zonder reclame aangeboden omdat we reclame haten. Ik accepteer ook geen donaties op PayPal of Bitcoin. Er is letterlijk geen manier voor mij om betaald te worden voor dit boek. In plaats hiervan raad ik aan dit boek te delen met collega’s, studenten en andere levenslange studenten die geïnteresseerd zijn in dit onderwerp.</p>
+</div>
+<div class="section" id="erkenning">
+<h2>Erkenning<a class="headerlink" href="#erkenning" title="Permalink to this headline">¶</a></h2>
+<p>Bedankt aan iedereen die dit boek heeft gelezen en van feedback heeft voorzien, en met name aan:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://github.com/duggabe" rel="noopener noreferrer" target="_blank">Barry Duggan</a></li>
+<li>Matthew Hannon</li>
+<li>James Hayek</li>
+<li>Deidre Stuffer</li>
+<li>Tarik Benaddi voor het <a class="reference external" href="https://pysdr.org/fr/index-fr.html" rel="noopener noreferrer" target="_blank">vertalen van PySDR naar het Frans</a></li>
+</ul>
+</div>
+<div class="section" id="nederlandse-vertaling">
+<h2>Nederlandse vertaling<a class="headerlink" href="#nederlandse-vertaling" title="Permalink to this headline">¶</a></h2>
+<p>Bij het vertalen van dit boek heb ik de bewuste keuze gemaakt om een aantal termen in Engelse vorm te gebruiken. De belangrijkste hiervan is “sample”. Een “sample” nemen heet in het Nederlands een “monster” nemen. Wanneer we het echter gaan hebben over dingen als bemonsteringsfrequentie dan gaan we in mijn mening het doel voorbij van dingen duidelijk overbrengen. Sample-frequentie is leesbaarder en herkenbaar uit vele online bronnen. Om deze reden heb ik “sample” i.p.v. “monster” aangehouden.</p>
+<p>Ook hou ik de standaard afkortingen aan zoals SDR, DSP, FIR, IIR, LPF etc. Ik geef de Nederlandse vertaling van de termen waarna ik vervolgens de Engelse afkortingen gebruik.</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2023, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

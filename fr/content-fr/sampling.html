@@ -6,14 +6,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>3. échantillonnage IQ &#8212; PySDR: A Guide to SDR and DSP using Python</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="4. Modulation numérique" href="digital_modulation.html" />
@@ -32,6 +31,7 @@
 <div style="float: right; padding-bottom: 0;">
   <select onchange="location = this.value;">
     <option value="https://pysdr.org/index.html">English</option>
+    <option value="https://pysdr.org/nl/index-nl.html">Dutch</option>
     <option value="https://pysdr.org/fr/index-fr.html">French</option>
   </select>
 </div>
@@ -115,7 +115,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -289,8 +289,8 @@ Q \sin(2\pi ft)"/></p>
 <h2>Echantillonnage à l’aide de notre SDR<a class="headerlink" href="#echantillonnage-a-l-aide-de-notre-sdr" title="Permalink to this headline">¶</a></h2>
 <p>Pour obtenir des informations spécifiques à la SDR sur l’exécution de l’échantillonnage, consultez l’un des chapitres suivants :</p>
 <ul class="simple">
-<li>Chapitre <a class="reference internal" href="pluto.html#pluto-chapter"><span class="std std-ref">PlutoSDR en Python</span></a></li>
-<li>Chapitre <a class="reference internal" href="usrp.html#usrp-chapter"><span class="std std-ref">USRP en Python</span></a></li>
+<li>Chapitre <a class="reference internal" href="../content-nl/pluto.html#pluto-chapter"><span class="std std-ref">PlutoSDR in Python</span></a></li>
+<li>Chapitre <a class="reference internal" href="../content-nl/usrp.html#usrp-chapter"><span class="std std-ref">USRP in Python</span></a></li>
 </ul>
 </div>
 <div class="section" id="calcul-de-la-puissance-moyenne">
@@ -332,7 +332,7 @@ Si votre signal a une moyenne approximativement nulle - ce qui est généralemen
 <span class="n">PSD_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">PSD_log</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>En option, nous pouvons appliquer une fenêtre, comme nous l’avons appris dans le chapitre <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Domaine fréquentiel</span></a>. Le fenêtrage aura lieu juste avant la ligne de code avec fft().</p>
+<p>En option, nous pouvons appliquer une fenêtre, comme nous l’avons appris dans le chapitre <a class="reference internal" href="../content-nl/frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Het Frequentiedomein</span></a>. Le fenêtrage aura lieu juste avant la ligne de code avec fft().</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ajouter la ligne suivante après avoir fait x = x[0:1024]</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">hamming</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="c1"># appliquer une fenêtre de Hamming</span>
 </pre></div>
@@ -415,7 +415,7 @@ Alternativement, si vous savez que votre signal ne change pas rapidement, il est
     <div class="clearer"></div>
   </div>
     <div class="footer">
-      &copy;2022, Marc Lichtman.
+      &copy;2023, Marc Lichtman.
       
     </div>
 
