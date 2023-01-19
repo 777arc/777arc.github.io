@@ -719,6 +719,9 @@
     <span class="n">i_out</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c1"># increment output index</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="n">i_out</span><span class="p">]</span> <span class="c1"># remove the first two, and anything after i_out (that was never filled out)</span>
 
+<span class="c1">#new sample_rate should be 1187.5</span>
+<span class="n">sample_rate</span> <span class="o">/=</span> <span class="mi">16</span>
+
 <span class="c1"># Fine freq sync</span>
 <span class="n">samples</span> <span class="o">=</span> <span class="n">x</span> <span class="c1"># for the sake of matching the sync chapter</span>
 <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>

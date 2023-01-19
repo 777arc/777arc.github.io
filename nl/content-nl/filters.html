@@ -83,7 +83,7 @@
 <li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronisatie</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rds.html">15. Compleet voorbeeld</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. About the Author</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. Over de auteur</a></li>
 </ul>
 
 
@@ -163,11 +163,13 @@ Op dezelfde manier zal de uitgang altijd een signaal betreffen, bijv. een 1D arr
 <p>Er zijn vier basistypen filters: laagdoorlaat, hoogdoorlaat, banddoorlaat en bandstop (of sper).
 Elke type bewerkt signalen zodanig dat de focus op verschillende gebieden aan frequenties ligt.
 De onderstaande grafieken laten voor elk van de typen zien hoe de frequenties worden gefilterd.
-We merken op dat onderstaande figuren ook de negatieve frequenties tonen. Zolang de filters “reëel” zijn, zullen de filters gespiegeld zijn rondom 0 Hz.</p>
-<table><tbody><tr><td><div class="figure" style="text-align: center"><p><img  src="../_images/tikz-2a4ebb4e874d87cd2a7035455fb4c1ba59789bc5.svg" alt="Figure made with TikZ" /></p>
-</div></td><td><div class="figure" style="text-align: center"><p><img  src="../_images/tikz-80af9faadf6343d0c097b8a5acbbb74d58f37b82.svg" alt="Figure made with TikZ" /></p>
-</div></td><td><div class="figure" style="text-align: center"><p><img  src="../_images/tikz-30fb887d493e3860e8c4a5dbea1131d3dc13f2cb.svg" alt="Figure made with TikZ" /></p>
-</div></td><td><div class="figure" style="text-align: center"><p><img  src="../_images/tikz-354ca6decf2a0d8cdd72cb21fce08240922ee7b7.svg" alt="Figure made with TikZ" /></p>
+Eerst worden, voor de duidelijkheid, alleen de positieve frequenties getoond, daarna ook figuren met negatieve frequenties.
+Zolang de filters “reëel” zijn, zullen de filters gespiegeld zijn rondom 0 Hz.</p>
+<a class="reference internal image-reference" href="../_images/filter_types.png"><img alt="../_images/filter_types.png" class="align-center" src="../_images/filter_types.png" style="width: 703.5px; height: 145.6px;" /></a>
+<table><tbody><tr><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-2a4ebb4e874d87cd2a7035455fb4c1ba59789bc5.svg" alt="Figure made with TikZ" /></p>
+</div></td><td  style="padding: 0px"><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-80af9faadf6343d0c097b8a5acbbb74d58f37b82.svg" alt="Figure made with TikZ" /></p>
+</div></td></tr><tr><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-30fb887d493e3860e8c4a5dbea1131d3dc13f2cb.svg" alt="Figure made with TikZ" /></p>
+</div></td><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-04a538b198412d6b0a811cf01b2024f707137ae6.svg" alt="Figure made with TikZ" /></p>
 </div></td></tr></tbody></table><p>Elk filter laat bepaalde frequenties in een signaal door terwijl het andere frequenties blokkeert.
 Het bereik aan frequenties wat wordt doorgelaten heet de “doorlaatband”, en wat wordt geblokkeerd heet de “stopband”.
 In het geval van een laagdoorlaatfilter worden lage frequenties doorgelaten en hoge frequenties geblokkeerd, dus 0Hz zal altijd in de doorlaatband vallen.
