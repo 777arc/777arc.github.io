@@ -150,11 +150,54 @@ Bekijk, voor een visueel voorbeeld, de onderstaande constellatiediagrammen voor 
 QPSK geeft 2 bits per symbool, terwijl 16QAM een dubbele datasnelheid heeft van 4 bits per symbool. Maar zie hoe, voor QPSK, de symbolen niet de beslissingsgrens (x- en y-as) overlappen en dus de symbolen correct worden ontvangen. Tegelijkertijd overlappen de clusters wel in het 16QAM-diagram, met als resultaat dat er een hoop verkeerde symbolen worden ontvangen.</p>
 <a class="reference internal image-reference" href="../_images/qpsk_vs_16qam.png"><img alt="../_images/qpsk_vs_16qam.png" class="align-center" src="../_images/qpsk_vs_16qam.png" style="width: 591.3000000000001px; height: 217.8px;" /></a>
 <p>Een CRC-fout resulteert bij een protocol als TCP meestal in het opnieuw verzenden van een pakket.
-Als Alice een bericht stuurt naar Bob we zouden we liever niet Bob nog een bericht naar Alice laten sturen om de informatie opnieuw aan te vragen.
+Als Alice een bericht naar Bob stuurt zouden we liever niet Bob nog een bericht naar Alice laten sturen om de informatie opnieuw aan te vragen.
 Het doel van kanaalcodering is om overtollige of <strong>redundante</strong> informatie te sturen.
-Door redundante data mee te sturen bouwen we een failsafe in om foute pakketten, her transmissies en verloren data te kunnen voorkomen.</p>
+Door redundante data mee te sturen bouwen we een failsafe in om foute pakketten, hertransmissies en verloren data te kunnen voorkomen.</p>
 <p>Nu we weten waarom het nodig is kunnen we zien waar het wordt toegepast in de communicatieketen:</p>
-<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-ed6bcc27a41a1f31f64986feebe225bab43d2792.svg" alt="Figure made with TikZ" /></p>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\large]
+\definecolor{yellowish}{HTML}{FFE699}
+\definecolor{grayish}{HTML}{D9D9D9}
+\tikzset{
+   rect/.style={
+      align=center,
+      text=black,
+      minimum width=2.5cm,
+      minimum height=2cm}
+}
+\tikzset{
+   done/.style={rect, fill=grayish }
+}
+\tikzset{
+   todo/.style={rect, fill=yellowish}
+}
+\tikzset{
+   arrow/.style={line width=1mm}
+}
+\node [done] (broncodering) {Broncodering\\(compressie)};
+\node [todo, right=1.5cm of broncodering ]  (codering) {Kanaalcodering\\(foutcorrectie)};
+\node [done, right=1.5cm of codering ]    (modulatie) {Modulatie\\(bijv. PSK, QAM)};
+\node [done, right=1.5cm of modulatie        ]  (dac) {DAC\\(digitaal-\\analoog-omzetter)};
+\node [done, right=1.5cm of dac      ]  (tx) {RF Circuit\\(filters,verschuiving,\\versterking)};
+\node[rect, cloud, cloud puffs=15.7, cloud ignores aspect, minimum width=5cm, minimum height=2cm, align=center, fill=grayish, right=1.5cm of tx] (channel) {Draadloos\\kanaal};
+\node [done] at (0,-4)                   (rx) {RF Circuit\\(Filters,verschuiving,\\versterking)};
+\node [done, right=1.5cm of rx]      (adc) {ADC\\(analoog-\\digitaal-omzetter)};
+\node [done, right=1.5cm of adc]         (demod) {Demodulatie};
+\node [todo, right=1.5cm of demod]        (decodering) {Kanaal-\\decodering};
+\node [done, right=1.5cm of decodering]   (brondecodering) {Bron-\\decodering};
+\draw [arrow, stealth-](broncodering.west) -- ++(-2,0) node[left]{\emph{Data}};
+\draw[arrow, -stealth] (broncodering.east)--  (codering.west);
+\draw[arrow, -stealth] (codering.east)--  (modulatie.west);
+\draw[arrow, -stealth] (modulatie.east)-- (dac.west);
+\draw[arrow, -stealth] (dac.east)--     (tx.west);
+\draw[arrow, -stealth] (tx.east)--     (channel.west);
+\draw[arrow, -stealth] (channel.south) -- ++(0,-0.5) -| (rx.north);
+\draw[arrow, -stealth] (rx.east) --  (adc.west);
+\draw[arrow, -stealth] (adc.east)--    (demod.west);
+\draw[arrow, -stealth] (demod.east)--    (decodering.west);
+\draw[arrow, -stealth] (decodering.east)--      (brondecodering.west);
+\draw[arrow, -stealth] (brondecodering.east) --++(1,0) node[right]{\emph{Data (hopelijk)}};</tt>)</p>
+!pdftoppm command cannot be run</div>
 </div><p>Er vinden meerdere stappen van codering plaats in de keten. Broncodering, de eerste stap, lijkt op kanaalcodering; broncodering heeft als doel de data zoveel mogelijk te comprimeren voordat het verzonden wordt, net als een bestandje zippen voordat je het e-mailt.
 In andere woorden, de uitgang van de broncodering zal <strong>kleiner</strong> zijn dan de data ingang, maar de uitgang van kanaalcodering zal langer zijn dan de ingang want er is redundante informatie toegevoegd.</p>
 </div>
@@ -168,7 +211,7 @@ Voor een herhalings-3 code zouden we elk bit driemaal versturen:</p>
 <li>0 <span class="raw-html">&rarr;</span> 000</li>
 <li>1 <span class="raw-html">&rarr;</span> 111</li>
 </ul>
-<p>Het bericht 10010110 wordt na de kanaalcodering dan verstuurt als 111000000111000111111000.</p>
+<p>Het bericht 10010110 wordt na de kanaalcodering dan verstuurd als 111000000111000111111000.</p>
 <p>Sommige van de codes werken op blokken van bits terwijl anderen op een stroom van bits werken.
 De codes die op blokken werken worden “blokcodes” genoemd, de codes die op stromen werken heten “convolutionele codes”. Dit zijn de twee primaire codes. Onze herhalings-3 code is een blokcode dat werkt op blokken van drie bits.</p>
 <p>Trouwens, deze codes worden niet alleen voor draadloze kanalen gebruikt. Ooit eens data op een harde schijf of SSD gezet en afgevraagd waarom dat altijd goed gaat? Geheugen schrijven en dan lezen is vergelijkbaar met een communicatiesysteem. Harde schijf/SSD controllers hebben foutcorrectie ingebouwd. Dit is volledig onzichtbaar voor het OS omdat het in de controller zit ingebouwd. Cd-roms gebruikten de gestandaardiseerde Reed-Solomon codes.</p>
@@ -188,10 +231,10 @@ Een lagere code-snelheid betekent meer redundantie maar minder doorvoer.</p>
 </div>
 <div class="section" id="modulatie-en-codering">
 <h2>Modulatie en codering<a class="headerlink" href="#modulatie-en-codering" title="Permalink to this headline">¶</a></h2>
-<p>In het <a class="reference internal" href="digital_modulation.html#modulation-chapter"><span class="std std-ref">Digitale Modulatie</span></a> hoofdstuk hebben we de invloed van ruis op modulatieschema’s bekeken. Bij een lage signaalruisverhouding heb je lager orde modulatieschema nodig (bijv. QPSK) om met de ruis om te kunnen gaan. Bij een hoge SNR kun je een schema als 256QAM toepassen om meer bits per seconden over te kunnen sturen. Kanaalcodering werkt hetzelfde; je wilt een lagere code-snelheid bij lage signaal-ruis verhoudingen en bij hoge signaal-ruis verhoudingen wil je een code-snelheid van bijna 1 gebruiken. Moderne communicatiesystemen gebruiken combinaties van modulatie- en codeschema’s, MCS. Elke MCS specificeert een modulatie- plus codeschema wat bij een specifieke SNR gebruikt moet worden.</p>
+<p>In het <a class="reference internal" href="digital_modulation.html#modulation-chapter"><span class="std std-ref">Digitale Modulatie</span></a> hoofdstuk hebben we de invloed van ruis op modulatieschema’s bekeken. Bij een lage signaal-ruisverhouding heb je een lager orde van modulatieschema nodig (bijv. QPSK) om met de ruis om te kunnen gaan. Bij een hoge SNR kun je een schema als 256QAM toepassen om meer bits per seconden over te kunnen sturen. Kanaalcodering werkt hetzelfde; je wilt een lagere codesnelheid bij lage signaal-ruisverhoudingen en bij hoge signaal-ruisverhoudingen wil je een codesnelheid van bijna 1 gebruiken. Moderne communicatiesystemen gebruiken combinaties van modulatie- en codeschema’s, MCS. Elke MCS specificeert een modulatie- plus codeschema wat bij een specifieke SNR gebruikt moet worden.</p>
 <p>Moderne systemen passen de MCS real-time aan op basis van de draadloze kanaalcondities. De ontvanger geeft feedback aan de zender over de kanaalkwaliteit.
 Deze feedback moet worden gegeven voordat de kwaliteit van het draadloze kanaal verandert, wat in ms kan gebeuren.
-Deze adaptieve aanpak leidt tot de hoogste doorvoersnelheid mogelijk, en wordt gebruikt door moderne technologieën zoals LTE, 5G en wifi.
+Deze adaptieve aanpak leidt tot de hoogst mogelijke doorvoersnelheid, en wordt door moderne technologieën gebruikt zoals LTE, 5G en wifi.
 Hieronder zie je hoe een telefoontoren de MCS aanpast op basis van de afstand tot de gebruiker.</p>
 <a class="reference external image-reference" href="../_images/adaptive_mcs.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/adaptive_mcs.svg" class="align-center" src="../_images/adaptive_mcs.svg" /></a>
 <p>Wanneer de MCS wordt aangepast, als je dit uitzet tegenover de SNR, dan krijg je een stapvormige grafiek zoals het figuur hieronder. Protocollen zoals LTE hebben vaak een tabel wat aangeeft welke MCS gebruikt zou moeten worden bij welke SNR.</p>
@@ -199,7 +242,7 @@ Hieronder zie je hoe een telefoontoren de MCS aanpast op basis van de afstand to
 </div>
 <div class="section" id="hamming-code">
 <h2>Hamming Code<a class="headerlink" href="#hamming-code" title="Permalink to this headline">¶</a></h2>
-<p>Laten we eens kijken naar simpele foutcorrectiecodes. De Hamming-code was de eerste niet-triviale code dat werkt ontwikkeld.
+<p>Laten we eens kijken naar simpele foutcorrectiecodes. De Hamming-code was de eerste niet-triviale code dat werd ontwikkeld.
 Aan het einde van 1940, bij Bell Laboratories, werkte Richard Hamming met een elektromechanische computer die ponskaarten gebruikte.
 Wanneer er fouten werden gevonden moest de computer stoppen en de bedienden moesten de kaarten repareren.
 Hamming raakte gefrustreerd dat zijn programma telkens bij een fout opnieuw opgestart moest worden.
@@ -213,7 +256,7 @@ Elke pariteitsbit <img class="math" src="../_images/math/d40e7b990bb5ccef11dafe5
 Dit is met een rode X hieronder aangegeven.
 Wanneer we dan een databit willen gebruiken, dan hebben we de pariteitsbits nodig die hier verantwoordelijk voor zijn.
 Om databit <img class="math" src="../_images/math/860096af1bc6d8f83048dd8270590626186b352c.svg" alt="d_{11}"/> te gebruiken zouden we pariteitsbit <img class="math" src="../_images/math/7fdcc9d4554d3b87718322178254291595097e7e.svg" alt="p_8"/> ,en alle pariteitsbits die daarvoor kwamen, nodig hebben.
-De tabel verteld ons dan hoeveel pariteitsbits we nodig hebben voor elke databit. Dit patroon gaat oneindig door.</p>
+De tabel vertelt ons dan hoeveel pariteitsbits we nodig hebben voor elke databit. Dit patroon gaat oneindig door.</p>
 <a class="reference external image-reference" href="../_images/hamming.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/hamming.svg" class="align-center" src="../_images/hamming.svg" /></a>
 <p>De hamming-code is een blokcode wat opereert op N databits per keer.
 Met 3 pariteitsbits kunnen we opereren op een blok van 4 databits per keer.
@@ -224,7 +267,7 @@ Dit schema zouden we aangeven als Hamming(7,4), waarbij het eerste getal aangeef
 <li>Het kan een bitfout repareren</li>
 <li>Het kan twee fouten detecteren maar niet repareren</li>
 </ul>
-<p>Het proces van databits coderen met de Hamming-code kan gedaan worden door een matrixvermenigvuldiging uit te voeren met de “generator matrix”.
+<p>Het proces van databits met de Hamming-code coderen kan worden gedaan door een matrixvermenigvuldiging uit te voeren met de “generator matrix”.
 In het onderstaande voorbeeld is 1011 de databit-vector dat we willen coderen en naar de ontvanger sturen.
 De 2D matrix is de “generator matrix” dat het codeschema definieert. Het resultaat van de vermenigvuldiging is een <em>code-woord</em> dat we willen versturen.</p>
 <div class="math">
@@ -251,7 +294,7 @@ De Hamming-codes van eerder, gebruiken harde beslissingen, convolutionele codes 
 </div>
 <div class="section" id="shannon-limiet">
 <h2>Shannon Limiet<a class="headerlink" href="#shannon-limiet" title="Permalink to this headline">¶</a></h2>
-<p>De limiet van Shannon, of de capaciteit van Shannon, is een ongelofelijk stuk theorie dat ons verteld hoeveel bits-per-seconde foutvrij kan worden verzonden:</p>
+<p>De limiet van Shannon, of de capaciteit van Shannon, is een ongelofelijk stuk theorie dat ons vertelt hoeveel bits-per-seconde foutvrij kan worden verzonden:</p>
 <div class="math">
 <p><img src="../_images/math/64252d6abb25eef45398e28a159e06f80531a981.svg" alt="C = B \cdot log_2 \left( 1 + \frac{S}{N}   \right)"/></p>
 </div><ul class="simple">
@@ -260,18 +303,18 @@ De Hamming-codes van eerder, gebruiken harde beslissingen, convolutionele codes 
 <li>S – Gemiddelde signaalvermogen ontvanger [Watt]</li>
 <li>N – Gemiddelde ruisvermogen [Watt]</li>
 </ul>
-<p>Deze vergelijking geeft aan welke snelheid een MCS zou kunnen bereiken om zonder fouten data over te sturen bij een gegeven SNR.
+<p>Deze vergelijking laat zien welke snelheid een MCS zou kunnen bereiken om zonder fouten data over te sturen bij een gegeven SNR.
 Het zou iets logischer zijn om de limiet in bits/sec/Hz uit te drukken i.p.v. bits/sec per spectrumdeel:</p>
 <div class="math">
 <p><img src="../_images/math/baccf5717719d4baf9026eb75dad3377e7586ec3.svg" alt="\frac{C}{B} = log_2 \left( 1 + \mathrm{SNR}   \right)"/></p>
 </div><p>Hierbij is de SNR lineair gegeven (niet dB).
-Maar bij het plotten geven we voor het gemakt de SNR meestal wel in dB:</p>
-<img alt="../_images/shannon_limit.svg" class="align-center" src="../_images/shannon_limit.svg" /><p>Soms wordt de Shannon-limiet weergeven met een x-as in “signaal/ruisenergie per bit” of <img class="math" src="../_images/math/047c5a05d03a18274f646f1a02b75c96bea3b71f.svg" alt="E_n/N_0"/>; dit is gewoon een alternatief voor SNR.</p>
-<p>Het kan helpen om te beseffen dat wanneer de SNR vrij hoog is (bijv. boven de 10 dB) de Shannon-limiet benadert kan worden met <img class="math" src="../_images/math/2a73be06bb83e105c5fbe8c0f7bbb3eefdc57746.svg" alt="log_2 \left( \mathrm{SNR} \right)"/>, wat ongeveer gelijk is aan <img class="math" src="../_images/math/323369ba08410c0ddc520da937179ff76d808817.svg" alt="\mathrm{SNR_{dB}}/3"/> (<a class="reference external" href="https://en.wikipedia.org/wiki/Shannon%E2%80%93Hartley_theorem#Bandwidth-limited_case" rel="noopener noreferrer" target="_blank">(wordt hier uitgelegd)</a>).
+Maar bij het plotten geven we voor het gemak de SNR meestal wel in dB:</p>
+<img alt="../_images/shannon_limit.svg" class="align-center" src="../_images/shannon_limit.svg" /><p>Soms wordt de Shannon-limiet in “signaal/ruisenergie per bit” weergeven of <img class="math" src="../_images/math/047c5a05d03a18274f646f1a02b75c96bea3b71f.svg" alt="E_n/N_0"/>; dit is gewoon een alternatief voor SNR.</p>
+<p>Het kan helpen om te beseffen dat wanneer de SNR vrij hoog is (bijv. boven de 10 dB) de Shannon-limiet benaderd kan worden met <img class="math" src="../_images/math/2a73be06bb83e105c5fbe8c0f7bbb3eefdc57746.svg" alt="log_2 \left( \mathrm{SNR} \right)"/>, wat ongeveer gelijk is aan <img class="math" src="../_images/math/323369ba08410c0ddc520da937179ff76d808817.svg" alt="\mathrm{SNR_{dB}}/3"/> (<a class="reference external" href="https://en.wikipedia.org/wiki/Shannon%E2%80%93Hartley_theorem#Bandwidth-limited_case" rel="noopener noreferrer" target="_blank">(wordt hier uitgelegd)</a>).
 Als je bijvoorbeeld een SNR hebt van 24 dB, dan komt dat overeen met ongeveer 8 bits/sec/Hz, dus als je 1 MHz moet gebruiken, dan geeft dat 8 Mbps.
 Nu denk je misschien “Dat is alleen theoretisch”, maar moderne communicatiesystemen komen erg dicht bij die limiet, dus het geeft je tenminste een grove inschatting om naartoe te werken.
-Je zou dat getal altijd kunnen halveren om rekening te houden met de overhead die pakketjes of frames introduceren en niet-ideale MCS.</p>
-<p>De maximale snelheid dat 802.11n wifi kan halen in de 2.4 GHz band, met een kanaalbreedte van 20 MHz, is 300 Mbps volgens de specificaties.
+Je zou dat getal altijd kunnen halveren om rekening te houden met de overhead die pakketjes of frames introduceren en een niet-ideale MCS.</p>
+<p>De maximale snelheid dat 802.11n wifi in de 2.4 GHz band kan halen, met een kanaalbreedte van 20 MHz, is 300 Mbps volgens de specificaties.
 Een optie om die snelheid te halen is om pal naast de router te gaan zitten.
 In dit geval krijg je misschien een SNR van 60 dB, maar om praktische redenen heeft de snelste MCS waarschijnlijk niet zo’n hoge SNR nodig.
 Je zou zelfs naar de <a class="reference external" href="https://en.wikipedia.org/wiki/IEEE_802.11n-2009#Data_rates" rel="noopener noreferrer" target="_blank">MCS lijst voor 802.11n</a> kunnen kijken.
@@ -279,7 +322,7 @@ Je zou zelfs naar de <a class="reference external" href="https://en.wikipedia.or
 Dat betekent dus dat zelfs bij 60 dB het wifi signaal nog steeds 64-QAM zal gebruiken.
 Bij 25 dB is de Shannon-limiet ongeveer 8.3 bits/sec/Hz, dus 166 Mbps bij een bandbreedte van 20 MHz.
 Als we ook rekening houden met MIMO, dit wordt later behandeld, dan krijgen we 4 64-QAM signalen tegelijkertijd met een totale snelheid van 664 Mbps.
-Als we dat getal halveren dan komen we behoorlijk in de buurt van de 300 Mbps dat 802.11n wifi beloofd op de 2.4 GHz band.</p>
+Als we dat getal halveren dan komen we behoorlijk in de buurt van de 300 Mbps dat 802.11n wifi belooft op de 2.4 GHz band.</p>
 <p>Het bewijs achter de Shannon-limiet is best gestoord; dit heeft wiskunde wat hierop lijkt:</p>
 <a class="reference internal image-reference" href="../_images/shannon_limit_proof.png"><img alt="../_images/shannon_limit_proof.png" class="align-center" src="../_images/shannon_limit_proof.png" style="width: 784.0px; height: 296.09999999999997px;" /></a>
 <p>Kijk voor meer informatie <a class="reference external" href="https://en.wikipedia.org/wiki/Shannon%E2%80%93Hartley_theorem" rel="noopener noreferrer" target="_blank">hier</a>.</p>
@@ -291,7 +334,7 @@ Als we dat getal halveren dan komen we behoorlijk in de buurt van de 300 Mbps da
 <li>Turbo codes, dit wordt gebruikt in 3G, 4G, NASA’s ruimtevaartuigen.</li>
 <li>LDPC-codes, gebruikt in DVB-S2, WiMAX, IEEE 802.11n.</li>
 </ol>
-<p>Beide codes benaderen de Shannon-limiet (dus onder bepaalde signaalruisverhoudingen wordt de limiet bijna gehaald).
+<p>Beide codes benaderen de Shannon-limiet (dus onder bepaalde signaal-ruisverhoudingen wordt de limiet bijna gehaald).
 Hamming-codes of andere simpele codes komen niet eens in de buurt van de Shannon-limiet.
 Voor wat betreft onderzoek valt er niet veel meer te halen in het verbeteren van de codes voor wat betreft toegevoegde overhead. Huidig onderzoek is meer gericht op het verbeteren van het decoderen; minder rekenintensief maken en kunnen omgaan met kanaalfeedback.</p>
 <p>Low-density parity-check (LDPC) codes zijn een groep van hele efficiënte lineaire blokcodes.

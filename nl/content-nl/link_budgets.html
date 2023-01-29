@@ -81,7 +81,7 @@
 <li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronisatie</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rds.html">15. Compleet voorbeeld</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. About the Author</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. Over de auteur</a></li>
 </ul>
 
 
@@ -139,8 +139,8 @@
 <div class="section" id="introductie">
 <h2>Introductie<a class="headerlink" href="#introductie" title="Permalink to this headline">¶</a></h2>
 <p>Een “link” budget is een opsomming van alle winsten en verliezen tussen de zender en ontvanger van een communicatiesysteem.
-Het beschrijft een richting van een draadloos kanaal.
-De meeste communicatiesystemen zijn echter bi directioneel en hebben dus aparte up- en downlink budgetten.
+Het beschrijft één richting van een draadloos kanaal.
+De meeste communicatiesystemen zijn echter bidirectioneel en hebben dus aparte up- en downlink budgetten.
 Het resultaat van zo’n budget geeft je een grove inschatting van de signaal-ruisverhouding (SNR) die je kunt verwachten bij de ontvanger.
 Na verdere analyse kun je dan besluiten of de SNR hoog genoeg is voor jouw doel.</p>
 <p>We bestuderen linkbudgetten niet zodat je er zelf een op kunt stellen, maar meer om een beeld te krijgen van draadloze communicatie op systeemniveau.</p>
@@ -152,7 +152,20 @@ Na verdere analyse kun je dan besluiten of de SNR hoog genoeg is voor jouw doel.
 In dit hoofdstuk zullen we een richting behandelen, namelijk vanaf de zender (Tx) naar ontvanger (Rx).
 We weten voor een gegeven systeem wat het zendvermogen is; dit is meestal een instelling bij de zender.
 Maar hoe bepalen we het vermogen wat aankomt bij de ontvanger?</p>
-<div class="figure" style="text-align: center"><p><img width="80%" src="../_images/tikz-15ca49c95ca4c1a3e79f8b2a51bfe6126b817f1f.svg" alt="Figure made with TikZ" /></p>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[auto, node distance=2cm,&gt;=latex',font=\sffamily]
+\tikzset{block/.style = {draw, fill=white, rectangle,
+                  minimum height=3em, minimum width=2cm},
+        input/.style = {coordinate},
+        output/.style = {coordinate},
+        pinstyle/.style = {pin edge={to-,t,black}}
+    }
+\node[block](tx)                          {zender};
+\node[antenna](txant) at (tx.north) {};
+\draw[snake=expanding waves] (txant.north east) -- ++(1,0);
+\node[block,right = 6cm of tx](rx)        {ontvanger};
+\node[antenna,xscale=-1] at (rx.north) {};</tt>)</p>
+!pdftoppm command cannot be run</div>
 </div><p>We hebben vier systeemparameters nodig om het ontvangen vermogen te bepalen. Deze zijn hieronder opgesomd samen met de meest gebruikte (Engelstalige) afkortingen.
 We zullen ieder apart behandelen in dit hoofdstuk.</p>
 <ul class="simple">
@@ -161,7 +174,29 @@ We zullen ieder apart behandelen in dit hoofdstuk.</p>
 <li><strong>Gr</strong> - Antenneversterking ontvanger (Gain receiver)</li>
 <li><strong>Lt</strong> - Afstand tussen zender en ontvanger dus hoeveelheid transmissieverlies (Path Loss)</li>
 </ul>
-<div class="figure" style="text-align: center"><p><img width="100%" src="../_images/tikz-51c329379cd87fd53a75f47107d813374e758c25.svg" alt="Figure made with TikZ" /></p>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[auto, node distance=2cm,&gt;=latex',font=\sffamily\small]
+\tikzset{block/.style = {draw, fill=white, rectangle,
+                  minimum height=3em, minimum width=2cm},
+        input/.style = {coordinate},
+        output/.style = {coordinate},
+        pinstyle/.style = {pin edge={to-,t,black}}
+    }
+\node[block](tx)                            {zender};
+\node[block,right = 6cm of tx](rx)          {ontvanger};
+\node[antenna](txant) at (tx.north) {};
+\node[antenna,xscale=-1](rxant) at (rx.north) {};
+\draw[snake=expanding waves]
+  (txant.east) -- ++(1,0) coordinate(begin);
+\draw[ultra thick,gray]
+  (begin) -- ++(2,0) coordinate(midden);
+\draw[-&gt;,ultra thick, gray]
+  (midden) -- ++(2,0) node[right,align=center]  {Ontvangen\\vermogen \textbf{Pr}};
+\draw (midden) node[align=center, below]        {transmissieverlies\\\textbf{Lp}};
+\node[above=1cm of txant.north,align=center]    {Antenneversterking\\zender \textbf{Gt}};
+\node[above=1cm of rxant.north,align=center]    {Antenneversterking\\ontvanger \textbf{Gr}};
+\node[above right = 1 cm of txant.east,align=center]     {Zendvermogen\\\textbf{Gt}};</tt>)</p>
+!pdftoppm command cannot be run</div>
 </div><div class="section" id="zendvermogen">
 <h3>Zendvermogen<a class="headerlink" href="#zendvermogen" title="Permalink to this headline">¶</a></h3>
 <p>Zendvermogen is vrij simpel; het is uitgedrukt in Watt, dBW or dBm (dBm is een afkorting voor dBmW).
@@ -241,7 +276,7 @@ In deze situaties worden andere modellen gebruikt.
 Een veelgebruikt model voor steden en bewoonde gebieden is het Okumura–Hata model:</p>
 <div class="math">
 <p><img src="../_images/math/14f2a692d9c7a9632a0334d816d150f76aae0695.svg" alt="L_{path} = 69.55 + 26.16 \log_{10} f - 13.82 \log_{10} h_B - C_H + \left[ 44.9 - 6.55 \log_{10} h_B \right] \log_{10} d"/></p>
-</div><p>Hierbij is <img class="math" src="../_images/math/33400e0e3a8b767999d8b77eb40a0261e8fe9548.svg" alt="L_{path}"/> het transmissieverlies in dB, <img class="math" src="../_images/math/df1bda24adad389d286c99c1a3f5a3aa122a91c8.svg" alt="h_B"/> is de hoogte van de antenne boven de grond in meters, <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is de draaggolffrequentie in MHz, <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> is de afstand tussen zender en ontvanger in km en <img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> wordt de “antenne correctiefactor” genoemd en wordt gedefinieerd aan de hand van het frequentiebereik en de grootte van de stad:</p>
+</div><p>Hierbij is <img class="math" src="../_images/math/33400e0e3a8b767999d8b77eb40a0261e8fe9548.svg" alt="L_{path}"/> het transmissieverlies in dB, <img class="math" src="../_images/math/df1bda24adad389d286c99c1a3f5a3aa122a91c8.svg" alt="h_B"/> is de hoogte van de antenne boven de grond in meters, <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is de draaggolffrequentie in MHz, <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> is de afstand tussen zender en ontvanger in km en <img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> wordt de “antennecorrectiefactor” genoemd en wordt gedefinieerd aan de hand van het frequentiebereik en de grootte van de stad:</p>
 <p><img class="math" src="../_images/math/dd8c0802ae0ea41817fe469ba0d6950e6bf6927b.svg" alt="C_H"/> voor dorpen:</p>
 <div class="math">
 <p><img src="../_images/math/e6274194defe270556e489484bdc9a0a90018fef.svg" alt="C_H = 0.8 + (1.1 \log_{10} f - 0.7 ) h_M - 1.56 \log_{10} f"/></p>
@@ -317,7 +352,7 @@ De ruis ontstaat doordat onze ontvanger een versterker en andere elektronica hee
 <p><img src="../_images/math/2910804c9e37ce20bd06837b74c915adb9f7ed3a.svg" alt="P_{noise} = kTB"/></p>
 </div><ul class="simple">
 <li><img class="math" src="../_images/math/30d4f39194cc2ced00937a2642c0345222fed6cd.svg" alt="k"/> – Boltzmann’s constante = 1.38 x 10-23 J/K = <strong>-228.6 dBW/K/Hz</strong>. De Bolzmann constante, voor de nieuwsgierigen onder ons, is een fysische constante wat de gemiddelde energie van deeltjes in een gas relateert aan de temperatuur van het gas.</li>
-<li><img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/> – Is de temperatuur van het systeem in Kelvin (cryocoolers anyone?), voornamelijk veroorzaakt door de versterker. Deze term is moeilijk te vinden en wordt meestal alleen benadert. Je betaalt meer voor een versterker die een lage temperatuur kan behouden voor hetzelfde vermogen.</li>
+<li><img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/> – Is de temperatuur van het systeem in Kelvin (cryocoolers anyone?), voornamelijk veroorzaakt door de versterker. Deze term is moeilijk te vinden en wordt meestal alleen benaderd. Je betaalt meer voor een versterker die een lage temperatuur kan behouden voor hetzelfde vermogen.</li>
 <li><img class="math" src="../_images/math/a04d3384fedfc300642f10c4207debb695a20fce.svg" alt="B"/> – Bandbreedte waarover we de ruis berekenen. Voor een LTE signaal van 10 MHz breed gebruiken we dus 10MHz voor <img class="math" src="../_images/math/a04d3384fedfc300642f10c4207debb695a20fce.svg" alt="B"/>, of 70 dbHz.</li>
 </ul>
 <p>Het vermenigvuldigen (of optellen in dB) van kTB geeft het ruisvermogen, de noemer van de SNR breuk.</p>
@@ -335,7 +370,7 @@ Hoe hoger de SNR, hoe meer bits je in een symbool kan stoppen zonder teveel bitf
 </div>
 <div class="section" id="voorbeeld-budget-ads-b">
 <h2>Voorbeeld budget: ADS-B<a class="headerlink" href="#voorbeeld-budget-ads-b" title="Permalink to this headline">¶</a></h2>
-<p>Het Automatic Dependent Surveillance-Broadcast (ADS-B) protocool wordt gebruikt door vliegtuigen om hun positie en overige informatie over het vliegtuig door te sturen naar de luchtverkeersleiding en andere vliegtuigen. ADS-B werkt autonoom en gebruikt het navigatiesysteem en andere computers van het vliegtuig om de informatie te genereren. De berichten gebruiken geen encryptie (yay!).
+<p>Het Automatic Dependent Surveillance-Broadcast (ADS-B) protocool wordt door vliegtuigen gebruikt om de positie en overige informatie over het vliegtuig door te sturen naar de luchtverkeersleiding en andere vliegtuigen. ADS-B werkt autonoom en gebruikt het navigatiesysteem en andere computers van het vliegtuig om de informatie te genereren. De berichten gebruiken geen encryptie (yay!).
 De ADS-B apparatuur is momenteel in het luchtruim van Australië verplicht terwijl de VS het slechts voor bepaalde vliegtuigen verplicht stelt, afhankelijk van de grootte.</p>
 <a class="reference internal image-reference" href="../_images/adsb.jpg"><img alt="../_images/adsb.jpg" class="align-center" src="../_images/adsb.jpg" style="width: 230.39999999999998px; height: 306.0px;" /></a>
 <p>De fysieke laag (PHY) van ADS-B heeft de volgende eigenschappen.</p>
@@ -360,7 +395,7 @@ We kunnen dan de FSPL voor die afstand en een frequentie van 1090 MHz berekenen:
 
 \mathrm{FSPL}_{dB} = 122.7 \left[ \mathrm{dB} \right]"/></p>
 </div><p>We zouden ook de FSPL als functie van de afstand <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> kunnen beschrijven. Dan zouden we de maximale afstand kunnen berekenen voor een gegeven signaal-ruisverhouding.</p>
-<p>Omdat we zeker geen open ruimte hebben kunnen we 3 dB toevoegen aan de verliezen.
+<p>Omdat we zeker geen open ruimte hebben kunnen we 3 dB aan de verliezen toevoegen.
 We voegen nog een extra 3 dB aan de verliezen toe vanwege een imperfecte antenne, kabels en connectoren.
 Uiteindelijk ziet ons budget er zo uit:</p>
 <table border="1" class="colwidths-given docutils align-default">

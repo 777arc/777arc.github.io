@@ -83,7 +83,7 @@
 <li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronisatie</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rds.html">15. Compleet voorbeeld</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. About the Author</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">16. Over de auteur</a></li>
 </ul>
 
 
@@ -154,7 +154,7 @@ Volgens de <strong>centrale limietstelling</strong> zal de sommatie van vele sto
 <p>De normale verdeling heeft twee parameters: gemiddelde/verwachtingswaarde en variantie.
 We hebben al behandeld waarom het gemiddelde als nul kan worden gezien, omdat een statische afwijking altijd eraf kan worden gehaald.
 De variantie verteld ons hoe “sterk” de ruis is.
-Een hogere variantie zal lijden tot hogere nummers.
+Een hogere variantie zal leiden tot hogere nummers.
 Om deze reden wordt het vermogen ook gedefinieerd door de variantie.</p>
 <p>De variantie staat gelijk aan de standaard deviatie in het kwadraat (<img class="math" src="../_images/math/6ba6a750dfd04fbdaf6ec0daeca3e068d61d54e1.svg" alt="\sigma^2"/>).</p>
 </div>
@@ -165,7 +165,7 @@ Als je van dB hebt gehoord, voel je dan vrij om dit deel over te slaan.</p>
 <p>Het werken met dB is extreem handig wanneer we met kleine en grote getallen op hetzelfde moment werken, of gewoon een hoop supergrote getallen. Kijk eens naar voorbeelden 1 en 2 om te zien hoe moeizaam het is zonder dB te werken:</p>
 <p>Voorbeeld 1: Signaal 1 heeft een vermogen van 2 Watt en de ruisvloer is 0.0000002 Watt.</p>
 <p>Voorbeeld 2: Een vuilnisbelt is 100000 keer luider dan een stille omgeving, terwijl een kettingzaag 10000 keer luider is dan een vuilnisbelt (geluidsgolven).</p>
-<p>Zonder dB, dus in normale “lineaire” termen, hebben we een hoop nullen nodig om de waarden te weergeven in voorbeelden 1 en 2.
+<p>Zonder dB, dus in normale “lineaire” termen, hebben we een hoop nullen nodig om de waarden in voorbeelden 1 en 2 te kunnen weergeven.
 Als we de waarden van signaal 1 zouden willen tonen in de tijd, dan zouden we de ruisvloer niet eens zien!
 Als bijvoorbeeld de y-as van 0 tot 3 Watt loopt, dan zou de ruis te klein zijn om zichtbaar te worden in de grafiek.
 Om beide waarden in dezelfde schaal te kunnen gebruiken, moeten we overgaan naar de logaritmische schaal.</p>
@@ -330,7 +330,7 @@ Maar waarom hadden we alleen “reële” ruis gegenereerd, en hoe werkt dat met
 </div>
 <div class="section" id="complexe-ruis">
 <h2>Complexe Ruis<a class="headerlink" href="#complexe-ruis" title="Permalink to this headline">¶</a></h2>
-<p>“Complexe Gaussische” ruis zullen we ervaren met signalen in de basisband; het ruisvermogen wordt evenredig verdeelt over de reële en imaginaire delen.
+<p>“Complexe Gaussische” ruis zullen we ervaren met signalen in de basisband; het ruisvermogen wordt evenredig over de reële en imaginaire delen verdeeld.
 Nog belangrijker is te beseffen dat de reële en imaginaire delen onafhankelijk van elkaar zijn; de waarde van het reële deel zegt niets over de waarde van het imaginaire deel.</p>
 <p>In Python kunnen we complexe gaussische ruis genereren met:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
@@ -347,7 +347,7 @@ Om complexe ruis te generen meet een vermogen van 1 (wat dingen eenvoudiger maak
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># AWGN with unity power</span>
 </pre></div>
 </div>
-<p>Om de complexe ruis te tonen in het tijddomein hebben we, zoals bij elk complex signaal, twee regels nodig:</p>
+<p>Om de complexe ruis in het tijddomein te weergeven hebben we, zoals bij elk complex signaal, twee regels nodig:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="s1">&#39;.-&#39;</span><span class="p">)</span>
@@ -368,7 +368,7 @@ In dit geval hebben beide assen een onafhankelijke gaussische verdeling.</p>
 </div>
 <a class="reference internal image-reference" href="../_images/noise_iq.png"><img alt="../_images/noise_iq.png" class="align-center" src="../_images/noise_iq.png" style="width: 357.59999999999997px; height: 330.0px;" /></a>
 <p>Dit ziet eruit zoals we het zouden verwachten; een willekeurige klodder met het midden rond 0+0j, de oorsprong.
-Laten we voor de lol, om te kijken hoe het eruit ziet, wat ruis proberen toe te voegen aan een QPSK signaal:</p>
+Laten we voor de lol, om te kijken hoe het eruit ziet, wat ruis proberen toe te voegen aan een QPSK-signaal:</p>
 <a class="reference internal image-reference" href="../_images/noisey_qpsk.png"><img alt="../_images/noisey_qpsk.png" class="align-center" src="../_images/noisey_qpsk.png" style="width: 721.1999999999999px; height: 342.0px;" /></a>
 <p>En wat als de ruis nog sterker is?</p>
 <a class="reference internal image-reference" href="../_images/noisey_qpsk2.png"><img alt="../_images/noisey_qpsk2.png" class="align-center" src="../_images/noisey_qpsk2.png" style="width: 643.5px; height: 229.0px;" /></a>
@@ -377,7 +377,7 @@ We willen zoveel mogelijk bits per symbool versturen, maar als de ruis te groot 
 </div>
 <div class="section" id="awgn">
 <h2>AWGN<a class="headerlink" href="#awgn" title="Permalink to this headline">¶</a></h2>
-<p>Additive White Gaussian Noise (AWGN) is een afkorting die je vaak in de DSP en SDR wereld zult tegenkomen.
+<p>Additive White Gaussian Noise (AWGN) is een afkorting die je vaak in de DSP en SDR-wereld zult tegenkomen.
 GN, gaussische ruis, hebben we al behandeld.
 ‘Additive’ of toevoegend, betekent gewoon dat de ruis wordt toegevoegd aan ons ontvangen signaal.
 ‘White’ of wit, betekent dat het frequentiespectrum over het volledig geobserveerde bereik vlak is.
@@ -391,7 +391,7 @@ Niet-AWGN ruis is een vak apart.</p>
 Het is een verhouding dus het heeft geen eenheid.
 In de praktijk is SNR bijna altijd in dB.
 Voor simulaties programmeren we onze signalen altijd op zo’n manier dat het een vermogen heeft van 1, of eenheidsvermogen.
-Als we nu een SNR willen creëren van 10 dB in de simulatie, kunnen we simpelweg ruis genereren van -10 dB vermogen door bij het aanmaken van de ruis de variantie aan te passen.</p>
+Als we nu een SNR van 10 dB in de simulatie willen creëren, kunnen we simpelweg ruis genereren van -10 dB vermogen door bij het aanmaken van de ruis de variantie aan te passen.</p>
 <div class="math">
 <p><img src="../_images/math/1d7c441abf7305b4cba78098f05ede71b4ea0f91.svg" alt="\mathrm{SNR} = \frac{P_{signaal}}{P_{ruis}}"/></p>
 </div><div class="math">

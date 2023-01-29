@@ -125,7 +125,7 @@ Je kunt dit hoofdstuk als deel 2 van het Filters hoofdstuk opvatten, waarin we e
 Maar, je kunt niet zomaar elk laagdoorlaatfilter toepassen want dan krijg je last van inter-symbool-interferentie (ISI). Dit is wanneer symbolen elkaar storen en overlappen.</p>
 <p>Wanneer we digitale symbolen versturen, dan versturen we ze zij-aan-zij (i.t.t. een bepaalde tijd te wachten tussen pulsen). Wanneer je een pulsvormend filter toepast worden deze pulsen uitgerekt in het tijddomein (om het samen te drukken in frequentie), waardoor aangrenzende symbolen elkaar in de tijd overlappen. Dit overlappen is niet erg zolang het pulsvormende filter aan een eis voldoet: alle pulsen behalve een, moeten optellen tot 0 op elke veelvoud van de symboolperiode <img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/>. Dit is het beste te begrijpen door een figuur:</p>
 <a class="reference external image-reference" href="../_images/pulse_train.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/pulse_train.svg" class="align-center" src="../_images/pulse_train.svg" /></a>
-<p>Zoals je ziet is op elke interval van <img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/> er maar een puls hoog, terwijl alle andere pulsen 0 zijn en de x-as kruisen. Wanneer de ontvanger het signaal sampled doet het dit op het perfecte moment (wanner de puls het hoogst is), dus alleen dat moment in tijd is belangrijk. Meestal vindt er nog een vorm van symboolsynchronisatie plaats bij de ontvanger om ervoor te zorgen dat de symbolen inderdaad bij de toppen wordt gesampled.</p>
+<p>Zoals je ziet is op elke interval van <img class="math" src="../_images/math/51acb7b4939189dc34f1c1f10cf8acb7aeb5218a.svg" alt="T"/> er maar een puls hoog, terwijl alle andere pulsen 0 zijn en de x-as kruisen. Wanneer de ontvanger het signaal samplet doet het dit op het perfecte moment (wanneer de puls het hoogst is), dus alleen dat moment in tijd is belangrijk. Meestal vindt er nog een vorm van symboolsynchronisatie plaats bij de ontvanger om ervoor te zorgen dat de symbolen inderdaad bij de toppen worden gesampled.</p>
 </div>
 <div class="section" id="matched-filter">
 <h2>Matched Filter<a class="headerlink" href="#matched-filter" title="Permalink to this headline">¶</a></h2>
@@ -133,7 +133,7 @@ Maar, je kunt niet zomaar elk laagdoorlaatfilter toepassen want dan krijg je las
 Om deze afstemming van filters te begrijpen zul je eerst deze twee punten moeten snappen:</p>
 <ol class="arabic simple">
 <li>De besproken pulsen hoeven <em>alleen bij de ontvanger</em> voor het samplen perfect te zijn uitgelijnd. Tot dat punt maakt het niet uit of er ISI plaatsvindt, de signalen kunnen met ISI zonder problemen door het luchtruim vliegen.</li>
-<li>We willen een laagdoorlaatfilter bij de zender om te voorkomen dat ons signaal te veel van het spectrum gebruikt. De ontvanger heeft echter ook een laagdoorlaatfilter nodig om zoveel mogelijk ruis/interferentie op on signaal weg te filteren. Dit resulteert in een laagdoorlaatfilter bij de zender (Tx) alsmede de ontvanger (Rx). De ontvanger sampled het signaal dan na beide filters (en natuurlijk de effecten van het draadloze kanaal).</li>
+<li>We willen een laagdoorlaatfilter bij de zender om te voorkomen dat ons signaal te veel van het spectrum gebruikt. De ontvanger heeft echter ook een laagdoorlaatfilter nodig om zoveel mogelijk ruis/interferentie op on signaal weg te filteren. Dit resulteert in een laagdoorlaatfilter bij de zender (Tx) alsmede de ontvanger (Rx). De ontvanger samplet het signaal dan na beide filters (en natuurlijk de effecten van het draadloze kanaal).</li>
 </ol>
 <p>Wat we in moderne communicatie doen, is het opsplitsen van het vormgevende filter tussen Tx en Rx. Ze <em>moeten</em> niet identiek zijn, maar, theoretisch gezien, is het <em>optimaal</em> om identieke filters te gebruiken bij de aanwezigheid van AWGN, om de SNR te maximaliseren. Deze vorm van filteren heet het “matched filter” concept.</p>
 <p>Een andere manier om hierover na te denken is dat de ontvanger het signaal correleert met een bekend signaal. Dit bekende signaal is in wezen de pulsen die worden verzonden, ongeacht de fase- en amplitudeverschuivingen die erop zijn toegepast. Bedenk dat filteren een convolutie actie is, wat in feite gewoon correlatie is (ze geven wiskundig gezien hetzelfde wanneer het voorbeeldsignaal symmetrisch is).
@@ -143,7 +143,7 @@ Als analogie kun je denken aan een beeldherkenningssysteem dat gezichten zoekt a
 </div>
 <div class="section" id="een-filter-opsplitsen">
 <h2>Een filter opsplitsen<a class="headerlink" href="#een-filter-opsplitsen" title="Permalink to this headline">¶</a></h2>
-<p>Hoe splitsen we eigenlijk een filter in tweeën? Convolutie is associatief, dit betekend:</p>
+<p>Hoe splitsen we eigenlijk een filter in tweeën? Convolutie is associatief, dit betekent:</p>
 <div class="math">
 <p><img src="../_images/math/d373bec11aacfd8b57d59338616e3f13e472dfaf.svg" alt="(f * g) * h = f * (g * h)"/></p>
 </div><p>Stel dat <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> onze ingang is, en <img class="math" src="../_images/math/1566fe953af0c667c8521ad1ab00cf9841c047f7.svg" alt="g"/> en <img class="math" src="../_images/math/2475529ef4582ec92a0ef0ee2a266a22d98ba80d.svg" alt="h"/> de filters.  Nu maakt het niet uit of we eerst <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> filteren met <img class="math" src="../_images/math/1566fe953af0c667c8521ad1ab00cf9841c047f7.svg" alt="g"/> en daarna met <img class="math" src="../_images/math/2475529ef4582ec92a0ef0ee2a266a22d98ba80d.svg" alt="h"/>, of <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> filteren met een enkel filter gelijk aan <img class="math" src="../_images/math/5973aeb55a9c71c8f90a8e7c22d47ed0c89d0575.svg" alt="g * h"/>.</p>
@@ -260,7 +260,7 @@ Met de manier waarop de filtervergelijking werkt willen we het tijdstip 0 in het
 <a class="reference internal image-reference" href="../_images/pulse_shaping_python2.png"><img alt="../_images/pulse_shaping_python2.png" class="align-center" src="../_images/pulse_shaping_python2.png" style="width: 418.40000000000003px; height: 285.6px;" /></a>
 <p>De uitgang zakt zeker naar 0 aan beide kanten. De hoeveelheid samples per symbool bepaalt hoe smal dit filter lijkt en hoe snel het naar 0 afzwakt.
 De bovenstaande impulsresponsie lijkt op een typisch laagdoorlaatfilter. Er is vrijwel geen onderscheid te maken tussen een vormgevend filter en een algemeen laagdoorlaatfilter.</p>
-<p>Nu zullen we het filter toepassen op ons signaal <img class="math" src="../_images/math/1907afd3cc2000b5af26022e2cf2c0ee820b13a7.svg" alt="x"/> en het resultaat bestuderen.
+<p>Nu zullen we het filter op ons signaal <img class="math" src="../_images/math/1907afd3cc2000b5af26022e2cf2c0ee820b13a7.svg" alt="x"/> toepassen en het resultaat bestuderen.
 De for-loop tekent alleen wat extra lijntjes in het figuur, maak je hier niet druk om.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># signaal x filteren.</span>
 <span class="n">x_shaped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
@@ -274,12 +274,12 @@ De for-loop tekent alleen wat extra lijntjes in het figuur, maak je hier niet dr
 </pre></div>
 </div>
 <a class="reference external image-reference" href="../_images/pulse_shaping_python3.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/pulse_shaping_python3.svg" class="align-center" src="../_images/pulse_shaping_python3.svg" /></a>
-<p>Het resultaat is een opsomming van alle impulsresponsies waarbij ongeveer de helft met -1 is vermenigvuldigd. Het ziet er ingewikkeld uit dus we zullen er samen doorheen lopen.</p>
+<p>Het resultaat is een opsomming van alle impulsresponsen waarbij ongeveer de helft met -1 is vermenigvuldigd. Het ziet er ingewikkeld uit dus we zullen er samen doorheen lopen.</p>
 <p>Als eerste zie je samples voor en achter de data vanwege hoe convolutie werkt. De extra samples worden wel meegestuurd, maar bevatten geen ‘pieken’ van de impulsen.</p>
 <p>Als tweede zijn de verticale lijnen aangebracht voor de uitleg. Ze laten zien waar elk samplemoment <img class="math" src="../_images/math/21946dc2539b19b0c0fec887e16d11ca970c217f.svg" alt="T_s"/> plaatsvindt.
 Het zijn de momenten waarop de ontvanger het signaal moet samplen.
 Op elk samplemoment is het signaal precies 1.0 of -1.0: het ideale tijdstip om te samplen.</p>
-<p>Zouden we dit signaal moduleren op een draaggolf en verzenden, dan moet de ontvanger zelf bepalen waar de samplemomenten vallen met bijvoorbeeld een symboolsynchronisatie-algoritme. Mocht de ontvanger net te vroeg of te laat samples nemen dan krijgen we waarden die door ISI een beetje afwijken, mochten we veel te vroeg of laat samplen dan krijgen we alleen een boel rare getallen.</p>
+<p>Zouden we dit signaal op een draaggolf moduleren en verzenden, dan moet de ontvanger zelf bepalen waar de samplemomenten vallen met bijvoorbeeld een symboolsynchronisatie-algoritme. Mocht de ontvanger net te vroeg of te laat samples nemen dan krijgen we waarden die door ISI een beetje afwijken, mochten we veel te vroeg of laat samplen dan krijgen we alleen een boel rare getallen.</p>
 <p>Hieronder laten we in een IQ-diagram zien hoe het op tijd (of niet) samplen eruitziet.</p>
 <a class="reference internal image-reference" href="../_images/symbol_sync1.png"><img alt="../_images/symbol_sync1.png" class="align-center" src="../_images/symbol_sync1.png" style="width: 562.5px; height: 241.5px;" /></a>
 <p>Onderstaande diagram laat de ideale samplemomenten zien:</p>
