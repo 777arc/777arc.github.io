@@ -152,20 +152,7 @@ Na verdere analyse kun je dan besluiten of de SNR hoog genoeg is voor jouw doel.
 In dit hoofdstuk zullen we een richting behandelen, namelijk vanaf de zender (Tx) naar ontvanger (Rx).
 We weten voor een gegeven systeem wat het zendvermogen is; dit is meestal een instelling bij de zender.
 Maar hoe bepalen we het vermogen wat aankomt bij de ontvanger?</p>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[auto, node distance=2cm,&gt;=latex',font=\sffamily]
-\tikzset{block/.style = {draw, fill=white, rectangle,
-                  minimum height=3em, minimum width=2cm},
-        input/.style = {coordinate},
-        output/.style = {coordinate},
-        pinstyle/.style = {pin edge={to-,t,black}}
-    }
-\node[block](tx)                          {zender};
-\node[antenna](txant) at (tx.north) {};
-\draw[snake=expanding waves] (txant.north east) -- ++(1,0);
-\node[block,right = 6cm of tx](rx)        {ontvanger};
-\node[antenna,xscale=-1] at (rx.north) {};</tt>)</p>
-!pdftoppm command cannot be run</div>
+<div class="figure" style="text-align: center"><p><img width="80%" src="../_images/tikz-15ca49c95ca4c1a3e79f8b2a51bfe6126b817f1f.svg" alt="Figure made with TikZ" /></p>
 </div><p>We hebben vier systeemparameters nodig om het ontvangen vermogen te bepalen. Deze zijn hieronder opgesomd samen met de meest gebruikte (Engelstalige) afkortingen.
 We zullen ieder apart behandelen in dit hoofdstuk.</p>
 <ul class="simple">
@@ -174,29 +161,7 @@ We zullen ieder apart behandelen in dit hoofdstuk.</p>
 <li><strong>Gr</strong> - Antenneversterking ontvanger (Gain receiver)</li>
 <li><strong>Lt</strong> - Afstand tussen zender en ontvanger dus hoeveelheid transmissieverlies (Path Loss)</li>
 </ul>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[auto, node distance=2cm,&gt;=latex',font=\sffamily\small]
-\tikzset{block/.style = {draw, fill=white, rectangle,
-                  minimum height=3em, minimum width=2cm},
-        input/.style = {coordinate},
-        output/.style = {coordinate},
-        pinstyle/.style = {pin edge={to-,t,black}}
-    }
-\node[block](tx)                            {zender};
-\node[block,right = 6cm of tx](rx)          {ontvanger};
-\node[antenna](txant) at (tx.north) {};
-\node[antenna,xscale=-1](rxant) at (rx.north) {};
-\draw[snake=expanding waves]
-  (txant.east) -- ++(1,0) coordinate(begin);
-\draw[ultra thick,gray]
-  (begin) -- ++(2,0) coordinate(midden);
-\draw[-&gt;,ultra thick, gray]
-  (midden) -- ++(2,0) node[right,align=center]  {Ontvangen\\vermogen \textbf{Pr}};
-\draw (midden) node[align=center, below]        {transmissieverlies\\\textbf{Lp}};
-\node[above=1cm of txant.north,align=center]    {Antenneversterking\\zender \textbf{Gt}};
-\node[above=1cm of rxant.north,align=center]    {Antenneversterking\\ontvanger \textbf{Gr}};
-\node[above right = 1 cm of txant.east,align=center]     {Zendvermogen\\\textbf{Gt}};</tt>)</p>
-!pdftoppm command cannot be run</div>
+<div class="figure" style="text-align: center"><p><img width="100%" src="../_images/tikz-51c329379cd87fd53a75f47107d813374e758c25.svg" alt="Figure made with TikZ" /></p>
 </div><div class="section" id="zendvermogen">
 <h3>Zendvermogen<a class="headerlink" href="#zendvermogen" title="Permalink to this headline">¶</a></h3>
 <p>Zendvermogen is vrij simpel; het is uitgedrukt in Watt, dBW or dBm (dBm is een afkorting voor dBmW).

@@ -164,32 +164,32 @@ We zullen de stappen behandelen om de drivers/software voor de PlutoSDR te kunne
 <li><strong>libad9361-iio</strong>, AD9361 is de specifieke RF-chip binnen de PlutoSDR</li>
 <li><strong>pyadi-iio</strong>, de Pluto’s Python API, <em>ons einddoel</em>, maar het is afhankelijk van de eerste twee</li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span>git<span class="w"> </span>libxml2-dev<span class="w"> </span>bison<span class="w"> </span>flex<span class="w"> </span>libcdk5-dev<span class="w"> </span>cmake<span class="w"> </span>python3-pip<span class="w"> </span>libusb-1.0-0-dev<span class="w"> </span>libavahi-client-dev<span class="w"> </span>libavahi-common-dev<span class="w"> </span>libaio-dev
-<span class="nb">cd</span><span class="w"> </span>~
-git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>v0.23<span class="w"> </span>https://github.com/analogdevicesinc/libiio.git
-<span class="nb">cd</span><span class="w"> </span>libiio
-mkdir<span class="w"> </span>build
-<span class="nb">cd</span><span class="w"> </span>build
-cmake<span class="w"> </span>-DPYTHON_BINDINGS<span class="o">=</span>ON<span class="w"> </span>..
-make<span class="w"> </span>-j<span class="k">$(</span>nproc<span class="k">)</span>
-sudo<span class="w"> </span>make<span class="w"> </span>install
-sudo<span class="w"> </span>ldconfig
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install build-essential git libxml2-dev bison flex libcdk5-dev cmake python3-pip libusb-1.0-0-dev libavahi-client-dev libavahi-common-dev libaio-dev
+<span class="nb">cd</span> ~
+git clone --branch v0.23 https://github.com/analogdevicesinc/libiio.git
+<span class="nb">cd</span> libiio
+mkdir build
+<span class="nb">cd</span> build
+cmake -DPYTHON_BINDINGS<span class="o">=</span>ON ..
+make -j<span class="k">$(</span>nproc<span class="k">)</span>
+sudo make install
+sudo ldconfig
 
-<span class="nb">cd</span><span class="w"> </span>~
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/analogdevicesinc/libad9361-iio.git
-<span class="nb">cd</span><span class="w"> </span>libad9361-iio
-mkdir<span class="w"> </span>build
-<span class="nb">cd</span><span class="w"> </span>build
-cmake<span class="w"> </span>..
-make<span class="w"> </span>-j<span class="k">$(</span>nproc<span class="k">)</span>
-sudo<span class="w"> </span>make<span class="w"> </span>install
+<span class="nb">cd</span> ~
+git clone https://github.com/analogdevicesinc/libad9361-iio.git
+<span class="nb">cd</span> libad9361-iio
+mkdir build
+<span class="nb">cd</span> build
+cmake ..
+make -j<span class="k">$(</span>nproc<span class="k">)</span>
+sudo make install
 
-<span class="nb">cd</span><span class="w"> </span>~
-git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>v0.0.14<span class="w"> </span>https://github.com/analogdevicesinc/pyadi-iio.git
-<span class="nb">cd</span><span class="w"> </span>pyadi-iio
-pip3<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
-pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
-sudo<span class="w"> </span>python3<span class="w"> </span>setup.py<span class="w"> </span>install
+<span class="nb">cd</span> ~
+git clone --branch v0.0.14 https://github.com/analogdevicesinc/pyadi-iio.git
+<span class="nb">cd</span> pyadi-iio
+pip3 install --upgrade pip
+pip3 install -r requirements.txt
+sudo python3 setup.py install
 </pre></div>
 </div>
 </div>
@@ -197,9 +197,9 @@ sudo<span class="w"> </span>python3<span class="w"> </span>setup.py<span class="
 <h3>PlutoSDR Drivers testen<a class="headerlink" href="#plutosdr-drivers-testen" title="Permalink to this headline">¶</a></h3>
 <p>Open een nieuwe terminal (in jouw VM) en type de volgende commando’s:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3
-import<span class="w"> </span>adi
-<span class="nv">sdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>adi.Pluto<span class="o">(</span><span class="s1">&#39;ip:192.168.2.1&#39;</span><span class="o">)</span><span class="w"> </span><span class="c1"># of wat jouw Pluto&#39;s IP ook is</span>
-sdr.sample_rate<span class="w"> </span><span class="o">=</span><span class="w"> </span>int<span class="o">(</span><span class="m">2</span>.5e6<span class="o">)</span>
+import adi
+<span class="nv">sdr</span> <span class="o">=</span> adi.Pluto<span class="o">(</span><span class="s1">&#39;ip:192.168.2.1&#39;</span><span class="o">)</span> <span class="c1"># of wat jouw Pluto&#39;s IP ook is</span>
+sdr.sample_rate <span class="o">=</span> int<span class="o">(</span><span class="m">2</span>.5e6<span class="o">)</span>
 sdr.rx<span class="o">()</span>
 </pre></div>
 </div>
@@ -219,15 +219,15 @@ sdr.rx<span class="o">()</span>
 <h3>“Hack” de PlutoSDR voor een groter RF bereik<a class="headerlink" href="#hack-de-plutosdr-voor-een-groter-rf-bereik" title="Permalink to this headline">¶</a></h3>
 <p>De PlutoSDR komt standaard met een beperkt frequentiebereik en beperkte sample-frequentie, maar de onderliggende chip kan veel hogere frequenties aan. Volg deze stappen om het volle frequentiebereik aan te zeten. Dit proces wordt door Analog Devices zelf uitgelegd dus heeft minimale risico’s. De restricties zijn door Analog Devices aangezet omdat de specifieke chips niet voldeden aan de strenge performance-eisen op deze hogere frequenties. Maar als SDR studenten maken we ons niet zo druk over die performance-eisen.</p>
 <p>Tijd om te hacken! Open een terminal (host of VM):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>root@192.168.2.1
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh root@192.168.2.1
 </pre></div>
 </div>
 <p>Het wachtwoord is analog.</p>
 <p>Je zou een welkomst ‘scherm’ moeten zien. Je hebt nu geSSHd naar de linux-omgeving van de Pluto zelf!
 Type de volgende commando’s in:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fw_setenv<span class="w"> </span>attr_name<span class="w"> </span>compatible
-fw_setenv<span class="w"> </span>attr_val<span class="w"> </span>ad9364
-fw_setenv<span class="w"> </span>compatible<span class="w"> </span>ad9364
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fw_setenv attr_name compatible
+fw_setenv attr_val ad9364
+fw_setenv compatible ad9364
 reboot
 </pre></div>
 </div>

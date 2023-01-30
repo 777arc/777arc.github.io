@@ -155,27 +155,9 @@ In digitale signaalbewerking worden filters voornamelijk toegepast voor het:</p>
 <p>Misschien denk je dat we alleen geïnteresseerd zijn in digitale filters; het is ten slotte een DSP boek.
 Het is echter belangrijk om te begrijpen dat veel filters analoog zullen zijn, zoals de filters die in jouw SDR voor de ADC’s zijn gezet.
 Het volgende figuur plaatst een schema van een analoog filter tegenover het schematisch ontwerp van een digitaal filter.</p>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large\bfseries]
-\node[anchor=south west,inner sep=0](image) at (0,0) {\includegraphics[scale=1.5]{analog_digital_filter_nolabel.png}};
-\begin{scope}[x={(image.south east)},y={(image.north west)}]
-   \node[] at (0.25,0.9) {Analoog filter};
-   \node[] at (0.75,0.9) {Digitaal filter};
-\end{scope}</tt>)</p>
-!pdftoppm command cannot be run</div>
+<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-d385a26d274e9b4e89121ad30631152d15db74aa.svg" alt="Figure made with TikZ" /></p>
 </div><p>DSP’s hebben signalen als in- en uitgangen. Een filter heeft een ingangssignaal en een uitgangssignaal:</p>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large\bfseries, scale=2]
-\definecolor{babyblueeyes}{rgb}{0.36, 0.61, 0.83}
-\node [draw,
- color=white,
- fill=babyblueeyes,
- minimum width=4cm,
- minimum height=2.4cm
-]  (filter) {Filter};
-\draw[&lt;-, very thick] (filter.west) -- ++(-2,0) node[left,align=center]{Ingang\\(tijddomein)} ;
-\draw[-&gt;, very thick] (filter.east) -- ++(2,0) node[right,align=center]{Uitgang\\(tijddomein)};</tt>)</p>
-!pdftoppm command cannot be run</div>
+<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-de372174deedbef5bbeec414186db73e5483ff16.svg" alt="Figure made with TikZ" /></p>
 </div><p>Je kunt niet twee verschillende signalen in een enkel filter stoppen zonder ze eerst samen te voegen of een andere operatie uit te voeren.
 Op dezelfde manier zal de uitgang altijd een signaal betreffen, bijv. een 1D array van getallen.</p>
 <p>Er zijn vier basistypen filters: laagdoorlaat, hoogdoorlaat, banddoorlaat en bandstop (of sper).
@@ -184,30 +166,10 @@ De onderstaande grafieken laten voor elk van de typen zien hoe de frequenties wo
 Eerst worden, voor de duidelijkheid, alleen de positieve frequenties getoond, daarna ook figuren met negatieve frequenties.
 Zolang de filters “reëel” zijn, zullen de filters gespiegeld zijn rondom 0 Hz.</p>
 <a class="reference internal image-reference" href="../_images/filter_types.png"><img alt="../_images/filter_types.png" class="align-center" src="../_images/filter_types.png" style="width: 703.5px; height: 145.6px;" /></a>
-<table><tbody><tr><td><div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large]
-\draw[-&gt;, thick] (-5,0) -- (5,0) node[below]{Frequentie};
-\draw[-&gt;, thick] (0,-0.5) node[below]{0 Hz} -- (0,5) node[left=1cm]{\textbf{Laag-doorlaat}};
-\draw[red, thick, smooth] plot[tension=0.5] coordinates{(-5,0) (-2.5,0.5) (-1.5,3) (1.5,3) (2.5,0.5) (5,0)};</tt>)</p>
-!pdftoppm command cannot be run</div>
-</div></td><td  style="padding: 0px"><div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large]
-\draw[-&gt;, thick] (-5,0) -- (5,0) node[below]{Frequentie};
-\draw[-&gt;, thick] (0,-0.5) node[below]{0 Hz} -- (0,5) node[left=1cm]{\textbf{Hoog-doorlaat}};
-\draw[red, thick, smooth] plot[tension=0.5] coordinates{(-5,3) (-2.5,2.5) (-1.5,0.3) (1.5,0.3) (2.5,2.5) (5,3)};</tt>)</p>
-!pdftoppm command cannot be run</div>
-</div></td></tr><tr><td><div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large]
-\draw[-&gt;, thick] (-5,0) -- (5,0) node[below]{Frequentie};
-\draw[-&gt;, thick] (0,-0.5) node[below]{0 Hz} -- (0,5) node[left=1cm]{\textbf{Band-doorlaat}};
-\draw[red, thick, smooth] plot[tension=0.5] coordinates{(-5,0) (-4.5,0.3) (-3.5,3) (-2.5,3) (-1.5,0.3) (1.5, 0.3) (2.5,3) (3.5, 3) (4.5,0.3) (5,0)};</tt>)</p>
-!pdftoppm command cannot be run</div>
-</div></td><td><div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large]
-\draw[-&gt;, thick] (-5,0) -- (5,0) node[below]{Frequentie};
-\draw[-&gt;, thick] (0,-0.5) node[below]{0 Hz} -- (0,5) node[left=1cm]{\textbf{Band-Stop}};
-\draw[red, thick, smooth] plot[tension=0.5] coordinates{(-5,3) (-4.5,2.7) (-3.5,0.3) (-2.5,0.3) (-1.5,2.7) (1.5, 2.7) (2.5,0.3) (3.5, 0.3) (4.5,2.7) (5,3)};</tt>)</p>
-!pdftoppm command cannot be run</div>
+<table><tbody><tr><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-2a4ebb4e874d87cd2a7035455fb4c1ba59789bc5.svg" alt="Figure made with TikZ" /></p>
+</div></td><td  style="padding: 0px"><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-80af9faadf6343d0c097b8a5acbbb74d58f37b82.svg" alt="Figure made with TikZ" /></p>
+</div></td></tr><tr><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-30fb887d493e3860e8c4a5dbea1131d3dc13f2cb.svg" alt="Figure made with TikZ" /></p>
+</div></td><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-04a538b198412d6b0a811cf01b2024f707137ae6.svg" alt="Figure made with TikZ" /></p>
 </div></td></tr></tbody></table><p>Elk filter laat bepaalde frequenties in een signaal door, terwijl het andere frequenties blokkeert.
 Het bereik aan frequenties wat wordt doorgelaten heet de “doorlaatband”, en wat wordt geblokkeerd heet de “stopband”.
 In het geval van een laagdoorlaatfilter worden lage frequenties doorgelaten en hoge frequenties geblokkeerd, dus 0Hz zal altijd in de doorlaatband vallen.
@@ -244,43 +206,16 @@ Hier zijn een aantal voorbeeldcoëfficiënten van een enkel filter:</p>
 Vergeet niet dat, terwijl we onze SDR afstemmen op een radiofrequentie, de samples die de SDR teruggeeft in de basisband zitten. Dit betekent dat het signaal dus gecentreerd zal zijn rond de 0 Hz.
 We moeten zelf onthouden op welke frequentie we de SDR hadden ingesteld.
 Dit zouden we dan kunnen ontvangen:</p>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large\bfseries]
-\node[anchor=south west,inner sep=0](image) at (0,0) {\includegraphics[scale=0.7]{filter_use_case_nolabel.png}};
-\begin{scope}[x={(image.south east)},y={(image.north west)}]
-   \draw[red, -&gt;] (0.3, 0.7) node[above left, align=center]{Gewenste\\signaal} -- (0.45, 0.6);
-   \draw[red, -&gt;] (0.9, 0.8) node[above right, align=center]{Ongewenst\\signaal} -- (0.8, 0.7);
-   \draw[red, -&gt;] (0.25, 0.2) node[below, align=center]{Ruisvloer} -- (0.3, 0.4);
-\end{scope}</tt>)</p>
-!pdftoppm command cannot be run</div>
+<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-5f994d2fbe09eba212d13fed6612a5d40f776d65.svg" alt="Figure made with TikZ" /></p>
 </div><p>We weten dat we een laagdoorlaatfilter nodig hebben omdat ons signaal al rond DC (0 Hz) is gecentreerd.
 We moeten de “kantelfrequentie” (Engels “cutoff”) kiezen waar de doorlaatband overgaat in de stopband.
 De kantelfrequentie wordt altijd in Hz gegeven.
 In dit voorbeeld lijkt 3 kHz wel een goede waarde:</p>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large\bfseries]
-\node[anchor=south west,inner sep=0](image) at (0,0) {\includegraphics[scale=0.7]{filter_use_case_nolabel.png}};
-\begin{scope}[x={(image.south east)},y={(image.north west)}]
-   \draw[red, -&gt;] (0.3, 0.7) node[above left, align=center]{Gewenste\\signaal} -- (0.45, 0.6);
-   \draw[red, -&gt;] (0.9, 0.8) node[above right, align=center]{Ongewenst\\signaal} -- (0.8, 0.7);
-   \draw[red, -&gt;] (0.25, 0.2) node[below, align=center]{Ruisvloer} -- (0.3, 0.4);
-   \draw[red, dashed, very thick] (0.62, 0.1) -- (0.62,0.7);
-\end{scope}</tt>)</p>
-!pdftoppm command cannot be run</div>
+<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-bf71f1cd3443691194ceda9807288361b89e7cc2.svg" alt="Figure made with TikZ" /></p>
 </div><p>Maar, gezien hoe de meeste laagdoorlaatfilters werken, zal de negatieve kantelfrequentie ook op (-)3 kHz liggen.
 Het is dus symmetrisch rond DC (later zien we waarom).
 Onze kantelfrequenties zien er dan ongeveer zo uit (de doorlaatband ligt tussen):</p>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large\bfseries]
-\node[anchor=south west,inner sep=0](image) at (0,0) {\includegraphics[scale=0.7]{filter_use_case_nolabel.png}};
-\begin{scope}[x={(image.south east)},y={(image.north west)}]
-   \draw[red, -&gt;] (0.3, 0.7) node[above left, align=center]{Gewenste\\signaal} -- (0.45, 0.6);
-   \draw[red, -&gt;] (0.9, 0.8) node[above right, align=center]{Ongewenst\\signaal} -- (0.8, 0.7);
-   \draw[red, -&gt;] (0.25, 0.2) node[below, align=center]{Ruisvloer} -- (0.3, 0.4);
-   \draw[red, dashed, very thick] (0.622, 0.1) -- (0.622,0.7);
-   \draw[red, dashed, very thick] (0.455, 0.1) -- (0.455,0.7);
-\end{scope}</tt>)</p>
-!pdftoppm command cannot be run</div>
+<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-87f38a83773597a9f845092b5d5fcaa656fb02f4.svg" alt="Figure made with TikZ" /></p>
 </div><p>Na het maken en toepassen van een filter met een kantelfrequentie van 3 kHz krijgen we:</p>
 <a class="reference internal image-reference" href="../_images/filter_use_case4.png"><img alt="../_images/filter_use_case4.png" class="align-center" src="../_images/filter_use_case4.png" style="width: 451.49999999999994px; height: 330.4px;" /></a>
 <p>Dit gefilterde signaal ziet er misschien verwarrend uit totdat je beseft dat de ruisvloer rond de groene lijn <em>zat</em> op -70 dB.
@@ -374,18 +309,7 @@ Dit is iets ingewikkelder omdat we een x-as voor de frequenties moeten opzetten.
 Of de coëfficiënten reëel of complex zijn heeft niets te maken met de ingang, je kunt een reëel signaal in een complex filter stoppen en andersom.
 Wanneer de coëfficiënten reëel zijn dan is de frequentierespons symmetrisch rondom DC (0Hz).
 We gebruiken complexe coëfficiënten alleen wanneer we een asymmetrisch filter willen, wat niet vaak het geval is.</p>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large,scale=2]
-\definecolor{babyblueeyes}{rgb}{0.36, 0.61, 0.83}
-\draw[-&gt;, thick] (-5,0) node[below]{$-\frac{f_s}{2}$} -- (5,0) node[below]{$\frac{f_s}{2}$};
-\draw[-&gt;, thick] (0,-0.5) node[below]{0 Hz} -- (0,1);
-\draw[babyblueeyes, smooth, line width=3pt] plot[tension=0.1] coordinates{(-5,0) (-1,0) (-0.5,2) (0.5,2) (1,0) (5,0)};
-\draw[-&gt;,thick] (6,0) node[below]{$-\frac{f_s}{2}$} -- (16,0) node[below]{$\frac{f_s}{2}$};
-\draw[-&gt;,thick] (11,-0.5) node[below]{0 Hz} -- (11,1);
-\draw[babyblueeyes, smooth, line width=3pt] plot[tension=0] coordinates{(6,0) (11,0) (11,2) (11.5,2) (12,0) (16,0)};
-\draw[font=\huge\bfseries] (0,2.5) node[above,align=center]{Een laagdoorlaatfilter met\\reële coëfficiënten};
-\draw[font=\huge\bfseries] (11,2.5) node[above,align=center]{Een laagdoorlaatfilter met\\complexe coëfficiënten};</tt>)</p>
-!pdftoppm command cannot be run</div>
+<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-a655800c26ace440553247d0361f7da68b4e07ce.svg" alt="Figure made with TikZ" /></p>
 </div><p>Als een voorbeeld voor complexe coëfficiënten nemen we het eerdere spectrum, maar deze keer zullen we het andere signaal proberen te ontvangen zonder de SDR opnieuw in te stellen.
 Dit betekent dat we een (niet symmetrisch) banddoorlaatfilter willen gebruiken.
 We willen alleen de frequenties rond 7 tot 13 kHz gebruiken, maar niet de frequenties van -13 tot -7 kHz:</p>
@@ -422,16 +346,7 @@ Dus om ons banddoorlaatfilter te maken zullen we de coëfficiënten (de impulsre
 </pre></div>
 </div>
 <p>De impuls- en frequentierespons worden hieronder weergeven:</p>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large\bfseries]
-\node[anchor=south west,inner sep=0](image) at (0,0) {\includegraphics[scale=0.7]{shifted_filter_nolabel.png}};
-\begin{scope}[x={(image.south east)},y={(image.north west)}]
-   \draw
-   (0.25, 0) node[align=center] {Tijddomein}
-   (0.25, 1) node[align=center] {Impulsrespons}
-   (0.75, 1) node[align=center] {Frequentierespons};
-\end{scope}</tt>)</p>
-!pdftoppm command cannot be run</div>
+<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-2e1f7f714954d3f24277de2b94970f899afa6240.svg" alt="Figure made with TikZ" /></p>
 </div><p>Omdat ons filter niet symmetrisch is rond de 0 Hz, moeten we complexe coëfficiënten gebruiken en hebben we twee lijnen nodig om het te weergeven.
 Deze complexe impulsrespons is aan de linkerkant van het bovenstaande figuur te zien.
 De rechterkant valideert dat we inderdaad het gewenste filter hebben verkregen; het filtert alles weg, behalve de frequenties rondom 10 kHz.

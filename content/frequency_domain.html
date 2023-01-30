@@ -162,7 +162,7 @@
 <li>Frequency</li>
 <li>Phase</li>
 </ol>
-<p><strong>Amplitude</strong> indicates the “strength” of the wave, while <strong>frequency</strong> is the number of waves per second.  <strong>Phase</strong> is used to represent how the sine wave is shifted in time, anywhere from 0 to 360 degrees (or 0 to <span class="math">2\pi</span>), but it must be relative to something to have any meaning, such as two signals with the same frequency being 30 degrees out of phase with each other.</p>
+<p><strong>Amplitude</strong> indicates the “strength” of the wave, while <strong>frequency</strong> is the number of waves per second.  <strong>Phase</strong> is used to represent how the sine wave is shifted in time, anywhere from 0 to 360 degrees (or 0 to <img class="math" src="../_images/math/bf50b56b21d67ede45fc1ec5b8213871824fe365.svg" alt="2\pi"/>), but it must be relative to something to have any meaning, such as two signals with the same frequency being 30 degrees out of phase with each other.</p>
 <a class="reference external image-reference" href="../_images/amplitude_phase_period.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/amplitude_phase_period.svg" class="align-center" src="../_images/amplitude_phase_period.svg" /></a>
 <p>At this point you may have realized that a “signal” is essentially just a function, usually represented “over time” (i.e., the x-axis). Another attribute that is easy to remember is <strong>period</strong>, which is the inverse of <strong>frequency</strong>. The <strong>period</strong> of a sinusoid is the amount of time, in seconds, for the wave to finish one cycle.  Thus, the unit of frequency is 1/seconds, or Hz.</p>
 <p>When we decompose a signal into a summation of sine waves, each one will have a certain <strong>amplitude</strong>, <strong>phase</strong>, and <strong>frequency</strong>.  Each sine wave’s <strong>amplitude</strong> will tell us how strong the <strong>frequency</strong> existed in the original signal.  Don’t worry too much about <strong>phase</strong> for now, other than realizing that the only difference between sin() and cos() is a phase shift (time shift).</p>
@@ -189,19 +189,19 @@
 <h2>Fourier Transform<a class="headerlink" href="#fourier-transform" title="Permalink to this headline">¶</a></h2>
 <p>Mathematically, the “transform” we use to go from the time domain to the frequency domain and back is called the Fourier Transform.  It is defined as follows:</p>
 <div class="math">
-<p><span class="math">X(f) = \int x(t) e^{-j2\pi ft} dt</span></p>
+<p><img src="../_images/math/6ec9b03637d9f36f1f21065d0ea5f51a02de4423.svg" alt="X(f) = \int x(t) e^{-j2\pi ft} dt"/></p>
 </div><p>For a signal x(t) we can get the frequency domain version, X(f), using this formula.  We will represent the time domain version of a function with x(t) or y(t), and the corresponding frequency domain version with X(f) and Y(f).  Note the “t” for time, and “f” for frequency. The “j” is simply the imaginary unit. You may have seen it as “i” in high school math class.  We use “j” in engineering and computer science because “i” is often referring to current, and in programming it’s often used as an iterator.</p>
 <p>To return to the time domain from frequency is almost the same, aside from a scaling factor and negative sign:</p>
 <div class="math">
-<p><span class="math">x(t) = \frac{1}{2 \pi} \int X(f) e^{j2\pi ft} df</span></p>
-</div><p>Note that a lot of textbooks and other resources use <span class="math">w</span> in place of the <span class="math">2\pi f</span>.  <span class="math">w</span> is angular frequency in radians per second, while <span class="math">f</span> is in Hz.  All you have to know is that</p>
+<p><img src="../_images/math/5be5072ccaf0978ad48c208cd73799c36aef51cd.svg" alt="x(t) = \frac{1}{2 \pi} \int X(f) e^{j2\pi ft} df"/></p>
+</div><p>Note that a lot of textbooks and other resources use <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> in place of the <img class="math" src="../_images/math/f2db2fc8f3c55a36937062e1797243b47a90f001.svg" alt="2\pi f"/>.  <img class="math" src="../_images/math/c37cd8faff2fe4e2b7d74bb3d54411948d081962.svg" alt="w"/> is angular frequency in radians per second, while <img class="math" src="../_images/math/6fae9f9f4e88f9ed9c4f703e00e569d4c953562b.svg" alt="f"/> is in Hz.  All you have to know is that</p>
 <div class="math">
-<p><span class="math">\omega = 2 \pi f</span></p>
-</div><p>Even though it adds a <span class="math">2 \pi</span> term to many equations, it’s easier to stick with frequency in Hz. Ultimately you will work with Hz in your SDR application.</p>
+<p><img src="../_images/math/198ad5c1c03eb34cf94aa5de5ecc4e89624a2964.svg" alt="\omega = 2 \pi f"/></p>
+</div><p>Even though it adds a <img class="math" src="../_images/math/adbf740b3ae712140edad99b950ffd8c9ec2919b.svg" alt="2 \pi"/> term to many equations, it’s easier to stick with frequency in Hz. Ultimately you will work with Hz in your SDR application.</p>
 <p>The above equation for the Fourier Transform is the continuous form, which you will only see in math problems.  The discrete form is much closer to what is implemented in code:</p>
 <div class="math">
-<p><span class="math">X_k = \sum_{n=0}^{N-1} x_n e^{-\frac{j2\pi}{N}kn}</span></p>
-</div><p>Note that the main difference is we replaced the integral with a summation.  The index <span class="math">k</span> goes from 0 to N-1.</p>
+<p><img src="../_images/math/d94eb6f124e7e929c0420fd6d6a19eb14903b593.svg" alt="X_k = \sum_{n=0}^{N-1} x_n e^{-\frac{j2\pi}{N}kn}"/></p>
+</div><p>Note that the main difference is we replaced the integral with a summation.  The index <img class="math" src="../_images/math/30d4f39194cc2ced00937a2642c0345222fed6cd.svg" alt="k"/> goes from 0 to N-1.</p>
 <p>It’s OK if none of these equations mean much to you. We actually don’t need to use them directly to do cool stuff with DSP and SDRs!</p>
 </div>
 <div class="section" id="time-frequency-properties">
@@ -211,14 +211,14 @@
 <li>Linearity Property:</li>
 </ol>
 <div class="math">
-<p><span class="math">a x(t) + b y(t) \leftrightarrow a X(f) + b Y(f)</span></p>
+<p><img src="../_images/math/746a7887541f0ad9d3847793bc3a342014dc4d6d.svg" alt="a x(t) + b y(t) \leftrightarrow a X(f) + b Y(f)"/></p>
 </div><p>This property is probably the easiest to understand.  If we add two signals in time, then the frequency domain version will also be the two frequency domain signals added together.  It also tells us that if we multiply either one by a scaling factor, the frequency domain will also scale by the same amount.  The utility of this property will become more apparent when we add together multiple signals.</p>
 <ol class="arabic simple" start="2">
 <li>Frequency Shift Property:</li>
 </ol>
 <div class="math">
-<p><span class="math">e^{2 \pi j f_0 t}x(t) \leftrightarrow X(f-f_0)</span></p>
-</div><p>The term to the left of x(t) is what we call a “complex sinusoid” or “complex exponential”. For now, all we need to know is that it’s essentially just a sine wave at frequency <span class="math">f_0</span>.  This property tells us that if we take a signal <span class="math">x(t)</span> and multiply it by a sine wave, then in the frequency domain we get <span class="math">X(f)</span> except shifted by a certain frequency, <span class="math">f_0</span>.  This shift in frequency may be easier to visualize:</p>
+<p><img src="../_images/math/be894b85227c716548c31342eccabe9c1b515b57.svg" alt="e^{2 \pi j f_0 t}x(t) \leftrightarrow X(f-f_0)"/></p>
+</div><p>The term to the left of x(t) is what we call a “complex sinusoid” or “complex exponential”. For now, all we need to know is that it’s essentially just a sine wave at frequency <img class="math" src="../_images/math/da647bd66569f61d6a3f16c3c2e09085c351a343.svg" alt="f_0"/>.  This property tells us that if we take a signal <img class="math" src="../_images/math/b52a14c3452fbd1a467b640bb6269127e997a8e3.svg" alt="x(t)"/> and multiply it by a sine wave, then in the frequency domain we get <img class="math" src="../_images/math/8107fe72abc774dcc596c9fa4ee452bf8f6748af.svg" alt="X(f)"/> except shifted by a certain frequency, <img class="math" src="../_images/math/da647bd66569f61d6a3f16c3c2e09085c351a343.svg" alt="f_0"/>.  This shift in frequency may be easier to visualize:</p>
 <a class="reference external image-reference" href="../_images/freq-shift.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/freq-shift.svg" class="align-center" src="../_images/freq-shift.svg" /></a>
 <p>Frequency shift is integral to DSP because we will want to shift signals up and down in frequency for many reasons. This property tells us how to do that (multiply by a sine wave).  Here’s another way to visualize this property:</p>
 <a class="reference external image-reference" href="../_images/freq-shift-diagram.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/freq-shift-diagram.svg" class="align-center" src="../_images/freq-shift-diagram.svg" /></a>
@@ -226,7 +226,7 @@
 <li>Scaling in Time Property:</li>
 </ol>
 <div class="math">
-<p><span class="math">x(at) \leftrightarrow X\left(\frac{f}{a}\right)</span></p>
+<p><img src="../_images/math/0a4a9d25a8969bb46059aa8e6ae6672fce599b17.svg" alt="x(at) \leftrightarrow X\left(\frac{f}{a}\right)"/></p>
 </div><p>On the left hand side of the equation, we can see that we are scaling our signal x(t) in the time domain. Here is an example of a signal being scaled in time, and then what happens to the frequency domain versions of each one.</p>
 <a class="reference external image-reference" href="../_images/time-scaling.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/time-scaling.svg" class="align-center" src="../_images/time-scaling.svg" /></a>
 <p>Scaling in time essentially shrinks or expands the signal in the x-axis.  What this property tells us is that scaling in the time domain causes inverse scaling in the frequency domain.  For example, when we transmit bits faster we have to use more frequencies.  The property helps to explain why higher data rate signals take up more bandwidth/spectrum.  If time-frequency scaling was proportional instead of inversely proportional, cellular carriers would be able to transmit all the bits per second they wanted without paying billions for spectrum!  Unfortunately that’s not the case.</p>
@@ -235,31 +235,21 @@
 <li>Convolution in Time Property:</li>
 </ol>
 <div class="math">
-<p><span class="math">\int x(\tau) y(t-\tau) d\tau  \leftrightarrow X(f)Y(f)</span></p>
+<p><img src="../_images/math/866b024f252bc95ed034ab893af1cb799453d7d0.svg" alt="\int x(\tau) y(t-\tau) d\tau  \leftrightarrow X(f)Y(f)"/></p>
 </div><p>It is called the convolution property because in the time domain we are convolving x(t) and y(t).  You may not know about the convolution operation yet, so for now imagine it like a cross-correlation. When we convolve time domain signals, it’s equivalent to multiplying the frequency domain versions of those two signals.  It is very different from adding together two signals.  When you add two signals, as we saw, nothing really happens, you just add together the frequency domain version.  But when you convolve two signals, it’s like creating a new third signal from them.  Convolution is the single most important technique in DSP, though we must understand how filters work first to fully grasp it.</p>
 <p>Before we move on, to briefly explain why this property is so important, consider this situation: you have one signal you want to receive, and there is an interfering signal next to it.</p>
 <a class="reference external image-reference" href="../_images/two-signals.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/two-signals.svg" class="align-center" src="../_images/two-signals.svg" /></a>
 <p>The concept of masking is heavily used in programming, so let’s use it here.  What if we could create the mask below, and multiply it by the signal above in order to mask out the one we don’t want?</p>
 <a class="reference external image-reference" href="../_images/masking.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/masking.svg" class="align-center" src="../_images/masking.svg" /></a>
 <p>We usually perform DSP operations in the time domain, so let’s utilize the convolution property to see how we can do this masking in the time domain.  Let’s say that x(t) is our received signal.  Let Y(f) be the mask we want to apply in the frequency domain.  Well that means y(t) is the time domain representation of our mask, and if we convolve it with x(t), we can “filter out” the signal we don’t want.</p>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\Large\bfseries\sffamily]
-\definecolor{babyblueeyes}{rgb}{0.36, 0.61, 0.83}
-\draw (0,0) node[align=center,babyblueeyes]           {E.g., our received signal};
-\draw (0,-4) node[below, align=center,babyblueeyes]   {E.g., the mask};
-\draw (0,-2) node[align=center,scale=2]{$\int x(\tau)y(t-\tau)d\tau \leftrightarrow X(f)Y(f)$};
-\draw[-&gt;,babyblueeyes,thick] (-4,0) -- (-5.5,-1.2);
-\draw[-&gt;,babyblueeyes,thick] (2.5,-0.5) -- (3,-1.3);
-\draw[-&gt;,babyblueeyes,thick] (-2.5,-4) -- (-3.8,-2.8);
-\draw[-&gt;,babyblueeyes,thick] (3,-4) -- (5.2,-2.8);</tt>)</p>
-!pdflatex command cannot be run</div>
+<div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-649a79a4e38a50b56f209ae74eca2e3aef3f17e4.svg" alt="Figure made with TikZ" /></p>
 </div><p>When we discuss filtering, the convolution property will make more sense.</p>
 <ol class="arabic simple" start="5">
 <li>Convolution in Frequency Property:</li>
 </ol>
 <p>Lastly, I want to point out that the convolution property works in reverse, although we won’t be using it as much as the time domain convolution:</p>
 <div class="math">
-<p><span class="math">x(t)y(t)  \leftrightarrow  \int X(g) Y(f-g) dg</span></p>
+<p><img src="../_images/math/4d0228bed6205664ca7c69fc28ff975676f0e932.svg" alt="x(t)y(t)  \leftrightarrow  \int X(g) Y(f-g) dg"/></p>
 </div><p>There are other properties, but the above five are the most crucial to understand in my opinion.  Even though we didn’t step through the proof for each property, the point is we use the mathematical properties to gain insight into what happens to real signals when we do analysis and processing.  Don’t get caught up on the equations. Make sure you understand the description of each property.</p>
 </div>
 <div class="section" id="fast-fourier-transform-fft">
@@ -269,11 +259,11 @@
 <a class="reference external image-reference" href="../_images/fft-block-diagram.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fft-block-diagram.svg" class="align-center" src="../_images/fft-block-diagram.svg" /></a>
 <p>We will only be dealing with 1 dimension FFTs in this textbook (2D is used for image processing and other applications). For our purposes, think of the FFT function as having one input: a vector of samples, and one output: the frequency domain version of that vector of samples.  The size of the output is always the same as the size of the input. If I feed 1,024 samples into the FFT, I will get 1,024 out.  The confusing part is that the output will always be in the frequency domain, and thus the “span” of the x-axis if we were to plot it doesn’t change based on the number of samples in the time domain input.  Let’s visualize that by looking at the input and output arrays, along with the units of their indices:</p>
 <a class="reference external image-reference" href="../_images/fft-io.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/fft-io.svg" class="align-center" src="../_images/fft-io.svg" /></a>
-<p>Because the output is in the frequency domain, the span of the x-axis is based on the sample rate, which we will cover next chapter.  When we use more samples for the input vector, we get a better resolution in the frequency domain (in addition to processing more samples at once).  We don’t actually “see” more frequencies by having a larger input. The only way would be to increase the sample rate (decrease the sample period <span class="math">\Delta t</span>).</p>
+<p>Because the output is in the frequency domain, the span of the x-axis is based on the sample rate, which we will cover next chapter.  When we use more samples for the input vector, we get a better resolution in the frequency domain (in addition to processing more samples at once).  We don’t actually “see” more frequencies by having a larger input. The only way would be to increase the sample rate (decrease the sample period <img class="math" src="../_images/math/39bb0cf165301516f1e7396af7393a5b3f6c733e.svg" alt="\Delta t"/>).</p>
 <p>How do we actually plot this output?  As an example let’s say that our sample rate was 1 million samples per second (1 MHz).  As we will learn next chapter, that means we can only see signals up to 0.5 MHz, regardless of how many samples we feed into the FFT.  The way the output of the FFT gets represented is as follows:</p>
 <a class="reference external image-reference" href="../_images/negative-frequencies.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/negative-frequencies.svg" class="align-center" src="../_images/negative-frequencies.svg" /></a>
-<p>It is always the case; the output of the FFT will always show <span class="math">\text{-} f_s/2</span> to <span class="math">f_s/2</span> where <span class="math">f_s</span> is the sample rate.  I.e., the output will always have a negative portion and positive portion.  If the input is complex, the negative and positive portions will be different, but if it real then they will be identical.</p>
-<p>Regarding the frequency interval, each bin corresponds to <span class="math">f_s/N</span> Hz, i.e., feeding in more samples to each FFT will lead to more granular resolution in your output.  A very minor detail that can be ignored if you are new: mathematically, the very last index does not correspond to <em>exactly</em> <span class="math">f_s/2</span>, rather it’s <span class="math">f_s/2 - f_s/N</span> which for a large <span class="math">N</span> will be approximately <span class="math">f_s/2</span>.</p>
+<p>It is always the case; the output of the FFT will always show <img class="math" src="../_images/math/cb05020c98608fb3c62ed9132b03cb70bfeac2d4.svg" alt="\text{-} f_s/2"/> to <img class="math" src="../_images/math/afde4de8938387b8c8e7277067b0eb0ab90ab483.svg" alt="f_s/2"/> where <img class="math" src="../_images/math/7daaccc7c28018a253e53d5cde99a13764df9a8d.svg" alt="f_s"/> is the sample rate.  I.e., the output will always have a negative portion and positive portion.  If the input is complex, the negative and positive portions will be different, but if it real then they will be identical.</p>
+<p>Regarding the frequency interval, each bin corresponds to <img class="math" src="../_images/math/da39ae114c94fb9dc38f7c6bbe66183011c21dc3.svg" alt="f_s/N"/> Hz, i.e., feeding in more samples to each FFT will lead to more granular resolution in your output.  A very minor detail that can be ignored if you are new: mathematically, the very last index does not correspond to <em>exactly</em> <img class="math" src="../_images/math/afde4de8938387b8c8e7277067b0eb0ab90ab483.svg" alt="f_s/2"/>, rather it’s <img class="math" src="../_images/math/85b4914ed3d51eb47935368044def8b2299898e1.svg" alt="f_s/2 - f_s/N"/> which for a large <img class="math" src="../_images/math/24ca8296258e6d43d10327cf05e8d5b650662803.svg" alt="N"/> will be approximately <img class="math" src="../_images/math/afde4de8938387b8c8e7277067b0eb0ab90ab483.svg" alt="f_s/2"/>.</p>
 </div>
 <div class="section" id="negative-frequencies">
 <h2>Negative Frequencies<a class="headerlink" href="#negative-frequencies" title="Permalink to this headline">¶</a></h2>

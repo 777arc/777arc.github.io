@@ -175,32 +175,32 @@
 <li><strong>libad9361-iio</strong>, AD9361 est la puce RF spécifique du PlutoSDR.</li>
 <li><strong>pyadi-iio</strong>, l’API Python du Pluto, <em>c’est notre objectif final</em>, mais il dépend des deux bibliothèques précédentes.</li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>build-essential<span class="w"> </span>git<span class="w"> </span>libxml2-dev<span class="w"> </span>bison<span class="w"> </span>flex<span class="w"> </span>libcdk5-dev<span class="w"> </span>cmake<span class="w"> </span>python3-pip<span class="w"> </span>libusb-1.0-0-dev<span class="w"> </span>libavahi-client-dev<span class="w"> </span>libavahi-common-dev<span class="w"> </span>libaio-dev
-<span class="nb">cd</span><span class="w"> </span>~
-git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>v0.23<span class="w"> </span>https://github.com/analogdevicesinc/libiio.git
-<span class="nb">cd</span><span class="w"> </span>libiio
-mkdir<span class="w"> </span>build
-<span class="nb">cd</span><span class="w"> </span>build
-cmake<span class="w"> </span>-DPYTHON_BINDINGS<span class="o">=</span>ON<span class="w"> </span>..
-make<span class="w"> </span>-j<span class="k">$(</span>nproc<span class="k">)</span>
-sudo<span class="w"> </span>make<span class="w"> </span>install
-sudo<span class="w"> </span>ldconfig
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install build-essential git libxml2-dev bison flex libcdk5-dev cmake python3-pip libusb-1.0-0-dev libavahi-client-dev libavahi-common-dev libaio-dev
+<span class="nb">cd</span> ~
+git clone --branch v0.23 https://github.com/analogdevicesinc/libiio.git
+<span class="nb">cd</span> libiio
+mkdir build
+<span class="nb">cd</span> build
+cmake -DPYTHON_BINDINGS<span class="o">=</span>ON ..
+make -j<span class="k">$(</span>nproc<span class="k">)</span>
+sudo make install
+sudo ldconfig
 
-<span class="nb">cd</span><span class="w"> </span>~
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/analogdevicesinc/libad9361-iio.git
-<span class="nb">cd</span><span class="w"> </span>libad9361-iio
-mkdir<span class="w"> </span>build
-<span class="nb">cd</span><span class="w"> </span>build
-cmake<span class="w"> </span>..
-make<span class="w"> </span>-j<span class="k">$(</span>nproc<span class="k">)</span>
-sudo<span class="w"> </span>make<span class="w"> </span>install
+<span class="nb">cd</span> ~
+git clone https://github.com/analogdevicesinc/libad9361-iio.git
+<span class="nb">cd</span> libad9361-iio
+mkdir build
+<span class="nb">cd</span> build
+cmake ..
+make -j<span class="k">$(</span>nproc<span class="k">)</span>
+sudo make install
 
-<span class="nb">cd</span><span class="w"> </span>~
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/analogdevicesinc/pyadi-iio.git
-<span class="nb">cd</span><span class="w"> </span>pyadi-iio
-pip3<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
-pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
-sudo<span class="w"> </span>python3<span class="w"> </span>setup.py<span class="w"> </span>install
+<span class="nb">cd</span> ~
+git clone https://github.com/analogdevicesinc/pyadi-iio.git
+<span class="nb">cd</span> pyadi-iio
+pip3 install --upgrade pip
+pip3 install -r requirements.txt
+sudo python3 setup.py install
 </pre></div>
 </div>
 </div>
@@ -208,9 +208,9 @@ sudo<span class="w"> </span>python3<span class="w"> </span>setup.py<span class="
 <h3>Test des pilotes PlutoSDR<a class="headerlink" href="#test-des-pilotes-plutosdr" title="Permalink to this headline">¶</a></h3>
 <p>Ouvrez un nouveau terminal (dans votre VM) et tapez les commandes suivantes :</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3
-import<span class="w"> </span>adi
-<span class="nv">sdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>adi.Pluto<span class="o">(</span><span class="s1">&#39;ip:192.168.2.1&#39;</span><span class="o">)</span><span class="w"> </span><span class="c1"># ou quel que soit l&#39;IP de votre Pluton</span>
-sdr.sample_rate<span class="w"> </span><span class="o">=</span><span class="w"> </span>int<span class="o">(</span><span class="m">2</span>.5e6<span class="o">)</span>
+import adi
+<span class="nv">sdr</span> <span class="o">=</span> adi.Pluto<span class="o">(</span><span class="s1">&#39;ip:192.168.2.1&#39;</span><span class="o">)</span> <span class="c1"># ou quel que soit l&#39;IP de votre Pluton</span>
+sdr.sample_rate <span class="o">=</span> int<span class="o">(</span><span class="m">2</span>.5e6<span class="o">)</span>
 sdr.rx<span class="o">()</span>
 </pre></div>
 </div>
@@ -230,19 +230,19 @@ sdr.rx<span class="o">()</span>
 <h3>“Hacker” PlutoSDR pour augmenter la plage RF<a class="headerlink" href="#hacker-plutosdr-pour-augmenter-la-plage-rf" title="Permalink to this headline">¶</a></h3>
 <p>Les PlutoSDR sont livrés avec une gamme de fréquences centrales et un taux d’échantillonnage limités, mais la puce sous-jacente est capable de fréquences beaucoup plus élevées.  Suivez ces étapes pour débloquer la gamme de fréquences complète de la puce.  S’il vous plaît garder à l’esprit que ce processus est fourni par Analog Devices, il est donc aussi faible risque que vous pouvez obtenir.  La limitation de fréquence du PlutoSDR est due au fait qu’Analog Devices utilisant l’AD9364 sur la base d’exigences strictes de performance à des fréquences plus élevées. …. En tant que passionnés de SDR et expérimentateurs, nous ne sommes pas trop concernés par ces exigences de performance.</p>
 <p>Il est temps de pirater ! Ouvrez un terminal (hôte ou VM, peu importe) :</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>root@192.168.2.1
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh root@192.168.2.1
 </pre></div>
 </div>
 <p>Le mot de passe par défaut est analogique.</p>
 <p>Vous devriez voir l’écran de bienvenue de PlutoSDR. Vous avez maintenant SSH dans le CPU ARM sur la Pluto elle-même !
 Si vous avez une Pluto avec la version 0.31 ou inférieure du firmware, tapez les commandes suivantes :</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fw_setenv<span class="w"> </span>attr_name<span class="w"> </span>compatible
-fw_setenv<span class="w"> </span>attr_val<span class="w"> </span>ad9364
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fw_setenv attr_name compatible
+fw_setenv attr_val ad9364
 reboot
 </pre></div>
 </div>
 <p>Et pour l’utilisation de 0.32 et plus :</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fw_setenv<span class="w"> </span>compatible<span class="w"> </span>ad9364
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fw_setenv compatible ad9364
 reboot
 </pre></div>
 </div>
