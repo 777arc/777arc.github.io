@@ -1004,15 +1004,19 @@
 <span class="n">bz</span><span class="p">,</span> <span class="n">az</span> <span class="o">=</span> <span class="n">bilinear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mf">75e-6</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">fs</span><span class="o">=</span><span class="n">sample_rate</span><span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">lfilter</span><span class="p">(</span><span class="n">bz</span><span class="p">,</span> <span class="n">az</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-<span class="c1"># decimate filter to get mono audio</span>
+<span class="c1"># decimate by 6 to get mono audio</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[::</span><span class="mi">6</span><span class="p">]</span>
-<span class="n">sample_rate</span> <span class="o">=</span> <span class="n">sample_rate</span><span class="o">/</span><span class="mi">6</span>
+<span class="n">sample_rate_audio</span> <span class="o">=</span> <span class="n">sample_rate</span><span class="o">/</span><span class="mi">6</span>
 
-<span class="c1"># normalizes volume</span>
-<span class="n">x</span> <span class="o">/=</span> <span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="c1"># normalize volume so its between -1 and +1</span>
+<span class="n">x</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+<span class="c1"># some machines want int16s</span>
+<span class="n">x</span> <span class="o">*=</span> <span class="mi">32767</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
 
 <span class="c1"># Save to wav file, you can open this in Audacity for example</span>
-<span class="n">wavfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;fm.wav&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">wavfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;fm.wav&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate_audio</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The most complicated part is the de-emphasis filter, <a class="reference external" href="https://wiki.gnuradio.org/index.php/FM_Preemphasis" rel="noopener noreferrer" target="_blank">which you can learn about here</a>, although it’s actually an optional step if you are OK with audio that has a poor bass/treble balance.  For those curious, here is what the frequency response of the <a class="reference external" href="https://en.wikipedia.org/wiki/Infinite_impulse_response" rel="noopener noreferrer" target="_blank">IIR</a> de-emphasis filter looks like, it doesn’t fully filter out any frequencies, it’s more of a “shaping” filter.</p>
