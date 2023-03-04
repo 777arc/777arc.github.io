@@ -145,8 +145,8 @@ Het zal sowieso helpen om zoveel mogelijk te filteren voordat we het signaal ver
 In dit hoofdstuk zullen we onderzoeken hoe synchronisatie wordt uitgevoerd aan de ontvangende kant.
 Synchronisatie is een reeks bewerkingen die plaatsvindt <em>vóór</em> demodulatie en kanaaldecodering.
 Hieronder zie je de totale zender-kanaal-ontvanger keten waarbij de blokken die we in dit hoofdstuk zullen behandelen, geel zijn gemaakt. (Dit diagram is niet allesomvattend - de meeste systemen bevatten ook egalisatie en multiplexing).</p>
-<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-0eb33cbd0ade0dc541a88691a3af6ca82715525b.svg" alt="Figure made with TikZ" /></p>
-</div></div>
+<a class="reference external image-reference" href="images/sync-diagram.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/sync-diagram.svg" class="align-center" src="../_images/sync-diagram.svg" /></a>
+</div>
 <div class="section" id="draadloos-kanaal-simuleren">
 <h2>Draadloos kanaal simuleren<a class="headerlink" href="#draadloos-kanaal-simuleren" title="Permalink to this headline">¶</a></h2>
 <p>We zullen een realistischer kanaalmodel moeten gaan gebruiken voordat we het over synchronisatie gaan hebben. Zolang er geen willekeurige vertraging plaatsvindt is er namelijk geen synchronisatie nodig, of tenminste is het erg simpel om te synchroniseren (met de sampleklok). Je zou in dat geval alleen maar rekening hoeven houden met de vertraging die jouw filters introduceren. Naast een tijdsvertraging zullen we ook een frequentieafwijking simuleren; oscillators zijn immers niet perfect, er zal altijd een verschil zijn tussen de middenfrequentie van de zender en ontvanger.</p>

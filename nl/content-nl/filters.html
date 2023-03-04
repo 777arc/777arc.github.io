@@ -155,10 +155,10 @@ In digitale signaalbewerking worden filters voornamelijk toegepast voor het:</p>
 <p>Misschien denk je dat we alleen geïnteresseerd zijn in digitale filters; het is ten slotte een DSP boek.
 Het is echter belangrijk om te begrijpen dat veel filters analoog zullen zijn, zoals de filters die in jouw SDR voor de ADC’s zijn gezet.
 Het volgende figuur plaatst een schema van een analoog filter tegenover het schematisch ontwerp van een digitaal filter.</p>
-<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-d385a26d274e9b4e89121ad30631152d15db74aa.svg" alt="Figure made with TikZ" /></p>
-</div><p>DSP’s hebben signalen als in- en uitgangen. Een filter heeft een ingangssignaal en een uitgangssignaal:</p>
-<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-de372174deedbef5bbeec414186db73e5483ff16.svg" alt="Figure made with TikZ" /></p>
-</div><p>Je kunt niet twee verschillende signalen in een enkel filter stoppen zonder ze eerst samen te voegen of een andere operatie uit te voeren.
+<a class="reference internal image-reference" href="../_images/analog_digital_filter.png"><img alt="../_images/analog_digital_filter.png" class="align-center" src="../_images/analog_digital_filter.png" style="width: 793.0999999999999px; height: 223.29999999999998px;" /></a>
+<p>DSP’s hebben signalen als in- en uitgangen. Een filter heeft een ingangssignaal en een uitgangssignaal:</p>
+<a class="reference internal image-reference" href="../_images/filter.svg"><img alt="../_images/filter.svg" class="align-center" height="69" src="../_images/filter.svg" width="510" /></a>
+<p>Je kunt niet twee verschillende signalen in een enkel filter stoppen zonder ze eerst samen te voegen of een andere operatie uit te voeren.
 Op dezelfde manier zal de uitgang altijd een signaal betreffen, bijv. een 1D array van getallen.</p>
 <p>Er zijn vier basistypen filters: laagdoorlaat, hoogdoorlaat, banddoorlaat en bandstop (of sper).
 Elke type bewerkt signalen zodanig dat de focus op verschillende gebieden aan frequenties ligt.
@@ -166,11 +166,9 @@ De onderstaande grafieken laten voor elk van de typen zien hoe de frequenties wo
 Eerst worden, voor de duidelijkheid, alleen de positieve frequenties getoond, daarna ook figuren met negatieve frequenties.
 Zolang de filters “reëel” zijn, zullen de filters gespiegeld zijn rondom 0 Hz.</p>
 <a class="reference internal image-reference" href="../_images/filter_types.png"><img alt="../_images/filter_types.png" class="align-center" src="../_images/filter_types.png" style="width: 703.5px; height: 145.6px;" /></a>
-<table><tbody><tr><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-2a4ebb4e874d87cd2a7035455fb4c1ba59789bc5.svg" alt="Figure made with TikZ" /></p>
-</div></td><td  style="padding: 0px"><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-80af9faadf6343d0c097b8a5acbbb74d58f37b82.svg" alt="Figure made with TikZ" /></p>
-</div></td></tr><tr><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-30fb887d493e3860e8c4a5dbea1131d3dc13f2cb.svg" alt="Figure made with TikZ" /></p>
-</div></td><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-04a538b198412d6b0a811cf01b2024f707137ae6.svg" alt="Figure made with TikZ" /></p>
-</div></td></tr></tbody></table><p>Elk filter laat bepaalde frequenties in een signaal door, terwijl het andere frequenties blokkeert.
+<p>Inclusief negatieve frequenties:</p>
+<a class="reference internal image-reference" href="../_images/4filters_transfer.svg"><img alt="../_images/4filters_transfer.svg" class="align-center" height="315" src="../_images/4filters_transfer.svg" width="530" /></a>
+<p>Elk filter laat bepaalde frequenties in een signaal door, terwijl het andere frequenties blokkeert.
 Het bereik aan frequenties wat wordt doorgelaten heet de “doorlaatband”, en wat wordt geblokkeerd heet de “stopband”.
 In het geval van een laagdoorlaatfilter worden lage frequenties doorgelaten en hoge frequenties geblokkeerd, dus 0Hz zal altijd in de doorlaatband vallen.
 Bij hoog- en banddoorlaatfilters bevindt 0 Hz zich altijd in de stopband.</p>
@@ -206,17 +204,14 @@ Hier zijn een aantal voorbeeldcoëfficiënten van een enkel filter:</p>
 Vergeet niet dat, terwijl we onze SDR afstemmen op een radiofrequentie, de samples die de SDR teruggeeft in de basisband zitten. Dit betekent dat het signaal dus gecentreerd zal zijn rond de 0 Hz.
 We moeten zelf onthouden op welke frequentie we de SDR hadden ingesteld.
 Dit zouden we dan kunnen ontvangen:</p>
-<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-5f994d2fbe09eba212d13fed6612a5d40f776d65.svg" alt="Figure made with TikZ" /></p>
-</div><p>We weten dat we een laagdoorlaatfilter nodig hebben omdat ons signaal al rond DC (0 Hz) is gecentreerd.
+<img alt="../_images/filter_use_case.svg" class="align-center" src="../_images/filter_use_case.svg" /><p>We weten dat we een laagdoorlaatfilter nodig hebben omdat ons signaal al rond DC (0 Hz) is gecentreerd.
 We moeten de “kantelfrequentie” (Engels “cutoff”) kiezen waar de doorlaatband overgaat in de stopband.
 De kantelfrequentie wordt altijd in Hz gegeven.
 In dit voorbeeld lijkt 3 kHz wel een goede waarde:</p>
-<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-bf71f1cd3443691194ceda9807288361b89e7cc2.svg" alt="Figure made with TikZ" /></p>
-</div><p>Maar, gezien hoe de meeste laagdoorlaatfilters werken, zal de negatieve kantelfrequentie ook op (-)3 kHz liggen.
+<img alt="../_images/filter_use_case_2.svg" class="align-center" src="../_images/filter_use_case_2.svg" /><p>Maar, gezien hoe de meeste laagdoorlaatfilters werken, zal de negatieve kantelfrequentie ook op (-)3 kHz liggen.
 Het is dus symmetrisch rond DC (later zien we waarom).
 Onze kantelfrequenties zien er dan ongeveer zo uit (de doorlaatband ligt tussen):</p>
-<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-87f38a83773597a9f845092b5d5fcaa656fb02f4.svg" alt="Figure made with TikZ" /></p>
-</div><p>Na het maken en toepassen van een filter met een kantelfrequentie van 3 kHz krijgen we:</p>
+<img alt="../_images/filter_use_case_3.svg" class="align-center" src="../_images/filter_use_case_3.svg" /><p>Na het maken en toepassen van een filter met een kantelfrequentie van 3 kHz krijgen we:</p>
 <a class="reference internal image-reference" href="../_images/filter_use_case4.png"><img alt="../_images/filter_use_case4.png" class="align-center" src="../_images/filter_use_case4.png" style="width: 451.49999999999994px; height: 330.4px;" /></a>
 <p>Dit gefilterde signaal ziet er misschien verwarrend uit totdat je beseft dat de ruisvloer rond de groene lijn <em>zat</em> op -70 dB.
 Ook al zien we het signaal rond de 10 kHz nog steeds, het is <em>sterk</em> in vermogen afgenomen.
@@ -309,8 +304,8 @@ Dit is iets ingewikkelder omdat we een x-as voor de frequenties moeten opzetten.
 Of de coëfficiënten reëel of complex zijn heeft niets te maken met de ingang, je kunt een reëel signaal in een complex filter stoppen en andersom.
 Wanneer de coëfficiënten reëel zijn dan is de frequentierespons symmetrisch rondom DC (0Hz).
 We gebruiken complexe coëfficiënten alleen wanneer we een asymmetrisch filter willen, wat niet vaak het geval is.</p>
-<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-a655800c26ace440553247d0361f7da68b4e07ce.svg" alt="Figure made with TikZ" /></p>
-</div><p>Als een voorbeeld voor complexe coëfficiënten nemen we het eerdere spectrum, maar deze keer zullen we het andere signaal proberen te ontvangen zonder de SDR opnieuw in te stellen.
+<a class="reference internal image-reference" href="../_images/complex_taps.svg"><img alt="../_images/complex_taps.svg" class="align-center" height="184" src="../_images/complex_taps.svg" width="964" /></a>
+<p>Als een voorbeeld voor complexe coëfficiënten nemen we het eerdere spectrum, maar deze keer zullen we het andere signaal proberen te ontvangen zonder de SDR opnieuw in te stellen.
 Dit betekent dat we een (niet symmetrisch) banddoorlaatfilter willen gebruiken.
 We willen alleen de frequenties rond 7 tot 13 kHz gebruiken, maar niet de frequenties van -13 tot -7 kHz:</p>
 <a class="reference internal image-reference" href="../_images/filter_use_case6.png"><img alt="../_images/filter_use_case6.png" class="align-center" src="../_images/filter_use_case6.png" style="width: 418.59999999999997px; height: 310.09999999999997px;" /></a>
@@ -346,8 +341,8 @@ Dus om ons banddoorlaatfilter te maken zullen we de coëfficiënten (de impulsre
 </pre></div>
 </div>
 <p>De impuls- en frequentierespons worden hieronder weergeven:</p>
-<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-2e1f7f714954d3f24277de2b94970f899afa6240.svg" alt="Figure made with TikZ" /></p>
-</div><p>Omdat ons filter niet symmetrisch is rond de 0 Hz, moeten we complexe coëfficiënten gebruiken en hebben we twee lijnen nodig om het te weergeven.
+<a class="reference internal image-reference" href="../_images/shifted_filter.png"><img alt="../_images/shifted_filter.png" class="align-center" src="../_images/shifted_filter.png" style="width: 637.1999999999999px; height: 312.59999999999997px;" /></a>
+<p>Omdat ons filter niet symmetrisch is rond de 0 Hz, moeten we complexe coëfficiënten gebruiken en hebben we twee lijnen nodig om het te weergeven.
 Deze complexe impulsrespons is aan de linkerkant van het bovenstaande figuur te zien.
 De rechterkant valideert dat we inderdaad het gewenste filter hebben verkregen; het filtert alles weg, behalve de frequenties rondom 10 kHz.
 Let nogmaals op dat het bovenstaande figuur <em>geen</em> signaal is, maar de respons van het filter.
