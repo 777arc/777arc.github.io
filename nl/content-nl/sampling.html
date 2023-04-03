@@ -180,9 +180,7 @@ Q \sin(2\pi ft)"/></p>
 </div><p>Dit kunnen we ook grafisch weergeven door I en Q gelijk te stellen aan 1:</p>
 <a class="reference internal image-reference" href="../_images/IQ_wave.png"><img alt="../_images/IQ_wave.png" class="align-center" src="../_images/IQ_wave.png" style="width: 481.59999999999997px; height: 242.2px;" /></a>
 <p>De cos() noemen we het “in fase” component, daarom de I, en de sin() is het 90 graden uit fase of “kwadratuur” component, vandaar de Q. Maar als je per ongeluk de Q aan de cos() en de I aan de sin() koppelt, dan maakt dat in de meeste situaties niets uit.</p>
-<p>IQ-sampling is gemakkelijker te begrijpen bekeken vanuit de zender, dus vanuit het zenden van een RF signaal door de lucht.
-We willen een enkele sinus met bepaalde fase versturen, wat gedaan kan worden door een sin() en cos() zonder faseverschuiving bij elkaar op te tellen. Dit is mogelijk vanwege de volgende eigenschap: <img class="math" src="../_images/math/ab3695b42f9cb6efd2d838efca3dd84c82e2f586.svg" alt="a \cos(x) + b \sin(x) = A \cos(x-\phi)"/>.
-Laten we zeggen dat we het signaal x(t) willen versturen:</p>
+<p>IQ-sampling is gemakkelijker te begrijpen bekeken vanuit de zender, dus vanuit het zenden van een RF signaal door de lucht. Wat we als zender doen is de sin() en cos() bij elkaar optellen. Laten we zeggen dat we het signaal x(t) willen versturen:</p>
 <div class="math">
 <p><img src="../_images/math/85952bb9ba66501bd120de475a08d40ff06ed52b.svg" alt="x(t) = I \cos(2\pi ft)  + Q \sin(2\pi ft)"/></p>
 </div><p>Wat zou er gebeuren wanneer we een sinus en cosinus optellen? Of eigenlijk, wat zou er gebeuren wanneer we twee sinusoïden optellen die 90 graden uit fase lopen. In de onderstaande video zijn er sliders om I en Q mee aan te passen. Wat geplot wordt zijn de cosinus, sinus en de som van beide.</p>
@@ -324,11 +322,7 @@ De volgende zes operaties zijn nodig om de PSD te bepalen:</p>
 <li>Neem de FFT van onze samples. Met x samples is de lengte van de FFT standaard ook x. Laten we als voorbeeld de eerste 1024 samples gebruiken om een 1024-lengte FFT te maken. De uitgang bestaat dan uit 1024 complexe floats.</li>
 <li>Neem de modulus van de FFT uitgang, dit geeft ons 1024 reële floats.</li>
 <li>Kwadrateer de modulus vervolgens om vermogen te krijgen.</li>
-<li>Normaliseren:<ul>
-<li>Deel door de FFT lengte (N) en sample-frequentie (Fs) voor de PSD in V^2/Hz. Dit is beter voor breedbandige signalen zoals ruis om het onafhankelijk te maken van Fs.</li>
-<li>Deel het door de FFT lengte in het kwadraat (<img class="math" src="../_images/math/7cd6ff20361eab9a77bbf1d326603a1992abdf15.svg" alt="N*N"/>) voor het vermogensspectrum in V^2/bin. Dit is beter voor periodieke signalen, maar de ruis wordt nu afhankelijk van Fs.</li>
-</ul>
-</li>
+<li>Normaliseren: Deel door de FFT lengte (<img class="math" src="../_images/math/24ca8296258e6d43d10327cf05e8d5b650662803.svg" alt="N"/>) en sample-frequentie (<img class="math" src="../_images/math/698739a98aaea30ace3093c2b58fb2a59e22c981.svg" alt="Fs"/>).</li>
 <li>Zet het om naar dB met behulp van <img class="math" src="../_images/math/f4455b0aaee830c84338328975fa7b9956463d04.svg" alt="10 \log_{10}()"/>; we bekijken PSD’s altijd in de log-schaal.</li>
 <li>Voer een FFT-shift uit, zoals is behandeld in het vorige hoofdstuk, om “0 Hz” in het midden, en de negatieve frequenties links van het midden, te plaatsen.</li>
 </ol>
@@ -337,7 +331,7 @@ De volgende zes operaties zijn nodig om de PSD te bepalen:</p>
 <span class="c1"># x bevat onze array van IQ samples</span>
 <span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">N</span><span class="p">]</span> <span class="c1"># We nemen slechts de FFT van de eerst 1024 samples</span>
-<span class="n">PSD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="n">Fs</span><span class="p">)</span> <span class="c1"># of / (N*N) voor PS</span>
+<span class="n">PSD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="n">Fs</span><span class="p">)</span>
 <span class="n">PSD_log</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PSD</span><span class="p">)</span>
 <span class="n">PSD_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">PSD_log</span><span class="p">)</span>
 </pre></div>
@@ -379,10 +373,7 @@ Anderzijds, als je weet dat het signaal niet snel verandert, dan is het genoeg o
 <span class="n">noise_power</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">noise_power</span><span class="p">)</span>
 
-<span class="c1">#PSD in (V^2/Hz)</span>
 <span class="n">PSD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span><span class="o">*</span><span class="n">Fs</span><span class="p">)</span>
-<span class="c1">#of.. het vermogen spectrum in (V^2/bin)</span>
-<span class="c1">#PSD = np.abs(np.fft.fft(r))**2 / (N*N)</span>
 <span class="n">PSD_log</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PSD</span><span class="p">)</span>
 <span class="n">PSD_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">PSD_log</span><span class="p">)</span>
 
@@ -401,7 +392,6 @@ Anderzijds, als je weet dat het signaal niet snel verandert, dan is het genoeg o
 <h2>Extra Leesmateriaal<a class="headerlink" href="#extra-leesmateriaal" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li><a class="reference external" href="http://rfic.eecs.berkeley.edu/~niknejad/ee242/pdf/eecs242_lect3_rxarch.pdf" rel="noopener noreferrer" target="_blank">http://rfic.eecs.berkeley.edu/~niknejad/ee242/pdf/eecs242_lect3_rxarch.pdf</a></li>
-<li><a class="reference external" href="https://appliedacousticschalmers.github.io/scaling-of-the-dft/AES2020_eBrief/" rel="noopener noreferrer" target="_blank">https://appliedacousticschalmers.github.io/scaling-of-the-dft/AES2020_eBrief/</a></li>
 </ol>
 </div>
 </div>

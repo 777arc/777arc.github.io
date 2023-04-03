@@ -72,7 +72,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#vensterfunctie">Vensterfunctie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fft-grootte">FFT-grootte</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#spectrogram-waterval">Spectrogram/Waterval</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fft-implementatie">FFT Implementatie</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ-sampling</a></li>
@@ -484,61 +483,6 @@ Het diagram hieronder laat zien wat deze FFT-shift doet:</p>
 <p>Dit zou het volgende moeten opleveren, wat niet zo spannend is want er is geen tijd variërend gedrag. Als extra oefening kun je het signaal laten variëren in de tijd, bekijk bijv. of je de toon kunt laten starten en stoppen.</p>
 <a class="reference external image-reference" href="../_images/spectrogram.svg" rel="noopener noreferrer" target="_blank"><img alt="../_images/spectrogram.svg" class="align-center" src="../_images/spectrogram.svg" /></a>
 </details></div>
-<div class="section" id="fft-implementatie">
-<h2>FFT Implementatie<a class="headerlink" href="#fft-implementatie" title="Permalink to this headline">¶</a></h2>
-<p>Terwijl NumpPy de FFT al heeft geïmplementeerd kan het toch goed zijn om de basis te begrijpen. Het meest populaire FFT algoritme is Cooley-Tukey, in 1805 uitgevonden door Carl Friedrich en herontdekt door James Cooley en John Tukey in 1965.</p>
-<p>De standaard versie van dit algoritme werkt met macht-van-twee FFT’s en is bedoeld voor complexe ingangen, maar kan ook werken met reële ingangen. Het bouwblok voor dit algoritme is bekend als de vlinder, een N=2 FFT bestaande uit twee vermenigvuldigingen en twee optellingen:</p>
-<a class="reference external image-reference" href="../_images/butterfly.svg" rel="noopener noreferrer" target="_blank"><img alt="Cooley-Tukey FFT algorithm butterfly radix-2" class="align-center" src="../_images/butterfly.svg" /></a>
-<p>of</p>
-<div class="math">
-<p><img src="../_images/math/ee02b6e199980917a03a4cd85286ef229302baaf.svg" alt="y_0 = x_0 + x_1 w^k_N
-
-y_1 = x_0 - x_1 w^k_N"/></p>
-</div><p>Hierbij zijn <img class="math" src="../_images/math/6263399236c5a56bde126a7379b21695d1d387b5.svg" alt="w^k_N = e^{j2\pi k/N}"/> bekend als twiddle factoren (<img class="math" src="../_images/math/24ca8296258e6d43d10327cf05e8d5b650662803.svg" alt="N"/> is de grootte van deze sub-FFT en <img class="math" src="../_images/math/30d4f39194cc2ced00937a2642c0345222fed6cd.svg" alt="k"/> is de index).
-Let op dat de in- en uitgangen en sommen/vermenigvuldigingen allemaal complex zijn. <img class="math" src="../_images/math/3b19f90fb8d3bf3eec8b88e878bc1c8eb2b9587e.svg" alt="x_0"/> kan bijvoorbeeld 0.6123 - 0.5213j zijn.</p>
-<p>Het algoritme is recursief en halveert zichzelf totdat er alleen maar vlinders over zijn. Hieronder is dit gevisualiseerd voor een N=8 FFT:</p>
-<a class="reference external image-reference" href="../_images/butterfly2.svg" rel="noopener noreferrer" target="_blank"><img alt="Cooley-Tukey FFT algorithm size 8" class="align-center" src="../_images/butterfly2.svg" /></a>
-<p>Elke kolom in dit figuur laat berekeningen zien die parallel uitgevoerd kunnen worden en er worden <img class="math" src="../_images/math/7eac0d148af16eec5464a069fe4fa5b4d47ee944.svg" alt="log_2(N)"/> stappen uitgevoerd. De complexiteit van de berekening is dan ook O(<img class="math" src="../_images/math/5fabb828b2deaaf79caebf224a58406797a44b87.svg" alt="N\log N"/>) i.p.v. O(<img class="math" src="../_images/math/f564f3173652e9963cb1e0399c08db8d295548bb.svg" alt="N^2"/>) voor de standaard DFT.</p>
-<p>Als je het liever vanuit code bekijkt dan is hieronder een simpele Python implementatie gegeven samen met een signaal om het uit te testen.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-
-<span class="k">def</span> <span class="nf">fft</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">x</span>
-    <span class="n">twiddle_factors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span>
-    <span class="n">x_even</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">[::</span><span class="mi">2</span><span class="p">])</span> <span class="c1"># yay recursion!</span>
-    <span class="n">x_odd</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x_even</span> <span class="o">+</span> <span class="n">twiddle_factors</span> <span class="o">*</span> <span class="n">x_odd</span><span class="p">,</span>
-                           <span class="n">x_even</span> <span class="o">-</span> <span class="n">twiddle_factors</span> <span class="o">*</span> <span class="n">x_odd</span><span class="p">])</span>
-
-<span class="c1"># Simulate a tone + noise</span>
-<span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">1e6</span>
-<span class="n">f_offset</span> <span class="o">=</span> <span class="mf">0.2e6</span> <span class="c1"># 200 kHz offset from carrier</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span>
-<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">/</span><span class="n">sample_rate</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">f_offset</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
-<span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># unity complex noise</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="n">n</span> <span class="c1"># 0 dB SNR</span>
-
-<span class="c1"># Perform fft, fftshift, convert to dB</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-<span class="n">X_shifted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># equivalent to np.fft.fftshift</span>
-<span class="n">X_mag</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">X_shifted</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="c1"># Plot results</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">sample_rate</span><span class="o">/-</span><span class="mi">2</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span><span class="o">/</span><span class="mf">1e6</span> <span class="c1"># plt in MHz</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">X_mag</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">X_mag</span><span class="p">)],</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X_mag</span><span class="p">),</span> <span class="s1">&#39;rx&#39;</span><span class="p">)</span> <span class="c1"># show max</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency [MHz]&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Magnitude [dB]&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<a class="reference external image-reference" href="../_images/fft_in_python.svg" rel="noopener noreferrer" target="_blank"><img alt="python implementation of fft example" class="align-center" src="../_images/fft_in_python.svg" /></a>
-</div>
 </div>
 
 
