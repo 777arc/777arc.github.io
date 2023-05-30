@@ -151,14 +151,45 @@
 <p>You may think we only care about digital filters; this textbook explores DSP, after all. However, it’s important to know that a lot of filters will be analog, like those in our SDRs placed before the analog-to-digital converter (ADC) on the receive side. The following image juxtaposes a schematic of an analog filter circuit with a flowchart representation of a digital filtering algorithm.</p>
 <a class="reference internal image-reference" href="../_images/analog_digital_filter.png"><img alt="../_images/analog_digital_filter.png" class="align-center" src="../_images/analog_digital_filter.png" style="width: 793.0999999999999px; height: 223.29999999999998px;" /></a>
 <p>In DSP, where the input and output are signals, a filter has one input signal and one output signal:</p>
-<div class="figure" style="text-align: center"><p><img width="80%" src="../_images/tikz-861fff5ae4760c20c84c1be43c34edf1fafac6c6.svg" alt="Figure made with TikZ" /></p>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large\bfseries, scale=2]
+\definecolor{babyblueeyes}{rgb}{0.36, 0.61, 0.83}
+\node [draw,
+ color=white,
+ fill=babyblueeyes,
+ minimum width=4cm,
+ minimum height=2.4cm
+]  (filter) {Filter};
+\draw[&lt;-, very thick] (filter.west) -- ++(-2,0) node[left,align=center]{Input\\(time domain)} ;
+\draw[-&gt;, very thick] (filter.east) -- ++(2,0) node[right,align=center]{Output\\(time domain)};</tt>)</p>
+!pdftoppm command cannot be run</div>
 </div><p>You cannot feed two different signals into a single filter without adding them together first or doing some other operation.  Likewise, the output will always be one signal, i.e., a 1D array of numbers.</p>
 <p>There are four basic types of filters: low-pass, high-pass, band-pass, and band-stop. Each type modifies signals to focus on different ranges of frequencies within them. The plots below demonstrate how frequencies in signals are filtered for each type, presented first with just positive frequencies (easier to understand), then also including negative.</p>
 <a class="reference internal image-reference" href="../_images/filter_types.png"><img alt="../_images/filter_types.png" class="align-center" src="../_images/filter_types.png" style="width: 703.5px; height: 145.6px;" /></a>
-<table><tbody><tr><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-e3aaf5f7c52c87ef9c6da68e8d840ca469e0b53d.svg" alt="Figure made with TikZ" /></p>
-</div></td><td  style="padding: 0px"><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-f88ddd43f673a3ba2436438aa4b2b983f124db7a.svg" alt="Figure made with TikZ" /></p>
-</div></td></tr><tr><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-dc783ab4a1ffd65ac8cb37d787674c288a7566e3.svg" alt="Figure made with TikZ" /></p>
-</div></td><td><div class="figure" style="text-align: center"><p><img width="70%" src="../_images/tikz-76b48577e5a767cb55f861dafb7dcb48c1718257.svg" alt="Figure made with TikZ" /></p>
+<table><tbody><tr><td><div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large]
+\draw[-&gt;, thick] (-5,0) -- (5,0) node[below]{Frequency};
+\draw[-&gt;, thick] (0,-0.5) node[below]{0 Hz} -- (0,5) node[left=1cm]{\textbf{Low-Pass}};
+\draw[red, thick, smooth] plot[tension=0.5] coordinates{(-5,0) (-2.5,0.5) (-1.5,3) (1.5,3) (2.5,0.5) (5,0)};</tt>)</p>
+!pdftoppm command cannot be run</div>
+</div></td><td  style="padding: 0px"><div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large]
+\draw[-&gt;, thick] (-5,0) -- (5,0) node[below]{Frequency};
+\draw[-&gt;, thick] (0,-0.5) node[below]{0 Hz} -- (0,5) node[left=1cm]{\textbf{High-Pass}};
+\draw[red, thick, smooth] plot[tension=0.5] coordinates{(-5,3) (-2.5,2.5) (-1.5,0.3) (1.5,0.3) (2.5,2.5) (5,3)};</tt>)</p>
+!pdftoppm command cannot be run</div>
+</div></td></tr><tr><td><div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large]
+\draw[-&gt;, thick] (-5,0) -- (5,0) node[below]{Frequency};
+\draw[-&gt;, thick] (0,-0.5) node[below]{0 Hz} -- (0,5) node[left=1cm]{\textbf{Band-Pass}};
+\draw[red, thick, smooth] plot[tension=0.5] coordinates{(-5,0) (-4.5,0.3) (-3.5,3) (-2.5,3) (-1.5,0.3) (1.5, 0.3) (2.5,3) (3.5, 3) (4.5,0.3) (5,0)};</tt>)</p>
+!pdftoppm command cannot be run</div>
+</div></td><td><div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large]
+\draw[-&gt;, thick] (-5,0) -- (5,0) node[below]{Frequency};
+\draw[-&gt;, thick] (0,-0.5) node[below]{0 Hz} -- (0,5) node[left=1cm]{\textbf{Band-Stop}};
+\draw[red, thick, smooth] plot[tension=0.5] coordinates{(-5,3) (-4.5,2.7) (-3.5,0.3) (-2.5,0.3) (-1.5,2.7) (1.5, 2.7) (2.5,0.3) (3.5, 0.3) (4.5,2.7) (5,3)};</tt>)</p>
+!pdftoppm command cannot be run</div>
 </div></td></tr></tbody></table><p>Each filter permits certain frequencies to remain from a signal while blocking other frequencies.  The range of frequencies a filter lets through is known as the “passband”, and “stopband” refers to what is blocked.  In the case of the low-pass filter, it passes low frequencies and stops high frequencies, so 0 Hz will always be in the passband.  For a high-pass and band-pass filter, 0 Hz will always be in the stopband.</p>
 <p>Do not confuse these filtering types with filter algorithmic implementation (e.g., IIR vs FIR).  The most common type by far is the low-pass filter (LPF) because we often represent signals at baseband.  LPF allows us to filter out everything “around” our signal, removing excess noise and other signals.</p>
 </div>
@@ -261,7 +292,18 @@ Typically we use a filter designer tool, then see how many taps it outputs, and 
 <div class="section" id="real-vs-complex-filters">
 <h3>Real vs. Complex Filters<a class="headerlink" href="#real-vs-complex-filters" title="Permalink to this headline">¶</a></h3>
 <p>The filter I showed you had real taps, but taps can also be complex.  Whether the taps are real or complex doesn’t have to match the signal you put through it, i.e., you can put a complex signal through a filter with real taps and vice versa.  When the taps are real, the filter’s frequency response will be symmetrical around DC (0 Hz).  Typically we use complex taps when we need asymmetry, which does not happen too often.</p>
-<div class="figure" style="text-align: center"><p><img  src="../_images/tikz-a7c349b1605a333231d358240d325d0180a94cb4.svg" alt="Figure made with TikZ" /></p>
+<div class="system-message">
+<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">[font=\sffamily\Large,scale=2]
+\definecolor{babyblueeyes}{rgb}{0.36, 0.61, 0.83}
+\draw[-&gt;, thick] (-5,0) node[below]{$-\frac{f_s}{2}$} -- (5,0) node[below]{$\frac{f_s}{2}$};
+\draw[-&gt;, thick] (0,-0.5) node[below]{0 Hz} -- (0,1);
+\draw[babyblueeyes, smooth, line width=3pt] plot[tension=0.1] coordinates{(-5,0) (-1,0) (-0.5,2) (0.5,2) (1,0) (5,0)};
+\draw[-&gt;,thick] (6,0) node[below]{$-\frac{f_s}{2}$} -- (16,0) node[below]{$\frac{f_s}{2}$};
+\draw[-&gt;,thick] (11,-0.5) node[below]{0 Hz} -- (11,1);
+\draw[babyblueeyes, smooth, line width=3pt] plot[tension=0] coordinates{(6,0) (11,0) (11,2) (11.5,2) (12,0) (16,0)};
+\draw[font=\huge\bfseries] (0,2.5) node[above,align=center]{Example Low-Pass Filter\\with Real Taps};
+\draw[font=\huge\bfseries] (11,2.5) node[above,align=center]{Example Low-Pass Filter\\with Complex Taps};</tt>)</p>
+!pdftoppm command cannot be run</div>
 </div><p>As an example of complex taps, let’s go back to the filtering use-case, except this time we want to receive the other interfering signal (without having to re-tune the radio).  That means we want a band-pass filter, but not a symmetrical one. We only want to keep (a.k.a “pass”) frequencies between around 7 kHz to 13 kHz (we don’t want to also pass -13 kHz to -7 kHz):</p>
 <a class="reference internal image-reference" href="../_images/filter_use_case6.png"><img alt="../_images/filter_use_case6.png" class="align-center" src="../_images/filter_use_case6.png" style="width: 418.59999999999997px; height: 310.09999999999997px;" /></a>
 <p>One way to design this kind of filter is to make a low-pass filter with a cutoff of 3 kHz and then frequency shift it.  Remember that we can frequency shift x(t) (time domain) by multiplying it by <img class="math" src="../_images/math/96dfb45b25ce9d4a2fd55cf9e8da4f3886436897.svg" alt="e^{j2\pi f_0t}"/>.  In this case <img class="math" src="../_images/math/da647bd66569f61d6a3f16c3c2e09085c351a343.svg" alt="f_0"/> should be 10 kHz, which shifts our filter up by 10 kHz. Recall that in our Python code from above, <img class="math" src="../_images/math/2475529ef4582ec92a0ef0ee2a266a22d98ba80d.svg" alt="h"/> was the filter taps of the low-pass filter.  In order to create our band-pass filter we just have to multiply those taps by <img class="math" src="../_images/math/96dfb45b25ce9d4a2fd55cf9e8da4f3886436897.svg" alt="e^{j2\pi f_0t}"/>, although it involves creating a vector to represent time based on our sample period (inverse of the sample rate):</p>
