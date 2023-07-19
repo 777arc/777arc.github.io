@@ -23,6 +23,31 @@
   gtag('js', new Date());
 
   gtag('config', 'G-TGRQK1JJYD');
+</script> 
+
+<div id="topBanner" class="modal">
+  <div class="modal-content">
+    <div class="modal-header" style="background-color: rgb(255, 240, 129); text-align:center;">
+      <i>-- Announcement from Marc --</i><br>I'm leading a new education-oriented open-source project called <a target="_blank" href="https://iqengine.org">IQEngine</a>!<br>It's a web-based SDR toolkit for analyzing, processing, and sharing RF recordings.  Checkout out our <a target="_blank" href="https://github.com/IQEngine/IQEngine">GitHub</a> and <a target="_blank" href="https://discord.gg/k7C8kp3b76">Discord</a>
+      <div class="closeButton">
+        <span style="font-size:30px; position:absolute; top:0px; right:5px; cursor:pointer; ">&times;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var banner = document.getElementById("topBanner");
+  var closeButton = document.getElementsByClassName("closeButton")[0];
+  // Close banner if they have already clicked the close button in the past
+  if (localStorage.getItem('pysdrvisited')){
+    banner.style.display = "none";
+  }
+  // When they click the close button
+  closeButton.onclick = function() {
+    banner.style.display = "none";
+    localStorage.setItem('pysdrvisited', true);
+  }
 </script>
 
 <div style="float: right; padding-bottom: 0;">
@@ -180,14 +205,14 @@
 <div class="section" id="visually-analyzing-an-rf-file">
 <h2>Visually Analyzing an RF File<a class="headerlink" href="#visually-analyzing-an-rf-file" title="Permalink to this headline">¶</a></h2>
 <p>Although we learned how to create our own spectrogram plot in the <a class="reference internal" href="frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Het Frequentiedomein</span></a> Chapter, nothing beats using an already created piece of software, and when it comes to analyzing a long RF recording, I recommend using <a class="reference external" href="https://github.com/miek/inspectrum" rel="noopener noreferrer" target="_blank">inspectrum</a>.  Inspectrum is a fairly simple but powerful graphical tool for scanning through an RF file visually, with fine control over the colormap range and FFT size (zoom amount).  You can hold alt and use the scrollwheel to shift through time.  It has optional cursors to measure the delta-time between two bursts of energy, and the ability to export a slice of the RF file into a new file.  For installation on Debian-based platforms such as Ubuntu, use the following commands:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>qt5-default<span class="w"> </span>libfftw3-dev<span class="w"> </span>cmake<span class="w"> </span>pkg-config<span class="w"> </span>libliquid-dev
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/miek/inspectrum.git
-<span class="nb">cd</span><span class="w"> </span>inspectrum
-mkdir<span class="w"> </span>build
-<span class="nb">cd</span><span class="w"> </span>build
-cmake<span class="w"> </span>..
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install qt5-default libfftw3-dev cmake pkg-config libliquid-dev
+git clone https://github.com/miek/inspectrum.git
+<span class="nb">cd</span> inspectrum
+mkdir build
+<span class="nb">cd</span> build
+cmake ..
 make
-sudo<span class="w"> </span>make<span class="w"> </span>install
+sudo make install
 inspectrum
 </pre></div>
 </div>
@@ -226,10 +251,10 @@ inspectrum
 <p>Note the <code class="code docutils literal notranslate"><span class="pre">core:cf32_le</span></code> indicates your .sigmf-data is of type IQIQIQIQ… with 32-bit floats, i.e., np.complex64 like we used previously.  Reference the specifications for other available datatypes, such as if you have real data instead of complex, or are using 16-bit integers instead of floats to save space.</p>
 <p>Aside from datatype, the most important lines to fill out are <code class="code docutils literal notranslate"><span class="pre">core:sample_rate</span></code> and <code class="code docutils literal notranslate"><span class="pre">core:frequency</span></code>.  It is good practice to also enter information about the hardware (<code class="code docutils literal notranslate"><span class="pre">core:hw</span></code>) used to capture the recording, such as the SDR type and antenna, as well as a description of what is known about the signal(s) in the recording in <code class="code docutils literal notranslate"><span class="pre">core:description</span></code>.  The <code class="code docutils literal notranslate"><span class="pre">core:version</span></code> is simply the version of the SigMF standard being used at the time the metadata file was created.</p>
 <p>If you are capturing your RF recording from within Python, e.g., using the Python API for your SDR, then you can avoid having to manually create these metadata files by using the SigMF Python package.  This can be installed on an Ubuntu/Debian based OS as follows:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/gnuradio/SigMF.git
-<span class="nb">cd</span><span class="w"> </span>SigMF
-sudo<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>.
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~
+git clone https://github.com/gnuradio/SigMF.git
+<span class="nb">cd</span> SigMF
+sudo pip install .
 </pre></div>
 </div>
 <p>The Python code to write the .sigmf-meta file for the example towards the beginning of this chapter, where we saved bpsk_in_noise.iq, is shown below:</p>

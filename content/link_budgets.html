@@ -25,6 +25,31 @@
   gtag('js', new Date());
 
   gtag('config', 'G-TGRQK1JJYD');
+</script> 
+
+<div id="topBanner" class="modal">
+  <div class="modal-content">
+    <div class="modal-header" style="background-color: rgb(255, 240, 129); text-align:center;">
+      <i>-- Announcement from Marc --</i><br>I'm leading a new education-oriented open-source project called <a target="_blank" href="https://iqengine.org">IQEngine</a>!<br>It's a web-based SDR toolkit for analyzing, processing, and sharing RF recordings.  Checkout out our <a target="_blank" href="https://github.com/IQEngine/IQEngine">GitHub</a> and <a target="_blank" href="https://discord.gg/k7C8kp3b76">Discord</a>
+      <div class="closeButton">
+        <span style="font-size:30px; position:absolute; top:0px; right:5px; cursor:pointer; ">&times;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var banner = document.getElementById("topBanner");
+  var closeButton = document.getElementsByClassName("closeButton")[0];
+  // Close banner if they have already clicked the close button in the past
+  if (localStorage.getItem('pysdrvisited')){
+    banner.style.display = "none";
+  }
+  // When they click the close button
+  closeButton.onclick = function() {
+    banner.style.display = "none";
+    localStorage.setItem('pysdrvisited', true);
+  }
 </script>
 
 <div style="float: right; padding-bottom: 0;">
@@ -291,14 +316,15 @@
 </div>
 <div class="section" id="example-link-budget-ads-b">
 <h2>Example Link Budget: ADS-B<a class="headerlink" href="#example-link-budget-ads-b" title="Permalink to this headline">¶</a></h2>
-<p>Automatic Dependent Surveillance-Broadcast (ADS-B) is a technology used by aircraft to broadcast signals that share their position and other status with air traffic control ground stations and other aircraft.  ADS–B is automatic in that it requires no pilot or external input; it depends on data from the aircraft’s navigation system and other computers.  The messages are not encrypted (yay!).  ADS–B equipment is currently mandatory in portions of Australian airspace, while the United States requires some aircraft to be equipped, depending on the size.</p>
+<p>Automatic Dependent Surveillance-Broadcast (ADS-B) is a technology used by aircraft to broadcast signals that share their position and other status with air traffic control ground stations and other aircraft.  ADS-B is automatic in that it requires no pilot or external input; it depends on data from the aircraft’s navigation system and other computers.  The messages are not encrypted (yay!).  ADS-B equipment is currently mandatory in portions of Australian airspace, while the United States requires some aircraft to be equipped, depending on the size.</p>
 <a class="reference internal image-reference" href="../_images/adsb.jpg"><img alt="../_images/adsb.jpg" class="align-center" src="../_images/adsb.jpg" style="width: 230.39999999999998px; height: 306.0px;" /></a>
 <p>The Physical (PHY) Layer of ADS-B has the following characteristics:</p>
 <ul class="simple">
 <li>Transmitted on 1,090 MHz</li>
-<li>Signal has 50&nbsp;kHz&nbsp;of bandwidth (which is very small)</li>
+<li>Signal bandwidth around 2 MHz</li>
 <li>PPM modulation</li>
-<li>Messages carry 15 bytes of data each, so multiple messages are usually needed</li>
+<li>Data rate of 1 Mbit/s, with messages between 56 - 112 microseconds</li>
+<li>Messages carry 15 bytes of data each, so multiple messages are usually needed for the entire aircraft information</li>
 <li>Multiple access is achieved by having messages broadcast with a period that ranges randomly between 0.4 and 0.6 seconds.  This randomization is designed to prevent aircraft from having all of their transmissions on top of each other (some may still collide but that’s fine)</li>
 <li>ADS-B antennas are vertically polarized</li>
 <li>Transmit power varies, but should be in the ballpark of 100 W (20 dBW)</li>
@@ -342,13 +368,13 @@
 </table>
 <p>For our noise budget:</p>
 <ul class="simple">
-<li>B = 50 kHz = 50e3 = 47 dBHz</li>
+<li>B = 2 MHz = 2e6 = 63 dBHz</li>
 <li>T we have to approximate, let’s say 300 K, which is 24.8 dBK.  It will vary based on quality of the receiver</li>
 <li>k is always -228.6 dBW/K/Hz</li>
 </ul>
 <div class="math">
-<p><img src="../_images/math/f7374fbb202051279103075b29e26a7798ec0c7f.svg" alt="P_{noise} = k + T + B = -156.8 \quad \mathrm{dBW}"/></p>
-</div><p>Therefore our SNR is -105.7 - (-156.8) = <strong>51.1 dB</strong>.  It’s not surprising it is a huge number, considering we are claiming to only be 30 km from the aircraft under free space.  If ADS-B signals couldn’t reach 30 km then ADS-B wouldn’t be a very effective system–no one would hear each other until they were very close.  Under this example we can easily decode the signals; pulse-position modulation (PPM) is fairly robust and does not require that high an SNR.  What’s difficult is when you try to receive ADS-B while inside a classroom, with an antenna that is very poorly matched, and a strong FM radio station nearby causing interference.  Those factors could easily lead to 20-30 dB of losses.</p>
+<p><img src="../_images/math/a80e844bcbc0d2ccf27dc8e6e2c24f4e53cd2d93.svg" alt="P_{noise} = k + T + B = -140.8 \quad \mathrm{dBW}"/></p>
+</div><p>Therefore our SNR is -105.7 - (-140.8) = <strong>35.1 dB</strong>.  It’s not surprising it is a huge number, considering we are claiming to only be 30 km from the aircraft under free space.  If ADS-B signals couldn’t reach 30 km then ADS-B wouldn’t be a very effective system–no one would hear each other until they were very close.  Under this example we can easily decode the signals; pulse-position modulation (PPM) is fairly robust and does not require that high an SNR.  What’s difficult is when you try to receive ADS-B while inside a classroom, with an antenna that is very poorly matched, and a strong FM radio station nearby causing interference.  Those factors could easily lead to 20-30 dB of losses.</p>
 <p>This example was really just a back-of-the-envelope calculation, but it demonstrated the basics of creating a link budget and understanding the important parameters of a comms link.</p>
 </div>
 </div>

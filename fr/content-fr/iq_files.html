@@ -25,6 +25,31 @@
   gtag('js', new Date());
 
   gtag('config', 'G-TGRQK1JJYD');
+</script> 
+
+<div id="topBanner" class="modal">
+  <div class="modal-content">
+    <div class="modal-header" style="background-color: rgb(255, 240, 129); text-align:center;">
+      <i>-- Announcement from Marc --</i><br>I'm leading a new education-oriented open-source project called <a target="_blank" href="https://iqengine.org">IQEngine</a>!<br>It's a web-based SDR toolkit for analyzing, processing, and sharing RF recordings.  Checkout out our <a target="_blank" href="https://github.com/IQEngine/IQEngine">GitHub</a> and <a target="_blank" href="https://discord.gg/k7C8kp3b76">Discord</a>
+      <div class="closeButton">
+        <span style="font-size:30px; position:absolute; top:0px; right:5px; cursor:pointer; ">&times;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var banner = document.getElementById("topBanner");
+  var closeButton = document.getElementsByClassName("closeButton")[0];
+  // Close banner if they have already clicked the close button in the past
+  if (localStorage.getItem('pysdrvisited')){
+    banner.style.display = "none";
+  }
+  // When they click the close button
+  closeButton.onclick = function() {
+    banner.style.display = "none";
+    localStorage.setItem('pysdrvisited', true);
+  }
 </script>
 
 <div style="float: right; padding-bottom: 0;">
@@ -197,14 +222,14 @@ r.tofile(‘bpsk_in_noise.iq’) # Sauvegarder le fichier</p>
 <div class="section" id="analyse-visuelle-d-un-fichier-rf">
 <h2>Analyse visuelle d’un fichier RF<a class="headerlink" href="#analyse-visuelle-d-un-fichier-rf" title="Permalink to this headline">¶</a></h2>
 <p>Bien que nous ayons appris à créer notre propre tracé de spectrogramme dans le chapitre <a class="reference internal" href="../content-nl/frequency_domain.html#freq-domain-chapter"><span class="std std-ref">Het Frequentiedomein</span></a>, rien ne vaut l’utilisation d’un logiciel déjà créé, et quand il s’agit d’analyser un long enregistrement RF, je recommande d’utiliser <a class="reference external" href="https://github.com/miek/inspectrum" rel="noopener noreferrer" target="_blank">inspectrum</a>.  Inspectrum est un outil graphique assez simple mais puissant pour balayer visuellement un fichier RF, avec un contrôle fin sur la gamme de cartes de couleurs et la taille de la FFT (quantité de zoom).  Vous pouvez maintenir la touche alt et utiliser la molette de défilement pour vous déplacer dans le temps.  Il dispose de curseurs optionnels pour mesurer le delta-temps entre deux rafales d’énergie, et la possibilité d’exporter une tranche du fichier RF dans un nouveau fichier.  Pour l’installation sur des plateformes basées sur Debian comme Ubuntu, utilisez les commandes suivantes :</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>qt5-default<span class="w"> </span>libfftw3-dev<span class="w"> </span>cmake<span class="w"> </span>pkg-config<span class="w"> </span>libliquid-dev
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/miek/inspectrum.git
-<span class="nb">cd</span><span class="w"> </span>inspectrum
-mkdir<span class="w"> </span>build
-<span class="nb">cd</span><span class="w"> </span>build
-cmake<span class="w"> </span>..
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install qt5-default libfftw3-dev cmake pkg-config libliquid-dev
+git clone https://github.com/miek/inspectrum.git
+<span class="nb">cd</span> inspectrum
+mkdir build
+<span class="nb">cd</span> build
+cmake ..
 make
-sudo<span class="w"> </span>make<span class="w"> </span>install
+sudo make install
 inspectrum
 </pre></div>
 </div>
@@ -243,10 +268,10 @@ La façon la plus simple (et minimale) d’utiliser le standard SigMF pour décr
 <p>Notez que <code class="code docutils literal notranslate"><span class="pre">core:cf32_le</span></code> indique que votre fichier .sigmf-data est de type IQIQIQIQ… avec des flottants 32 bits, c’est-à-dire np.complex64 comme nous l’avons utilisé précédemment.  Référez-vous aux spécifications pour les autres types de données disponibles, par exemple si vous avez des données réelles au lieu de complexes, ou si vous utilisez des entiers 16 bits au lieu de flottants pour gagner de la place.</p>
 <p>En dehors du type de données, les lignes les plus importantes à remplir sont <code class="code docutils literal notranslate"><span class="pre">core:sample_rate</span></code> et <code class="code docutils literal notranslate"><span class="pre">core:frequency</span></code>.  Il est bon de saisir également des informations sur le matériel (<code class="code docutils literal notranslate"><span class="pre">core:hw</span></code>) utilisé pour capturer l’enregistrement, comme le type de SDR et l’antenne, ainsi qu’une description de ce que l’on sait du ou des signaux dans l’enregistrement dans <code class="code docutils literal notranslate"><span class="pre">core:description</span></code>.  Le <code class="code docutils literal notranslate"><span class="pre">core:version</span></code> est simplement la version de la norme SigMF utilisée au moment de la création du fichier de métadonnées.</p>
 <p>Si vous capturez votre enregistrement RF à partir de Python, par exemple en utilisant l’API Python pour votre SDR, vous pouvez éviter de devoir créer manuellement ces fichiers de métadonnées en utilisant le paquetage SigMF Python.  Celui-ci peut être installé sur un système d’exploitation basé sur Ubuntu/Debian comme suit :</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/gnuradio/SigMF.git
-<span class="nb">cd</span><span class="w"> </span>SigMF
-sudo<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>.
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~
+git clone https://github.com/gnuradio/SigMF.git
+<span class="nb">cd</span> SigMF
+sudo pip install .
 </pre></div>
 </div>
 <p>Le code Python permettant d’écrire le fichier .sigmf-meta pour l’exemple du début de ce chapitre, où nous avons enregistré bpsk_in_noise.iq, est présenté ci-dessous :</p>
