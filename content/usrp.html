@@ -378,7 +378,7 @@ print<span class="o">(</span>samples<span class="o">[</span><span class="m">0</s
 </div>
 <div class="section" id="syncing-to-10-mhz-and-pps">
 <h2>Syncing to 10 MHz and PPS<a class="headerlink" href="#syncing-to-10-mhz-and-pps" title="Permalink to this headline">¶</a></h2>
-<p>One of the huge advantages of using a USRP over other SDRs is their ability to synchronize to an external source or onboard <a class="reference external" href="https://www.ettus.com/all-products/gpsdo-tcxo-module/" rel="noopener noreferrer" target="_blank">GPSDO</a>.  If you have connected an external 10 MHz and PPS source to your USRP, you will want to make sure to call these two lines after initializing your USRP:</p>
+<p>One of the huge advantages of using a USRP over other SDRs is their ability to synchronize to an external source or onboard <a class="reference external" href="https://www.ettus.com/all-products/gpsdo-tcxo-module/" rel="noopener noreferrer" target="_blank">GPSDO</a>, allowing multi-receiver applications such as TDOA.  If you have connected an external 10 MHz and PPS source to your USRP, you will want to make sure to call these two lines after initializing your USRP:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">usrp</span><span class="o">.</span><span class="n">set_clock_source</span><span class="p">(</span><span class="s2">&quot;external&quot;</span><span class="p">)</span>
 <span class="n">usrp</span><span class="o">.</span><span class="n">set_time_source</span><span class="p">(</span><span class="s2">&quot;external&quot;</span><span class="p">)</span>
 </pre></div>
