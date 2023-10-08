@@ -15,8 +15,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="17. About the Author" href="about_author.html" />
-    <link rel="prev" title="15. End-to-End Example" href="rds.html" />
+    <link rel="next" title="18. About the Author" href="about_author.html" />
+    <link rel="prev" title="16. Phased Array using the Phaser" href="phaser.html" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
 <script>
@@ -99,7 +99,8 @@
 <li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rds.html">15. End-to-End Example</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">16. DOA &amp; Beamforming</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="phaser.html">16. Phased Array using the Phaser</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">17. DOA &amp; Beamforming</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#common-applications">Common Applications</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sdr-requirements">SDR Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#array-factor-math">Array Factor Math</a></li>
@@ -118,7 +119,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#conclusion-and-references">Conclusion and References</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="about_author.html">17. About the Author</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">18. About the Author</a></li>
 </ul>
 
 
@@ -134,8 +135,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="rds.html" title="previous chapter"><span class="section-number">15. </span>End-to-End Example</a></li>
-      <li>Next: <a href="about_author.html" title="next chapter"><span class="section-number">17. </span>About the Author</a></li>
+      <li>Previous: <a href="phaser.html" title="previous chapter"><span class="section-number">16. </span>Phased Array using the Phaser</a></li>
+      <li>Next: <a href="about_author.html" title="next chapter"><span class="section-number">18. </span>About the Author</a></li>
   </ul></li>
 </ul>
 </div>
@@ -159,10 +160,10 @@
     <ul>
         <li>
           &larr;
-          <a href="rds.html" title="Previous document"><span class="section-number">15. </span>End-to-End Example</a>
+          <a href="phaser.html" title="Previous document"><span class="section-number">16. </span>Phased Array using the Phaser</a>
         </li>
         <li>
-          <a href="about_author.html" title="Next document"><span class="section-number">17. </span>About the Author</a>
+          <a href="about_author.html" title="Next document"><span class="section-number">18. </span>About the Author</a>
           &rarr;
         </li>
     </ul>
@@ -173,7 +174,7 @@
           <div class="body" role="main">
             
   <div class="section" id="doa-beamforming">
-<span id="doa-chapter"></span><h1><span class="section-number">16. </span>DOA &amp; Beamforming<a class="headerlink" href="#doa-beamforming" title="Permalink to this headline">¶</a></h1>
+<span id="doa-chapter"></span><h1><span class="section-number">17. </span>DOA &amp; Beamforming<a class="headerlink" href="#doa-beamforming" title="Permalink to this headline">¶</a></h1>
 <p>Direction-of-Arrival (DOA) within DSP/SDR refers to the process of using an array of antennas to estimate the DOA of one or more signals received by that array.  Once we know the direction a signal of interest is arriving from, we can isolate it from other signals/interference/jamming.  It is just like isolating a signal in the frequency domain by filtering it, except we are now working in the spatial domain (you can certainly combine both!).  We typically refer to the antennas that make up an array as elements, and sometimes the array is called a “sensor” instead.  These array elements are most often omnidirectional antennas, equally spaced in either a line or across two dimensions.  DOA is a subset of beamforming techniques, where as the receiver, we are trying to steer a beam (our receiver’s antenna beam) towards the direction of an emitter.  We may also steer a beam blindly across a wide range (e.g., 0 to 360 degrees) to figure out what signals are being received and from what direction.</p>
 <div class="section" id="common-applications">
 <h2>Common Applications<a class="headerlink" href="#common-applications" title="Permalink to this headline">¶</a></h2>
@@ -481,10 +482,10 @@
     <ul>
         <li>
           &larr;
-          <a href="rds.html" title="Previous document"><span class="section-number">15. </span>End-to-End Example</a>
+          <a href="phaser.html" title="Previous document"><span class="section-number">16. </span>Phased Array using the Phaser</a>
         </li>
         <li>
-          <a href="about_author.html" title="Next document"><span class="section-number">17. </span>About the Author</a>
+          <a href="about_author.html" title="Next document"><span class="section-number">18. </span>About the Author</a>
           &rarr;
         </li>
     </ul>

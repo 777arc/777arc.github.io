@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phased Arrays with Phaser &#8212; PySDR: A Guide to SDR and DSP using Python</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="17. DOA &amp; Beamforming" href="doa.html" />
+    <link rel="prev" title="15. End-to-End Example" href="rds.html" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TGRQK1JJYD');
+</script> 
+
+<div id="topBanner" class="modal">
+  <div class="modal-content">
+    <div class="modal-header" style="background-color: rgb(255, 240, 129); text-align:center;">
+      <i>-- Announcement from Marc --</i><br>I'm leading a new education-oriented open-source project called <a target="_blank" href="https://iqengine.org">IQEngine</a>!<br>It's a web-based SDR toolkit for analyzing, processing, and sharing RF recordings.  Checkout out our <a target="_blank" href="https://github.com/IQEngine/IQEngine">GitHub</a> and <a target="_blank" href="https://discord.gg/k7C8kp3b76">Discord</a>
+      <div class="closeButton">
+        <span style="font-size:30px; position:absolute; top:0px; right:5px; cursor:pointer; ">&times;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var banner = document.getElementById("topBanner");
+  var closeButton = document.getElementsByClassName("closeButton")[0];
+  // Close banner if they have already clicked the close button in the past
+  if (localStorage.getItem('pysdrvisited')){
+    banner.style.display = "none";
+  }
+  // When they click the close button
+  closeButton.onclick = function() {
+    banner.style.display = "none";
+    localStorage.setItem('pysdrvisited', true);
+  }
+</script>
+
+<div style="float: right; padding-bottom: 0;">
+  PySDR is now available in:&nbsp;&nbsp;
+  <img src="https://pysdr.org/_static/us.svg" alt="English Version" width="20"><a href="https://pysdr.org/index.html">English</a>&nbsp;&nbsp;
+  <img src="https://pysdr.org/_static/nl.svg" alt="Dutch Version" width="20"><a href="https://pysdr.org/nl/index-nl.html">Dutch</a>&nbsp;&nbsp;
+  <img src="https://pysdr.org/_static/fr.svg" alt="French Version" width="20"><a href="https://pysdr.org/fr/index-fr.html">French</a>
+</div>
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/logo.svg" alt="Logo"/>
+    
+    <h1 class="logo logo-name">PySDR: A Guide to SDR and DSP using Python</h1>
+    
+  </a>
+</p>
+
+
+
+<p class="blurb">By <a href="https://pysdr.org/content/about_author.html">Dr. Marc Lichtman</a></p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="frequency_domain.html">2. Frequency Domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">3. IQ Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="digital_modulation.html">4. Digital Modulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pluto.html">5. PlutoSDR in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usrp.html">6. USRP in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="noise.html">7. Noise and dB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">8. Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="link_budgets.html">9. Link Budgets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="channel_coding.html">10. Channel Coding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iq_files.html">11. IQ Files and SigMF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multipath_fading.html">12. Multipath Fading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rds.html">15. End-to-End Example</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">16. Phased Arrays with Phaser</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#intro-to-phased-arrays">Intro to Phased Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-overview">Hardware Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sd-card-preparation">SD Card Preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-preparation">Hardware Preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#software-install">Software Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hb100-setup">HB100 Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calibration">Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pre-built-example-app">Pre-built Example App</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#phaser-in-python">Phaser in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="doa.html">17. DOA &amp; Beamforming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about_author.html">18. About the Author</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://www.paypal.com/donate/?business=AHW8EDXSCNMKC&no_recurring=0&item_name=Thank+you+for+supporting+PySDR%21++Your+contribution+helps+keep+it+ad-free%2C+and+promotes+future+content+creation+and+refinement.+&currency_code=USD">Donate through PayPal</a></li>
+    
+    <li class="toctree-l1"><a href="https://trinket.io/embed/python3">Online Python Console</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="rds.html" title="previous chapter"><span class="section-number">15. </span>End-to-End Example</a></li>
+      <li>Next: <a href="doa.html" title="next chapter"><span class="section-number">17. </span>DOA &amp; Beamforming</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Search" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+              <div class="related top">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="rds.html" title="Previous document"><span class="section-number">15. </span>End-to-End Example</a>
+        </li>
+        <li>
+          <a href="doa.html" title="Next document"><span class="section-number">17. </span>DOA &amp; Beamforming</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="phased-arrays-with-phaser">
+<span id="phaser-chapter"></span><h1><span class="section-number">16. </span>Phased Arrays with Phaser<a class="headerlink" href="#phased-arrays-with-phaser" title="Permalink to this headline">¶</a></h1>
+<p>In this chapter we use the <a class="reference external" href="https://wiki.analog.com/resources/eval/user-guides/circuits-from-the-lab/cn0566" rel="noopener noreferrer" target="_blank">Analog Devices Phaser</a>, (a.k.a. CN0566 or ADALM-PHASER) which is an 8-channel low-cost phased array SDR that combines a PlutoSDR, Raspberry Pi, and ADAR1000 beamformers, designed to operate around 10.25 GHz.  We will cover the setup and calibration steps, and then go through some beamforming examples in Python.  For those that do not have a Phaser, we have included screenshots and animations of what the user would see.</p>
+<a class="reference internal image-reference" href="../_images/phaser_on_tripod.png"><img alt="The Phaser (CN0566) by Analog Devices" class="align-center" src="../_images/phaser_on_tripod.png" style="width: 154.79999999999998px; height: 300.0px;" /></a>
+<div class="section" id="intro-to-phased-arrays">
+<h2>Intro to Phased Arrays<a class="headerlink" href="#intro-to-phased-arrays" title="Permalink to this headline">¶</a></h2>
+<p>—Short intro to phased arrays, and compare to digital beamforming—</p>
+</div>
+<div class="section" id="hardware-overview">
+<h2>Hardware Overview<a class="headerlink" href="#hardware-overview" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="../_images/phaser_front_and_back.png"><img alt="The front and back of the Phaser unit" class="align-center" src="../_images/phaser_front_and_back.png" style="width: 558.8000000000001px; height: 200.0px;" /></a>
+<p>The Phaser is a single board containing the phased array and a bunch of other components, with a Raspberry Pi plugged in on one side and a Pluto mounted to the other side.  The high-level block diagram is shown below.  Some items to note:</p>
+<ol class="arabic simple">
+<li>Even though it looks like a 32-element 2d array, it’s really an 8-element 1d array</li>
+<li>Both receive channels on the Pluto are used (the second channel uses a u.FL connector)</li>
+<li>The LO onboard is used to downconvert the received signal from around 10.25 GHz to around 2 GHz, so that the Pluto can receive it</li>
+<li>Each ADAR1000 has four phase shifters with adjustable gain, and all four channels are summed together before being sent to the Pluto</li>
+<li>The Phaser essentially contains two “subarrays” which each subarray containing four channels</li>
+<li>Not shown below are GPIO and serial signals from the Raspberry Pi used to control various components on the Phaser</li>
+</ol>
+<a class="reference internal image-reference" href="../_images/phaser_components.png"><img alt="The components of the Phaser (CN0566) including ADF4159, LTC5548, ADAR1000" class="align-center" src="../_images/phaser_components.png" style="width: 780.0px; height: 462.0px;" /></a>
+<p>For now let’s ignore the transmit side of the Phaser, as in this chapter we will only be using the HB100 device as a test transmitter.  The ADF4159 is a frequency synthesizer that produces a tone up to 13 GHz in frequency, what we call the local oscillator or LO.  This LO is fed into a mixer, the LTC5548, which is able to do upconversion or downconversion, although we’ll be using it for downconversion.  For downconversion it takes in the LO as well as a signal anywhere from 2 - 14 GHz, and multiplies the two together which performs a frequency shift.  The resulting downconverted signal can be anywhere from DC to 6 GHz, although we are going to target around 2 GHz.  The ADAR1000 is a 4-channel analog beamformer, so the Phaser utilizes two of them.  An analog beamformer has independently adjustable phase shifters and gain for each channel, allowing each channel to be time-delayed and attenuated before being summed together in the analog domain (resulting in a single channel).  On the Phaser, each ADAR1000 outputs a signal which gets downconverted and then received by the Pluto.  Using the Raspberry Pi we can control the phase and gain of all eight channels in realtime, to perform beamforming.  We also have the option to do two-channel digital beamforming/array processing, discussed in the next chapter.</p>
+<p>For those interested, a slightly more detailed block diagram is provided below.</p>
+<a class="reference internal image-reference" href="../_images/phaser_detailed_block_diagram.png"><img alt="Detailed block diagram of the Phaser (CN0566)" class="align-center" src="../_images/phaser_detailed_block_diagram.png" style="width: 758.4000000000001px; height: 400.0px;" /></a>
+</div>
+<div class="section" id="sd-card-preparation">
+<h2>SD Card Preparation<a class="headerlink" href="#sd-card-preparation" title="Permalink to this headline">¶</a></h2>
+<p>We will assume you are using the Raspberry Pi onboard the Phaser (directly, with a monitor/keyboard/mouse).  This simplifies setup, as Analog Devices publishes a pre-built SD card image with all the necessary drivers and software.  You can download the SD card image and find SD imaging instructions <a class="reference external" href="https://wiki.analog.com/resources/tools-software/linux-software/kuiper-linux" rel="noopener noreferrer" target="_blank">here</a>.  The image is based on Raspberry Pi OS and includes all the software you’ll need already installed.</p>
+</div>
+<div class="section" id="hardware-preparation">
+<h2>Hardware Preparation<a class="headerlink" href="#hardware-preparation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Connect Pluto’s CENTER micro-USB port to Raspberry Pi</li>
+<li>Optionally, carefully thread the tripod into the tripod mount</li>
+<li>We will assume you’re using an HDMI display, USB keyboard, and USB mouse connected to the Raspberry pi</li>
+<li>Power the Pi and Phaser board through the type-C port of the Phaser (CN0566), i.e. do NOT connect a supply to the Raspberry Pi’s USB C</li>
+</ol>
+</div>
+<div class="section" id="software-install">
+<h2>Software Install<a class="headerlink" href="#software-install" title="Permalink to this headline">¶</a></h2>
+<p>Once you have booted into the Raspberry Pi using the pre-build image, using the default user/pass analog/analog, it is recommended to run the following steps:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget https://github.com/mthoren-adi/rpi_setup_stuff/raw/main/phaser/phaser_sdcard_setup.sh
+sudo chmod +x phaser_sdcard_setup.sh
+./phaser_sdcard_setup.sh
+sudo reboot
+
+sudo raspi-config
+</pre></div>
+</div>
+<p>For more assistance setting up the Phaser, reference the <a class="reference external" href="https://wiki.analog.com/resources/eval/user-guides/circuits-from-the-lab/cn0566/quickstart" rel="noopener noreferrer" target="_blank">Phaser wiki quickstart page</a>.</p>
+</div>
+<div class="section" id="hb100-setup">
+<h2>HB100 Setup<a class="headerlink" href="#hb100-setup" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="../_images/phaser_hb100.png"><img alt="HB100 that comes with Phaser" class="align-center" src="../_images/phaser_hb100.png" style="width: 132.0px; height: 171.0px;" /></a>
+<p>The HB100 that comes with the Phaser is a low-cost Doppler radar module that we will be using as a test transmitter, as it transmits a continuous tone around 10 GHz.  It runs off 2 AA batteries or a 3V benchtop supply, and when it’s on it will have a solid red LED.</p>
+<p>Because the HB100 is low-cost and uses cheap RF components, its transmit frequency varies from unit to unit, over hundreds of MHz, which is a range that is greater than the highest bandwidth we can receive using the Pluto (56 MHz).  So to make sure we are tuning our Pluto and downconverter in a manner that will always receive the HB100 signal, we must determine the HB100’s transmit frequency.  This is done using an example app from Analog Devices, which performs a frequency sweep and calculates FFTs while looking for a spike.  Make sure your HB100 is on and in the general vicinity of the Phaser, and then run the utility with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~/pyadi-iio/examples/phaser
+python phaser_find_hb100.py
+</pre></div>
+</div>
+<p>It should create a file called hb100_freq_val.pkl in the same directory.  This file contains the HB100 transmit frequency in Hz (pickled, so not viewable in plaintext) which we will use in the next step.</p>
+</div>
+<div class="section" id="calibration">
+<h2>Calibration<a class="headerlink" href="#calibration" title="Permalink to this headline">¶</a></h2>
+<p>Lastly, we need to calibrate the phased array.  This requires holding the HB100 at the array’s boresight (0 degrees).  The side of the HB100 with the barcode is the side that transmits the signal, so that face should be held a few feet away from the Phaser, right in-front and centered to it, and then pointed straight at the Phaser.  In the next step you can experiment with different angles and orientations, but for now let’s run the calibration utility:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python phaser_examples.py cal
+</pre></div>
+</div>
+<p>This will create two more pickle files: phase_cal_val.pkl and gain_cal_val.pkl, in the same directory.  Each one contains an array of 8 numbers corresponding to the phase and gain tweaks needed to calibrate each channel.  These values are unique to each Phaser, as they can very during manufacturing.  Subsequent runs of this utility will lead to slightly different values which is normal.</p>
+</div>
+<div class="section" id="pre-built-example-app">
+<h2>Pre-built Example App<a class="headerlink" href="#pre-built-example-app" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have calibrated our Phaser and found the HB100 frequency, we can run the example app that Analog Devices provides.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python phaser_gui.py
+</pre></div>
+</div>
+<p>If you check the “Auto Refresh Data” checkbox in the bottom-left it should begin running.  You should see something similar to the following when holding the HB100 in the Phaser’s boresight.</p>
+<a class="reference internal image-reference" href="../_images/phaser_gui.png"><img alt="Phaser example GUI tool by Analog Devices" class="align-center" src="../_images/phaser_gui.png" style="width: 799.0px; height: 396.5px;" /></a>
+</div>
+<div class="section" id="phaser-in-python">
+<h2>Phaser in Python<a class="headerlink" href="#phaser-in-python" title="Permalink to this headline">¶</a></h2>
+<p>We will now dive into the hands-on Python portion.  For those who don’t have a Phaser, screenshots and animations are provided.</p>
+<div class="section" id="initializing-phaser-and-pluto">
+<h3>Initializing Phaser and Pluto<a class="headerlink" href="#initializing-phaser-and-pluto" title="Permalink to this headline">¶</a></h3>
+<p>The following Python code sets up our Phaser and Pluto.  By this point you should have already run the calibration steps, which produce three pickle files.  Make sure you are running the Python script below from within the same directory as these pickle files.</p>
+<p>There are a lot of settings to deal with, so it’s OK if you don’t absorb the entire code snippet below, just note that we are using a sample rate of 30 MHz, manual gain which we set very low, we set all of the element gains to the same value, and point the array towards boresight (0 degrees).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">adi</span> <span class="kn">import</span> <span class="n">ad9361</span>
+<span class="kn">from</span> <span class="nn">adi.cn0566</span> <span class="kn">import</span> <span class="n">CN0566</span>
+
+<span class="n">phase_cal</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;phase_cal_val.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+<span class="n">gain_cal</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;gain_cal_val.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+<span class="n">signal_freq</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;hb100_freq_val.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mf">0.014</span>  <span class="c1"># element to element spacing of the antenna</span>
+
+<span class="n">phaser</span> <span class="o">=</span> <span class="n">CN0566</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:localhost&quot;</span><span class="p">)</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">ad9361</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="s2">&quot;ip:192.168.2.1&quot;</span><span class="p">)</span>
+<span class="n">phaser</span><span class="o">.</span><span class="n">sdr</span> <span class="o">=</span> <span class="n">sdr</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PlutoSDR and CN0566 connected!&quot;</span><span class="p">)</span>
+
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="c1"># recommended by Analog Devices</span>
+
+<span class="n">phaser</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">device_mode</span><span class="o">=</span><span class="s2">&quot;rx&quot;</span><span class="p">)</span>
+
+<span class="c1"># Set all antenna elements to half scale - a typical HB100 will have plenty of signal power.</span>
+<span class="n">gain</span> <span class="o">=</span> <span class="mi">64</span> <span class="c1"># 64 is about half scale</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+    <span class="n">phaser</span><span class="o">.</span><span class="n">set_chan_gain</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">gain</span><span class="p">,</span> <span class="n">apply_cal</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Aim the beam at boresight (zero degrees)</span>
+<span class="n">phaser</span><span class="o">.</span><span class="n">set_beam_phase_diff</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+
+<span class="c1"># Misc SDR settings, not super critical to understand</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">_ctrl</span><span class="o">.</span><span class="n">debug_attrs</span><span class="p">[</span><span class="s2">&quot;adi,frequency-division-duplex-mode-enable&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">_ctrl</span><span class="o">.</span><span class="n">debug_attrs</span><span class="p">[</span><span class="s2">&quot;adi,ensm-enable-txnrx-control-enable&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span> <span class="c1"># Disable pin control so spi can move the states</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">_ctrl</span><span class="o">.</span><span class="n">debug_attrs</span><span class="p">[</span><span class="s2">&quot;initialize&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_enabled_channels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># enable Rx1 and Rx2</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">_rxadc</span><span class="o">.</span><span class="n">set_kernel_buffers_count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># No stale buffers to flush</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain_chan0</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span><span class="p">)</span> <span class="c1"># Make sure the Tx channels are attenuated (or off)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">tx_hardwaregain_chan1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span><span class="p">)</span>
+
+<span class="c1"># These settings are basic PlutoSDR settings we have seen before</span>
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">30e6</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_buffer_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>  <span class="c1"># samples per buffer</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_rf_bandwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">10e6</span><span class="p">)</span>  <span class="c1"># analog filter bandwidth</span>
+
+<span class="c1"># Manually gain (no automatic gain control) so that we can sweep angle and see peaks/nulls</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode_chan0</span> <span class="o">=</span> <span class="s2">&quot;manual&quot;</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">gain_control_mode_chan1</span> <span class="o">=</span> <span class="s2">&quot;manual&quot;</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain_chan0</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># dB, 0 is the lowest gain.  the HB100 is pretty loud</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_hardwaregain_chan1</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># dB</span>
+
+<span class="n">sdr</span><span class="o">.</span><span class="n">rx_lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">2.2e9</span><span class="p">)</span> <span class="c1"># The Pluto will tune to this freq</span>
+
+<span class="c1"># Set the Phaser&#39;s PLL (the ADF4159 onboard) to downconvert the HB100 to 2.2 GHz plus a small offset</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="mi">1000000</span> <span class="c1"># add a small arbitrary offset just so we&#39;re not right at 0 Hz where there&#39;s a DC spike</span>
+<span class="n">phaser</span><span class="o">.</span><span class="n">lo</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">signal_freq</span> <span class="o">+</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx_lo</span> <span class="o">-</span> <span class="n">offset</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="receiving-samples-from-the-pluto">
+<h3>Receiving Samples from the Pluto<a class="headerlink" href="#receiving-samples-from-the-pluto" title="Permalink to this headline">¶</a></h3>
+<p>At this point the Phaser and Pluto are configured and ready to go.  We can now start receiving data from the Pluto.  Let’s grab a single batch of 1024 samples, then take the FFT of each of the two channels.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Grab some samples (whatever we set rx_buffer_size to), remember we are receiving on 2 channels at the same time</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span>
+
+<span class="c1"># Take FFT</span>
+<span class="n">PSD0</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">PSD1</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="c1"># Time plot helps us check that we see the HB100 and that we&#39;re not saturated (ie gain isnt too high)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="c1"># Only plot real part</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Data Point&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;ADC output&quot;</span><span class="p">)</span>
+
+<span class="c1"># PSDs show where the HB100 is and verify both channels are working</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="o">/</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">PSD0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="o">/</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">PSD1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Frequency [MHz]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Signal Strength [dB]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>What you see at this point will depend if your HB100 is on and where it’s pointing.  If you hold it a few feet from the Phaser and point it towards the center, you should see something like this:</p>
+<a class="reference internal image-reference" href="../_images/phaser_rx_psd.png"><img alt="Phaser initial example" class="align-center" src="../_images/phaser_rx_psd.png" style="width: 640.0px; height: 480.0px;" /></a>
+<p>Note the strong spike near 0 Hz, the 2nd shorter spike is simply an artifact that can be ignored, since it’s around 40 dB down.  The top plot, showing the time domain, displays the real part of the two channels, so the relative amplitude between the two will vary slightly depending on where you hold the HB100.</p>
+</div>
+<div class="section" id="performing-beamforming">
+<h3>Performing Beamforming<a class="headerlink" href="#performing-beamforming" title="Permalink to this headline">¶</a></h3>
+<p>Next, let’s actually sweep the phase!  In the following code we sweep the phase from negative 180 to positive 180 degrees, at a 2 degree step.  Note that this is not the angle the beamformer points; it’s the phase difference between adjacent channels.  We must calculate the angle of arrival corresponding to each phase step, using knowledge of the speed of light, the RF frequency of the received signal, and the Phaser’s element spacing.  The phase difference between adjacent elements is given by:</p>
+<div class="math">
+<p><img src="../_images/math/9bb499172832cd4c6bda8ce348bc80fb00a22b76.svg" alt="\phi = \frac{2 \pi d}{\lambda} \sin(\theta_{AOA})"/></p>
+</div><p>where <img class="math" src="../_images/math/ce3488ccfaaa98001f327ddc84a4b2284dc3683a.svg" alt="\theta_{AOA}"/> is the angle of arrival of the signal with respect to boresight, <img class="math" src="../_images/math/0519e4b809e812b547bede7396ba7366643b7910.svg" alt="d"/> is the antenna spacing in meters, and <img class="math" src="../_images/math/5d20f71e79182adab536e881e1c524d2a073268f.svg" alt="\lambda"/> is the wavelength of the signal. Using the formula for wavelength and solving for <img class="math" src="../_images/math/ce3488ccfaaa98001f327ddc84a4b2284dc3683a.svg" alt="\theta_{AOA}"/> we get:</p>
+<div class="math">
+<p><img src="../_images/math/297dd79b7abe6c08df848113a2b04cb8ad20f34e.svg" alt="\theta_{AOA} = \sin^{-1}\left(\frac{c \phi}{2 \pi f d}\right)"/></p>
+</div><p>You’ll see this when we calculate <code class="code docutils literal notranslate"><span class="pre">steer_angle</span></code> below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">powers</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># main DOA result</span>
+<span class="n">angle_of_arrivals</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="c1"># sweep over angle</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+    <span class="c1"># set phase difference between the adjacent channels of devices</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+        <span class="n">channel_phase</span> <span class="o">=</span> <span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="n">phase_cal</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">%</span> <span class="mf">360.0</span> <span class="c1"># Analog Devices had this forced to be a multiple of phase_step_size (2.8125 or 360/2**6bits) but it doesn&#39;t seem nessesary</span>
+        <span class="n">phaser</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rx_phase</span> <span class="o">=</span> <span class="n">channel_phase</span>
+    <span class="n">phaser</span><span class="o">.</span><span class="n">latch_rx_settings</span><span class="p">()</span> <span class="c1"># apply settings</span>
+
+    <span class="n">steer_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mf">3e8</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">phase</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">signal_freq</span> <span class="o">*</span> <span class="n">phaser</span><span class="o">.</span><span class="n">element_spacing</span><span class="p">)),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))</span> <span class="c1"># arcsin argument must be between 1 and -1, or numpy will throw a warning</span>
+    <span class="c1"># If you&#39;re looking at the array side of Phaser (32 squares) then add a *-1 to steer_angle</span>
+    <span class="n">angle_of_arrivals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">steer_angle</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">phaser</span><span class="o">.</span><span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span> <span class="c1"># receive a batch of samples</span>
+    <span class="n">data_sum</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># sum the two subarrays (within each subarray the 4 channels have already been summed)</span>
+    <span class="n">power_dB</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data_sum</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">powers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">power_dB</span><span class="p">)</span>
+    <span class="c1"># in addition to just taking the power in the signal, we could also do the FFT then grab the value of the max bin, effectively filtering out noise, results came out almost exactly the same in my tests</span>
+    <span class="c1">#PSD = 10*np.log10(np.abs(np.fft.fft(data_sum * np.blackman(len(data_sum))))**2) # in dB</span>
+
+<span class="n">powers</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">powers</span><span class="p">)</span> <span class="c1"># normalize so max is at 0 dB</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">angle_of_arrivals</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Angle of Arrival&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Magnitude [dB]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>For each <code class="code docutils literal notranslate"><span class="pre">phase</span></code> value (remember, this is the phase between adjacent elements) we set the phase shifters, after adding in the phase calibration values and forcing the degrees to be between 0 and 360.  We then grab one batch of samples with <code class="code docutils literal notranslate"><span class="pre">rx()</span></code>, sum the two channels, then calculate the power in the signal.  We then plot power over angle of arrival.  The result should look something like this:</p>
+<a class="reference internal image-reference" href="../_images/phaser_sweep.png"><img alt="Phaser single sweep" class="align-center" src="../_images/phaser_sweep.png" style="width: 568.0px; height: 420.0px;" /></a>
+<p>In this example the HB100 was held slightly to the side of boresight.</p>
+<p>If you want a polar plot you can instead using the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Polar plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;projection&#39;</span><span class="p">:</span> <span class="s1">&#39;polar&#39;</span><span class="p">})</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">angle_of_arrivals</span><span class="p">),</span> <span class="n">powers</span><span class="p">)</span> <span class="c1"># x axis in radians</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_rticks</span><span class="p">([</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># Less radial ticks</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_thetamin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">angle_of_arrivals</span><span class="p">))</span> <span class="c1"># in degrees</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_thetamax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">angle_of_arrivals</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_theta_direction</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># increase clockwise</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_theta_zero_location</span><span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">)</span> <span class="c1"># make 0 degrees point up</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/phaser_sweep_polar.png"><img alt="Phaser single sweep using a polar plot" class="align-center" src="../_images/phaser_sweep_polar.png" style="width: 419.0px; height: 240.0px;" /></a>
+<p>By taking the max we can estimate the direction of arrival of the signal!</p>
+</div>
+<div class="section" id="realtime-and-with-spatial-tapering">
+<h3>Realtime and with Spatial Tapering<a class="headerlink" href="#realtime-and-with-spatial-tapering" title="Permalink to this headline">¶</a></h3>
+<p>Now let’s take a moment to talk about spatial tapering.  So far we have left the gain adjustments of each channel to equal values, so that all eight channels get summed equally.  Just like we applied a window before taking an FFT, we can apply a window in the spatial domain by applying weights to these eight channels.  We’ll use the exact same windowing functions like Hanning, Hamming, etc.  Let’s also tweak the code to run in realtime so that it’s a little more fun:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span> <span class="c1"># needed for realtime view</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting, use control-c to stop&quot;</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">powers</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># main DOA result</span>
+        <span class="n">angle_of_arrivals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="c1"># sweep over angle</span>
+            <span class="c1"># set phase difference between the adjacent channels of devices</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+                <span class="n">channel_phase</span> <span class="o">=</span> <span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="n">phase_cal</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">%</span> <span class="mf">360.0</span> <span class="c1"># Analog Devices had this forced to be a multiple of phase_step_size (2.8125 or 360/2**6bits) but it doesn&#39;t seem nessesary</span>
+                <span class="n">phaser</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rx_phase</span> <span class="o">=</span> <span class="n">channel_phase</span>
+
+            <span class="c1"># set gains, incl the gain_cal, which can be used to apply a taper.  try out each one!</span>
+            <span class="n">gain_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">127</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span> <span class="c1"># rectangular window          [127, 127, 127, 127, 127, 127, 127, 127]</span>
+            <span class="c1">#gain_list = np.rint(np.hamming(8) * 127)         # [ 10,  32,  82, 121, 121,  82,  32,  10]</span>
+            <span class="c1">#gain_list = np.rint(np.hanning(10)[1:-1] * 127)  # [ 15,  52,  95, 123, 123,  95,  52,  15]</span>
+            <span class="c1">#gain_list = np.rint(np.blackman(10)[1:-1] * 127) # [  6,  33,  80, 121, 121,  80,  33,   6]</span>
+            <span class="c1">#gain_list = np.rint(np.bartlett(10)[1:-1] * 127) # [ 28,  56,  85, 113, 113,  85,  56,  28]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+                <span class="n">channel_gain</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">gain_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">gain_cal</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">phaser</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rx_gain</span> <span class="o">=</span> <span class="n">channel_gain</span>
+
+            <span class="n">phaser</span><span class="o">.</span><span class="n">latch_rx_settings</span><span class="p">()</span> <span class="c1"># apply settings</span>
+
+            <span class="n">steer_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mf">3e8</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">phase</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">signal_freq</span> <span class="o">*</span> <span class="n">phaser</span><span class="o">.</span><span class="n">element_spacing</span><span class="p">)),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))</span> <span class="c1"># arcsin argument must be between 1 and -1, or numpy will throw a warning</span>
+            <span class="n">angle_of_arrivals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">steer_angle</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">phaser</span><span class="o">.</span><span class="n">sdr</span><span class="o">.</span><span class="n">rx</span><span class="p">()</span> <span class="c1"># receive a batch of samples</span>
+            <span class="n">data_sum</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># sum the two subarrays (within each subarray the 4 channels have already been summed)</span>
+            <span class="n">power_dB</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data_sum</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+            <span class="n">powers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">power_dB</span><span class="p">)</span>
+
+        <span class="n">powers</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">powers</span><span class="p">)</span> <span class="c1"># normalize so max is at 0 dB</span>
+
+        <span class="c1"># Realtime view</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">angle_of_arrivals</span><span class="p">,</span> <span class="n">powers</span><span class="p">,</span> <span class="s1">&#39;.-&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Angle of Arrival&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Magnitude [dB]&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+
+<span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span> <span class="c1"># quit python</span>
+</pre></div>
+</div>
+<p>You should see a realtime version of the previous exercise.  Try switching which <code class="code docutils literal notranslate"><span class="pre">gain_list</span></code> is used, to play around with the different windows.  Here is an example of the Rectangular window (i.e., no windowing function):</p>
+<a class="reference internal image-reference" href="../_images/phaser_animation_rect.gif"><img alt="Beamforming animation using the Phaser and a rectangular window" class="align-center" src="../_images/phaser_animation_rect.gif" style="width: 466.0px; height: 448.0px;" /></a>
+<p>and here is an example of the Hamming window:</p>
+<a class="reference internal image-reference" href="../_images/phaser_animation_hamming.gif"><img alt="Beamforming animation using the Phaser and a Hamming window" class="align-center" src="../_images/phaser_animation_hamming.gif" style="width: 466.0px; height: 448.0px;" /></a>
+<p>Note the lack of sidelobes for Hamming.  In fact, every window aside from Rectangular will greatly reduce the sidelobes, but in return the main lobe will be a little wider.</p>
+</div>
+</div>
+<div class="section" id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<p>In the next chapter we will cover digital beamforming, using pure simulation in Python, no Phaser needed!</p>
+</div>
+</div>
+
+
+          </div>
+              <div class="related bottom">
+                &nbsp;
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="rds.html" title="Previous document"><span class="section-number">15. </span>End-to-End Example</a>
+        </li>
+        <li>
+          <a href="doa.html" title="Next document"><span class="section-number">17. </span>DOA &amp; Beamforming</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+              </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2023, Marc Lichtman.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
