@@ -15,8 +15,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="18. About the Author" href="about_author.html" />
-    <link rel="prev" title="16. Phased Array using the Phaser" href="phaser.html" />
+    <link rel="next" title="17. Phased Arrays with Phaser" href="phaser.html" />
+    <link rel="prev" title="15. End-to-End Example" href="rds.html" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TGRQK1JJYD"></script>
 <script>
@@ -99,9 +99,8 @@
 <li class="toctree-l1"><a class="reference internal" href="pulse_shaping.html">13. Pulse Shaping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sync.html">14. Synchronization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rds.html">15. End-to-End Example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="phaser.html">16. Phased Array using the Phaser</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">17. DOA &amp; Beamforming</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#common-applications">Common Applications</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">16. DOA &amp; Beamforming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview-and-terminology">Overview and Terminology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sdr-requirements">SDR Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#array-factor-math">Array Factor Math</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#receiving-a-signal">Receiving a Signal</a></li>
@@ -119,6 +118,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#conclusion-and-references">Conclusion and References</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="phaser.html">17. Phased Arrays with Phaser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about_author.html">18. About the Author</a></li>
 </ul>
 
@@ -135,8 +135,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="phaser.html" title="previous chapter"><span class="section-number">16. </span>Phased Array using the Phaser</a></li>
-      <li>Next: <a href="about_author.html" title="next chapter"><span class="section-number">18. </span>About the Author</a></li>
+      <li>Previous: <a href="rds.html" title="previous chapter"><span class="section-number">15. </span>End-to-End Example</a></li>
+      <li>Next: <a href="phaser.html" title="next chapter"><span class="section-number">17. </span>Phased Arrays with Phaser</a></li>
   </ul></li>
 </ul>
 </div>
@@ -160,10 +160,10 @@
     <ul>
         <li>
           &larr;
-          <a href="phaser.html" title="Previous document"><span class="section-number">16. </span>Phased Array using the Phaser</a>
+          <a href="rds.html" title="Previous document"><span class="section-number">15. </span>End-to-End Example</a>
         </li>
         <li>
-          <a href="about_author.html" title="Next document"><span class="section-number">18. </span>About the Author</a>
+          <a href="phaser.html" title="Next document"><span class="section-number">17. </span>Phased Arrays with Phaser</a>
           &rarr;
         </li>
     </ul>
@@ -174,23 +174,31 @@
           <div class="body" role="main">
             
   <div class="section" id="doa-beamforming">
-<span id="doa-chapter"></span><h1><span class="section-number">17. </span>DOA &amp; Beamforming<a class="headerlink" href="#doa-beamforming" title="Permalink to this headline">¶</a></h1>
-<p>Direction-of-Arrival (DOA) within DSP/SDR refers to the process of using an array of antennas to estimate the DOA of one or more signals received by that array.  Once we know the direction a signal of interest is arriving from, we can isolate it from other signals/interference/jamming.  It is just like isolating a signal in the frequency domain by filtering it, except we are now working in the spatial domain (you can certainly combine both!).  We typically refer to the antennas that make up an array as elements, and sometimes the array is called a “sensor” instead.  These array elements are most often omnidirectional antennas, equally spaced in either a line or across two dimensions.  DOA is a subset of beamforming techniques, where as the receiver, we are trying to steer a beam (our receiver’s antenna beam) towards the direction of an emitter.  We may also steer a beam blindly across a wide range (e.g., 0 to 360 degrees) to figure out what signals are being received and from what direction.</p>
-<div class="section" id="common-applications">
-<h2>Common Applications<a class="headerlink" href="#common-applications" title="Permalink to this headline">¶</a></h2>
-<p>Coming soon!</p>
-<ul class="simple">
-<li>cellular</li>
-<li>satellites</li>
-<li>satellite ground stations</li>
-</ul>
+<span id="doa-chapter"></span><h1><span class="section-number">16. </span>DOA &amp; Beamforming<a class="headerlink" href="#doa-beamforming" title="Permalink to this headline">¶</a></h1>
+<p>In this chapter we cover the concepts of beamforming, direction-of-arrival (DOA), and phased arrays in general.  Techniques such as Capon and MUSIC are discussed, using Python simulation examples. We cover beamforming vs. DOA, and go through the two different types of phased arrays (Passive electronically scanned array or PESA and Active electronically scanned array or AESA).</p>
+<div class="section" id="overview-and-terminology">
+<h2>Overview and Terminology<a class="headerlink" href="#overview-and-terminology" title="Permalink to this headline">¶</a></h2>
+<p>A phased array, a.k.a. electronically steered array, is an array of antennas that can be used on the transmit or receive side to form beams in one or more desired directions.  They are used in both communications and radar, and you’ll find them on the ground, airborne, and on satellites.</p>
+<p>Phased arrays can be broken down into three types:</p>
+<ol class="arabic simple">
+<li><strong>Passive electronically scanned array (PESA)</strong>, a.k.a. analog or traditional phased arrays, where analog phase shifters are used to steer the beam.  On the receive side, all elements are summed after phase shifting (and optionally, adjustable gain) and turned into a signal channel which is downconverted and received.  On the transmit side the inverse takes place; a single digital signal is outputted from the digital side, and on the analog side phase shifters and gain stages are used to produce the output going to each antenna.  These digital phase shifters will have a limited number of bits of resolution, and control latency.</li>
+<li><strong>Active electronically scanned array (AESA)</strong>, a.k.a. fully digital arrays, where every single element has its own RF front end, and the beamforming is done entirely in the digital domain.  This is the most expensive approach, as RF components are expensive, but it provides much more flexibility and speed than PESAs.  Digital arrays are popular with SDRs, although the number of receive or transmit channels of the SDR limits the number of elements in your array.</li>
+<li><strong>Hybrid array</strong>, which consists of subarrays that individually resemble PESAs, where each subarray has its own RF front end just like with AESAs.  This is the most common approach for modern phased arrays, as it provides the best of both worlds.</li>
+</ol>
+<p>An example of each of the types is shown below.</p>
+<a class="reference external image-reference" href="../_images/beamforming_examples.svg" rel="noopener noreferrer" target="_blank"><img alt="Example of phased arrays including Passive electronically scanned array (PESA), Active electronically scanned array (AESA), Hybrid array, showing Raytheon's MIM-104 Patriot Radar, ELM-2084 Israeli Multi-Mission Radar, Starlink User Terminal, aka Dishy" class="align-center" src="../_images/beamforming_examples.svg" /></a>
+<p>In this chapter we primarily focus on DSP for fully digital arrays, as they are more suited towards simulation and DSP, but in the next chapter we get hands-on with the “Phaser” array and SDR from Analog Devices that has 8 analog phase shifters feeding a Pluto.</p>
+<p>We typically refer to the antennas that make up an array as elements, and sometimes the array is called a “sensor” instead.  These array elements are most often omnidirectional antennas, equally spaced in either a line or across two dimensions.</p>
+<p>A beamformer is essentially a spatial filter; it filters out signals from all directions except the desired direction(s).  Instead of taps, we use weights (a.k.a. coefficients) applied to each element of an array.  We then manipulate the weights to form the beam(s) of the array, hence the name beamforming!  We can steer these beams (and nulls) extremely fast; must faster than mechanically gimballed antennas which can be thought of as an alternative to phased arrays.  A single array can electronically track multiple signals at once while nulling out interferers, as long as it has enough elements.  We’ll typically discuss beamforming within the context of a communications link, where the receiver aims to receive one or more signals at as high SNR as possible.</p>
+<p>Beamforming approaches are typically broken down into conventional and adaptive.  With conventional beamforming you assume you already know the direction of arrival of the signal of interest, and the beamformer involves choosing weights to maximize gain in that direction.  This can be used on the receive or transmit side of a communication system.  Adaptive beamforming, on the other hand, involves constantly adjusting the weights based on the beamformer output, to optimize some criteria, often involving nulling out an interferer.  Due to the closed loop and adaptive nature, adaptive beamforming is typically just used on the receive side.</p>
+<p>Direction-of-Arrival (DOA) within DSP/SDR refers to the process of using an array of antennas to estimate the DOA of one or more signals received by that array (versus traditional beamforming, where we are trying to receive a signal and possibly reject interference).  Although DOA certainly falls under the beamforming umbrella, so the terms can get confusing, just know that the term DOA will be used if the goal is to find the angles of arrival for one or more signals, versus beamforming used as a spatial filter to isolate and receive one or more signals for demodulation or other processing.  Some techniques such as MVDR will apply to both DOA and beamforming, while others like MUSIC are strictly for the purpose of DOA.</p>
+<p>Phased arrays and beamforming/DOA find use in all sorts of applications, although you will most often see them used in multiple forms of radar, mmWave communication within 5G, satellite communications, and jamming.  Any applications that require a high-gain antenna, or require a rapidly moving high-gain antenna, are good candidates for phased arrays.</p>
 </div>
 <div class="section" id="sdr-requirements">
 <h2>SDR Requirements<a class="headerlink" href="#sdr-requirements" title="Permalink to this headline">¶</a></h2>
-<p>Coming soon!</p>
-<ul class="simple">
-<li>explain phase coherent receive channels and give some examples of whats available</li>
-</ul>
+<p>As discussed, analog phased arrays involve an analog phase shifter (and usually adjustable gain) per channel, meaning an analog phased array is a dedicated piece of hardware that must go alongside an SDR.  On the other hand, any SDR that contains more than one channel can be used as a digital array with no extra hardware, as long as the channels are phase coherent and sampled using the same clock, which is typically the case for SDRs that have multiple recieve channels onboard.  There are many SDRs that contain <strong>two</strong> receive channels, such as the Ettus USRP B210 and Analog Devices Pluto (the 2nd channel is exposed using a uFL connector on the board itself).  Unfortunately, going beyond two channels involves entering the $10k+ segment of SDRs, at least as of 2023, such as the USRP N310.  The main problem is that low-cost SDRs are typically not able to be “chained” together to scale the number of channels.  The exception is the KerberosSDR (4 channels) and KrakenSDR (5 channels) which use multiple RTL-SDRs sharing an LO to form a low-cost digital array; the downside being the very limited sample rate (up to 2.56 MHz) and tuning range (up to 1766 MHz).  The KrakenSDR board and example antenna configuration is shown below.</p>
+<a class="reference external image-reference" href="../_images/krakensdr.jpg" rel="noopener noreferrer" target="_blank"><img alt="The KrakenSDR" class="align-center" src="../_images/krakensdr.jpg" /></a>
+<p>In this chapter we don’t use any specific SDRs; instead we simulate the receiving of signals using Python, and then go through the DSP used to perform beamforming/DOA for ditital arrays.</p>
 </div>
 <div class="section" id="array-factor-math">
 <h2>Array Factor Math<a class="headerlink" href="#array-factor-math" title="Permalink to this headline">¶</a></h2>
@@ -482,10 +490,10 @@
     <ul>
         <li>
           &larr;
-          <a href="phaser.html" title="Previous document"><span class="section-number">16. </span>Phased Array using the Phaser</a>
+          <a href="rds.html" title="Previous document"><span class="section-number">15. </span>End-to-End Example</a>
         </li>
         <li>
-          <a href="about_author.html" title="Next document"><span class="section-number">18. </span>About the Author</a>
+          <a href="phaser.html" title="Next document"><span class="section-number">17. </span>Phased Arrays with Phaser</a>
           &rarr;
         </li>
     </ul>
