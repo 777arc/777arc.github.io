@@ -1,0 +1,1 @@
+PySDR now fully lives in https://github.com/777arc/textbook and is served out of that repo's GitHub Pages
